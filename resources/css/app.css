@@ -1,0 +1,9 @@
+
+@import "tailwindcss";
+@import "tailwindcss/preflight"
+
+@tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}

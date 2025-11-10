@@ -1,0 +1,157 @@
+<template>
+    <main>
+        <div class="bg-blue-900 hover:bg-blue-800 transition duration-300 cursor-pointer">
+            <p class="text-md text-white text-center py-1">Get a quote for FREE estimate! Call us right now!</p>
+        </div>
+        <header class="flex flex-row min-h-18">
+            <a href="/" class="block w-64">
+                <img :src="'../storage/img/logo.png'" alt="Logo" class="">
+            </a>
+            <ul class="flex flex-auto justify-center w-64 pb-3">
+                <li class="nav-link px-8 content-center">
+                    <Link href="/" :class="{ 'active-link-style': $page.url === '/' }">
+                        Home
+                    </Link>
+                </li>
+                <li class="nav-link px-8 content-center">
+                    <Link href="/about" :class="{ 'active-link-style': $page.url === '/about'}">About
+                    </Link>
+                </li>
+
+                <li class="relative nav-link content-center">
+                    <Link href="/services" class="px-8" :class="{ 'active-link-style': $page.url === '/services'}">Services
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 pt-1 float-right">
+                            <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
+                    </Link>
+
+                    <!-- Dropdown -->
+
+                    <div class="absolute top-20 bg-white shadow-md flex flex-col min-w-54">
+                        <ul>
+                            <li class="w-full px-4 py-2 border-b border-gray-300">
+                                <Link href="/contact" class="">Refrigerator Repair</Link>
+                            </li>
+                            <li class="w-full px-4 py-2 border-b border-gray-300">
+                                <Link href="/contact" class="">Washer Repair</Link>
+                            </li>
+                            <li class="w-full px-4 py-2 border-b border-gray-300">
+                                <Link href="/contact" class="">Dryer Repair</Link>
+                            </li>
+                            <li class="w-full px-4 py-2 border-b border-gray-300">
+                                <Link href="/contact" class="">Oven Repair</Link>
+                            </li>
+                            
+                        </ul>
+                    </div>
+
+                </li>
+
+                <li class="nav-link px-8 content-center">
+                    <Link href="/contact" :class="{ 'active-link-style': $page.url === '/contact'}">Contact
+                    </Link>
+                </li>
+                <li class="nav-link px-8 content-center">
+                    <Link href="/extra" :class="{ 'active-link-style': $page.url === '/extra'}">Extra
+                    </Link>
+                </li>
+            </ul>
+            <div class="content-center px-12">
+                <button class="btn-primary text-md transition duration-300 hover:bg-red-600">
+                    Request service
+                </button>
+            </div>
+        </header>
+        <article>
+            <slot/>
+        </article>
+        <footer class="">
+            <div class="grid grid-cols-5 gap-4 bg-gray-700 px-12 py-8">
+                <div class="col-span-2 w-64">
+                    <img :src="'../storage/img/components/logo-footer.png'" alt="Logo" class="pb-4">
+                    <p class="pb-4 text-sm text-white">Fast, friendly, and dependable repair service when you need it most</p>
+                    <div class="flex flex-row">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" fill="#ffffff"></path> <path d="M18 5C17.4477 5 17 5.44772 17 6C17 6.55228 17.4477 7 18 7C18.5523 7 19 6.55228 19 6C19 5.44772 18.5523 5 18 5Z" fill="#ffffff"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M1.65396 4.27606C1 5.55953 1 7.23969 1 10.6V13.4C1 16.7603 1 18.4405 1.65396 19.7239C2.2292 20.8529 3.14708 21.7708 4.27606 22.346C5.55953 23 7.23969 23 10.6 23H13.4C16.7603 23 18.4405 23 19.7239 22.346C20.8529 21.7708 21.7708 20.8529 22.346 19.7239C23 18.4405 23 16.7603 23 13.4V10.6C23 7.23969 23 5.55953 22.346 4.27606C21.7708 3.14708 20.8529 2.2292 19.7239 1.65396C18.4405 1 16.7603 1 13.4 1H10.6C7.23969 1 5.55953 1 4.27606 1.65396C3.14708 2.2292 2.2292 3.14708 1.65396 4.27606ZM13.4 3H10.6C8.88684 3 7.72225 3.00156 6.82208 3.0751C5.94524 3.14674 5.49684 3.27659 5.18404 3.43597C4.43139 3.81947 3.81947 4.43139 3.43597 5.18404C3.27659 5.49684 3.14674 5.94524 3.0751 6.82208C3.00156 7.72225 3 8.88684 3 10.6V13.4C3 15.1132 3.00156 16.2777 3.0751 17.1779C3.14674 18.0548 3.27659 18.5032 3.43597 18.816C3.81947 19.5686 4.43139 20.1805 5.18404 20.564C5.49684 20.7234 5.94524 20.8533 6.82208 20.9249C7.72225 20.9984 8.88684 21 10.6 21H13.4C15.1132 21 16.2777 20.9984 17.1779 20.9249C18.0548 20.8533 18.5032 20.7234 18.816 20.564C19.5686 20.1805 20.1805 19.5686 20.564 18.816C20.7234 18.5032 20.8533 18.0548 20.9249 17.1779C20.9984 16.2777 21 15.1132 21 13.4V10.6C21 8.88684 20.9984 7.72225 20.9249 6.82208C20.8533 5.94524 20.7234 5.49684 20.564 5.18404C20.1805 4.43139 19.5686 3.81947 18.816 3.43597C18.5032 3.27659 18.0548 3.14674 17.1779 3.0751C16.2777 3.00156 15.1132 3 13.4 3Z" fill="#ffffff"></path> </g></svg>
+                        <svg fill="#ffffff" width="24" height="24" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff" class="mr-3"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M234.33057,69.79736a23.96369,23.96369,0,0,0-14.50489-16.34619C185.55615,40.28223,130.97949,40.39209,128,40.40771c-2.978-.02392-57.55518-.126-91.8252,13.04346A23.96415,23.96415,0,0,0,21.66992,69.79639C19.083,79.72705,16,97.88574,16,128c0,30.11377,3.083,48.27246,5.66943,58.20264a23.96369,23.96369,0,0,0,14.50489,16.34619c32.80615,12.60693,84.22168,13.04541,91.167,13.04541.6206.00049.69678.00049,1.31738,0,6.95069-.00049,58.36231-.43945,91.16651-13.04541a23.96415,23.96415,0,0,0,14.50488-16.34522C236.917,176.273,240,158.11426,240,128,240,97.88623,236.917,79.72754,234.33057,69.79736Zm-72.11182,61.53076-48,32A3.99967,3.99967,0,0,1,108,160V96a3.99968,3.99968,0,0,1,6.21875-3.32813l48,32a3.99979,3.99979,0,0,1,0,6.65625Z"></path> </g></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H15V13.9999H17.0762C17.5066 13.9999 17.8887 13.7245 18.0249 13.3161L18.4679 11.9871C18.6298 11.5014 18.2683 10.9999 17.7564 10.9999H15V8.99992C15 8.49992 15.5 7.99992 16 7.99992H18C18.5523 7.99992 19 7.5522 19 6.99992V6.31393C19 5.99091 18.7937 5.7013 18.4813 5.61887C17.1705 5.27295 16 5.27295 16 5.27295C13.5 5.27295 12 6.99992 12 8.49992V10.9999H10C9.44772 10.9999 9 11.4476 9 11.9999V12.9999C9 13.5522 9.44771 13.9999 10 13.9999H12V21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z" fill="#ffffff"></path> </g></svg>
+                    </div>
+                </div>
+                <div class="flex-col mt-2">
+                    <span class="text-sm text-white font-bold">Our Services</span>
+                    <ul class="pt-3 text-sm text-white">
+                        <li class="pt-2"><a href="#">Washer Repair</a></li>
+                        <li class="pt-2">Dryer Repair</li>
+                        <li class="pt-2">Oven Repair</li>
+                        <li class="pt-2">Refrigerator Repair</li>
+                    </ul>
+                </div>
+                <div class="flex-col mt-2">
+                    <span class="text-sm text-white font-bold">Quick Links</span>
+                    <ul class="pt-3 text-sm text-white">
+                        <li class="pt-2"><a href="#">About Us</a></li>
+                        <li class="pt-2">Blog</li>
+                    </ul>
+                </div>
+                <div class="flex-col mt-2">
+
+                </div>
+                <div class="mt-2">
+                    <span class="text-white text-sm text-nowrap">© 2024 Tech Solutions Repair Service Inc.</span>
+                </div>
+            </div>
+        </footer>
+    </main>
+</template>
+
+<script>
+import {Link} from '@inertiajs/vue3'
+
+</script>
+
+<style>
+
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: ""; /* Essential for pseudo-elements */
+    position: absolute;
+    bottom: 0; /* Position at the bottom */
+    left: 0; /* Start from the left */
+    width: 0; /* Initial width (hidden) */
+    height: 2px; /* Desired border thickness */
+    background-color: red; /* Desired border color */
+    transition: width 0.3s ease-in-out; /* Add transition for smooth animation */
+}
+
+.nav-link:hover::after {
+    width: 100%; /* Expand to full width */
+}
+
+.active-link-style::after {
+    width: 100%;
+    background-color: salmon;
+}
+
+@import "tailwindcss";
+@layer components {
+    .btn-primary {
+        /*border-radius: calc(infinity * 1px);*/
+        border-radius: 10px;
+        background-color: var(--color-red-400);
+        padding-inline: --spacing(5);
+        padding-block: --spacing(2);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-white);
+        box-shadow: var(--shadow-md);
+&:hover {
+
+    @media (hover: hover) {
+        background-color: var(--color-red-600);
+    }
+}
+}
+}
+
+</style>
