@@ -1,16 +1,16 @@
 <template>
     <div class="flex flex-col bg-zinc-100">
-        <h1 class="mt-10 text-5xl text-center font-semibold">Why Choose Us</h1>
+        <h1 class="my-12 md:my-10 text-5xl text-center font-semibold">Why Choose Us</h1>
         <div class="w-full">
-            <p class="text-center text-lg max-w-xl mx-auto py-8">Choosing the right repair service makes all the difference.
+            <p class="text-center text-lg md:max-w-3xl md:mx-auto px-8 md:py-8">Choosing the right repair service makes all the difference.
             We combine fast response times with certified expertise, transparent pricing, and reliable warranties.
             Our goal is to give you peace of mind and keep your appliances running smoothly for years to come.</p>
         </div>
-        <button type="button" class="mx-auto text-red-500 border border-red-500 hover:bg-red-600 hover:text-white 
+        <button type="button" class="my-8 mx-auto text-red-500 border border-red-500 hover:bg-red-600 hover:text-white 
                 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 transition">Learn More</button>
         <div class="py-12">
             <div class="mx-auto max-w-7xl px-6 lg:px-8">
-                <dl class="grid grid-cols-4 gap-x-8 gap-y-16 text-center">
+                <dl class="grid grid-cols-2 md:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-4 md:gap-y-16 text-center">
                     <div class="bg-white px-4 py-12 flex max-w-xs flex-col shadow-lg rounded-lg">
                         <div class="flex justify-center pb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 603 610" fill="none">

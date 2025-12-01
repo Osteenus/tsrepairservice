@@ -2,7 +2,7 @@
     <h1 class="mt-10 text-5xl text-center font-semibold">What We Repair</h1>
     <div class="bg-white py-16">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <dl class="grid grid-cols-4 gap-x-8 gap-y-16 text-center">
+            <dl class="grid grid-cols-2 gap-x-4 gap-y-4 md:grid-cols-4 md:gap-x-8 md:gap-y-16 text-center">
                 <div class="mx-auto flex max-w-xs flex-col">
                     <img src="/storage/img/components/washer-dryer.png" alt="" class="p-4 rounded-3xl">
                     <div class="text-lg text black">Washer & Dryer</div>

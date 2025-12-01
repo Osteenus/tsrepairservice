@@ -1,6 +1,6 @@
 <template>
     <div :style="{ 'background-image': 'url(' + '../storage/img/components/laundromat-room.jpg' + ')' }"
-         class="py-48 h-dvh bg-cover bg-center bg-stone-600 bg-blend-multiply">
+         class="py-14 md:py-28 bg-cover bg-center bg-stone-600 bg-blend-multiply">
         <h1 class="pb-5 text-white text-center text-6xl font-bold">Fast & Reliable Appliance Repair</h1>
         <h3 class="text-white text-center text-3xl">Same-day service, certified technicians, guaranteed repairs.</h3>
         <div class="flex justify-center py-10">

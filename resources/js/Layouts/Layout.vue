@@ -3,60 +3,81 @@
         <div class="bg-blue-900 hover:bg-blue-800 transition duration-300 cursor-pointer">
             <p class="text-md text-white text-center py-1">Get a quote for FREE estimate! Call us right now!</p>
         </div>
-        <header class="flex flex-row min-h-18">
-            <a href="/" class="block w-64">
-                <img :src="'../storage/img/logo.png'" alt="Logo" class="">
-            </a>
-            <ul class="flex flex-auto justify-center w-64 pb-3">
-                <li class="nav-link px-8 content-center">
-                    <Link href="/" :class="{ 'active-link-style': $page.url === '/' }">
-                        Home
-                    </Link>
-                </li>
-                <li class="nav-link px-8 content-center">
-                    <Link href="/about" :class="{ 'active-link-style': $page.url === '/about'}">About
-                    </Link>
-                </li>
+        <header class="flex flex-col md:flex-row min-h-18">
+            <div class="flex flex-row">
+                <a href="/" class="flex-auto md:block w-72 md:w-64">
+                    <img src="/storage/img/logo.png" alt="Logo" class="">
+                </a>
+                <div class="md:hidden flex items-center px-8">
+                    <button @click="toggleMenu" :class="{ 'hamburger-button': true, 'active': isMenuOpen }" class="w-24">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button> 
+                </div>
+            </div>
+            <Transition name="slide-down">
+                <ul v-show="this.isMenuOpen || !this.isMobile" class="flex flex-col w-full md:flex-auto md:flex-row justify-center md:w-64 md:pb-3">
+                    <li class="content-center border-b-2 border-gray-200 md:border-none">
+                        <Link href="/" :class="{ 'active-link-style': $page.url === '/' }" class="flex nav-link px-8 py-6 text-2xl md:text-xl">
+                            Home
+                        </Link>
+                    </li>
 
-                <li class="relative nav-link content-center">
-                    <Link href="/services" class="px-8" :class="{ 'active-link-style': $page.url === '/services'}">Services
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 pt-1 float-right">
-                            <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                        </svg>
-                    </Link>
+                    <li class="content-center border-b-2 border-gray-200 md:border-none">
+                        <Link href="/about" :class="{ 'active-link-style': $page.url === '/about'}" class="flex nav-link px-8 py-6 text-2xl md:text-xl">
+                            About
+                        </Link>
+                    </li>
 
-                    <!-- Dropdown -->
+                    <li class="content-center border-b-2 border-gray-200 md:border-none" 
+                        @mouseover="dropdownIsVisible = true" 
+                        @mouseleave="dropdownIsVisible = false">
+                        <Link href="/services" 
+                            class="flex nav-link px-8 py-6 text-2xl md:text-xl" 
+                            :class="{'active-link-style': 
+                            $page.url === '/services'}"
+                            >
+                            Services
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-7 md:size-6 float-right">
+                                <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                            </svg>
+                        </Link>
 
-                    <div class="absolute top-20 bg-white shadow-md flex flex-col min-w-54">
-                        <ul>
-                            <li class="w-full px-4 py-2 border-b border-gray-300">
-                                <Link href="/contact" class="">Refrigerator Repair</Link>
-                            </li>
-                            <li class="w-full px-4 py-2 border-b border-gray-300">
-                                <Link href="/contact" class="">Washer Repair</Link>
-                            </li>
-                            <li class="w-full px-4 py-2 border-b border-gray-300">
-                                <Link href="/contact" class="">Dryer Repair</Link>
-                            </li>
-                            <li class="w-full px-4 py-2 border-b border-gray-300">
-                                <Link href="/contact" class="">Oven Repair</Link>
-                            </li>
-                            
-                        </ul>
-                    </div>
+                        <!-- Dropdown -->
 
-                </li>
+                        <Transition name="fade">
+                            <div 
+                                id="dropdown" 
+                                text="Dropdown Button" 
+                                v-show="dropdownIsVisible" 
+                                class="absolute top-26 bg-white shadow-md flex flex-col min-w-54"
+                            >
+                                <ul>
+                                    <li v-for="service in services" :key="service.id" class="w-full">
+                                        <Link href="{{ service.link }}" class="flex px-4 py-1 border-b border-gray-300 hover:bg-gray-100">{{ service.name }}</Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </Transition>
+                        
 
-                <li class="nav-link px-8 content-center">
-                    <Link href="/contact" :class="{ 'active-link-style': $page.url === '/contact'}">Contact
-                    </Link>
-                </li>
-                <li class="nav-link px-8 content-center">
-                    <Link href="/extra" :class="{ 'active-link-style': $page.url === '/extra'}">Extra
-                    </Link>
-                </li>
-            </ul>
-            <div class="content-center px-12">
+                    </li>
+
+                    <li class="content-center border-b-2 border-gray-200 md:border-none">
+                        <Link href="/contact" :class="{ 'active-link-style': $page.url === '/contact'}" class="flex nav-link px-8 py-6 text-2xl md:text-xl">
+                            Contact
+                        </Link>
+                    </li>
+                    <!-- <li class="content-center">
+                        <Link href="/extra" :class="{ 'active-link-style': $page.url === '/extra'}" class="flex nav-link px-8 py-6 text-2xl md:text-xl">
+                            Extra
+                        </Link>
+                    </li> -->
+                </ul>
+            </Transition>
+            
+            <div class="hidden md:block content-center px-12">
                 <button class="btn-primary text-md transition duration-300 hover:bg-red-600">
                     Request service
                 </button>
@@ -104,7 +125,74 @@
 </template>
 
 <script>
-import {Link} from '@inertiajs/vue3'
+import { Link } from '@inertiajs/vue3'
+import { Transition, ref } from 'vue';
+
+export default {
+    beforeMount() {
+        if (this.screenWidth <= 768) {
+            this.isMobile = true
+        }
+    },
+
+    data() {
+        return {
+            services: [
+                {
+                    name: 'Refrigerator Repair',
+                    link: '/services/refrigerator-repair'
+                },
+                {
+                    name: 'Washer Repair',
+                    link: '/services/washer-repair'
+                },
+                {
+                    name: 'Dryer Repair',
+                    link: '/services/dryer-repair'
+                },
+                {
+                    name: 'Oven Repair',
+                    link: '/services/oven-repair'
+                },
+                {
+                    name: 'Dishwasher Repair',
+                    link: '/services/dishwasher-repair'
+                },
+                {
+                    name: 'Stove Repair',
+                    link: '/services/stove-repair'
+                },
+                {
+                    name: 'Microwave Repair',
+                    link: '/services/microwave-repair'
+                },
+                {
+                    name: 'Exhaust Fan Repair',
+                    link: '/services/exhaust-fan-repair'
+                },
+                {
+                    name: 'Trash Compactor Repair',
+                    link: '/services/trash-compactor-repair'
+                },
+                {
+                    name: 'Electroic Repair',
+                    link: '/services/electronic-repair'
+                },
+
+            ],
+            dropdownIsVisible: false,
+            isMenuOpen: false,
+            screenWidth: ref(window.innerWidth),
+            isMobile: false,
+        }
+    },
+    methods: {
+        toggleMenu() {
+            this.isMenuOpen = !this.isMenuOpen;
+        }
+    }
+
+}
 
 </script>
 
@@ -132,6 +220,64 @@ import {Link} from '@inertiajs/vue3'
 .active-link-style::after {
     width: 100%;
     background-color: salmon;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: max-height 0.5s ease-in-out; /* Adjust duration and easing as needed */
+  overflow: hidden; /* Crucial to prevent content overflow during transition */
+}
+
+.slide-down-enter-from,
+.slide-down-leave-to {
+  max-height: 0; /* Start/end state for the slide down */
+}
+
+.slide-down-enter-to,
+.slide-down-leave-from {
+  max-height: 1000px; /* A value larger than the maximum possible height of the content */
+}
+
+.hamburger-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 25px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.hamburger-line {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: black;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Active state for animation */
+.hamburger-button.active .hamburger-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg); /* Example: Move and rotate top line */
+}
+
+.hamburger-button.active .hamburger-line:nth-child(2) {
+  opacity: 0; /* Example: Hide middle line */
+}
+
+.hamburger-button.active .hamburger-line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg); /* Example: Move and rotate bottom line */
 }
 
 @import "tailwindcss";
