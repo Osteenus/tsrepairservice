@@ -8,7 +8,7 @@
     import CustomerReviewsSection from '../Components/Custom/CustomerReviewsSection.vue';
 
     export default {
-        components: {ServiceAreaSection, WhyChooseUsSection, BrandsSection, OurServicesSection, MainSection},
+        components: {ServiceAreaSection, WhyChooseUsSection, BrandsSection, OurServicesSection, CustomerReviewsSection, MainSection},
         // Using a render function...
         // layout: (h, page) => h(Layout, [page]),
 
@@ -18,7 +18,7 @@
 </script>
 
 <script setup>
-    defineProps({ user: Object })
+
 </script>
 
 <template>

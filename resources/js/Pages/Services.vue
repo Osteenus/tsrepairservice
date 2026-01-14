@@ -1,5 +1,6 @@
 <script>
 import Layout from '../Layouts/Layout.vue'
+import OurServicesSection from '@/Components/Custom/OurServicesSection.vue';
 
 export default {
     // Using a render function...
@@ -20,5 +21,9 @@ defineProps({ user: Object })
           class="bg-cover bg-center bg-stone-600 bg-blend-multiply">
         <h1 class="text-5xl text-white text-center font-semibold py-24">Services</h1>
     </div>
+
+    <OurServicesSection>
+
+    </OurServicesSection>
 
 </template>

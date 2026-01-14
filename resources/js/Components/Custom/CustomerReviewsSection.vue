@@ -13,7 +13,7 @@
     url: `https://picsum.photos/seed/${Math.random()}/800/600`,
   }))
 
-  let reviews = [
+  const reviews = [
     {
       "reviewColorClass": "bg-green-800",
       "reviewShort": "S",
@@ -57,7 +57,21 @@
   <div class="flex flex-col bg-blue-800 pt-8 pb-16">
     <h1 class="py-10 text-5xl text-center text-white font-semibold">Customer Reviews</h1>
     <div class="px-9">
-      <Carousel v-bind="carouselConfig">
+      <Carousel 
+        :items-to-show="1"
+        breakpoint-mode="carousel"
+        :breakpoints="{
+          700: {
+            itemsToShow: 3,
+            snapAlign: 'center',
+          },
+          1000: {
+            itemsToShow: 4,
+            snapAlign: 'start',
+          }
+        }"
+        :gap="18"
+      >
         <Slide v-for="review in reviews" :key="review.id">
           <div class="h-full rounded-xl bg-white">
             <div class="flex flex-row p-1">

@@ -6,12 +6,15 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     server: {
         host: '0.0.0.0',
+
+        // Prevent CORS issues
+
         hmr: {
-            host: '31.220.60.234' // Only the IP address, no protocol or port
+            host: '192.168.1.96' // Only the IP address, no protocol or port
         },
         cors: {  
             origin: [  
-                'http://31.220.60.234:8000',  
+                'http://192.168.1.96:8000',  
             ],  
         },  
     },
@@ -31,4 +34,9 @@ export default defineConfig({
         }),
 
     ],
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.esm-bundler.js',
+        },
+    },
 });

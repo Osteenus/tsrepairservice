@@ -1,6 +1,6 @@
 <template>
     <div class="bg-blue-900 flex flex-col">
-        <h1 class="text-5xl text-center text-white font-semibold pt-12">Brands That We Repair</h1>
+        <h1 data-aos="zoom-in" class="text-5xl text-center text-white font-semibold pt-12">Brands That We Repair</h1>
         <Carousel
             :items-to-show="1"
             breakpoint-mode="carousel"
@@ -31,8 +31,14 @@
 
 <script setup>
 
+import { onMounted } from 'vue'
+import Aos from 'aos'
 import 'vue3-carousel/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
+
+onMounted( async () => {
+    Aos.init()
+})
 
 const word = "AHOPA"
 

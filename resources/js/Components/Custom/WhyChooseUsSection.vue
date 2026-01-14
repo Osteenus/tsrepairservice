@@ -1,17 +1,17 @@
 <template>
     <div class="flex flex-col bg-zinc-100">
-        <h1 class="my-12 md:my-10 text-5xl text-center font-semibold">Why Choose Us</h1>
+        <h1 data-aos="flip-left" class="my-12 md:my-10 text-5xl text-center font-semibold">Why Choose Us</h1>
         <div class="w-full">
-            <p class="text-center text-lg md:max-w-3xl md:mx-auto px-8 md:py-8">Choosing the right repair service makes all the difference.
+            <p data-aos="flip-right" class="text-center text-lg md:max-w-3xl md:mx-auto px-8 md:py-8">Choosing the right repair service makes all the difference.
             We combine fast response times with certified expertise, transparent pricing, and reliable warranties.
             Our goal is to give you peace of mind and keep your appliances running smoothly for years to come.</p>
         </div>
-        <button type="button" class="my-8 mx-auto text-red-500 border border-red-500 hover:bg-red-600 hover:text-white 
+        <button type="button" data-aos="flip-up" class="my-8 mx-auto text-red-500 border border-red-500 hover:bg-red-600 hover:text-white 
                 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 transition">Learn More</button>
         <div class="py-12">
             <div class="mx-auto max-w-7xl px-6 lg:px-8">
-                <dl class="grid grid-cols-2 md:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-4 md:gap-y-16 text-center">
-                    <div class="bg-white px-4 py-12 flex max-w-xs flex-col shadow-lg rounded-lg">
+                <dl class="grid grid-cols-1 md:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-4 md:gap-y-16 text-center">
+                    <div data-aos="zoom-in-up" class="bg-white px-4 py-12 flex flex-col shadow-lg rounded-lg">
                         <div class="flex justify-center pb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 603 610" fill="none">
                                 <path d="M521.842 562.109C531.982 562.109 542.121 557.924 549.058 550.6C564.001 535.954 564.001 511.368 549.058 496.721C541.587 489.397 531.982 485.212 521.842 485.212C511.703 485.212 501.564 489.397 494.626 496.721C479.684 511.368 479.684 535.954 494.626 550.6C501.564 558.447 511.169 562.109 521.842 562.109ZM521.842 517.645C523.443 517.645 525.044 518.168 526.112 519.214C528.78 521.83 528.78 526.015 526.112 528.63C525.044 529.676 523.443 530.199 521.842 530.199C520.241 530.199 518.64 529.676 517.573 528.63C514.905 526.015 514.905 521.83 517.573 519.214C518.64 518.168 520.241 517.645 521.842 517.645Z" fill="#C90000"/>
@@ -23,7 +23,7 @@
                         <h3 class="text-lg font-bold py-4">Same-Day Service</h3>
                         <p class="px-4">We know appliances break at the worst time. That’s why we offer fast, same-day repairs whenever possible.</p>
                     </div>
-                    <div class="bg-white px-4 py-12 flex max-w-xs flex-col shadow-lg rounded-lg">
+                    <div data-aos="zoom-in-up" class="bg-white px-4 py-12 flex flex-col shadow-lg rounded-lg">
                         <div class="flex justify-center pb-2">
                             <svg width="96" height="96" viewBox="0 0 683 532" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M69.9297 531.944C31.3789 531.944 0.429688 497.631 0.429688 455.884V76.1595C0.429688 34.4126 31.3789 0.100098 69.9297 0.100098H613.441C651.992 0.100098 682.941 34.4126 682.941 76.1595V455.313C682.941 497.059 651.992 531.372 613.441 531.372H69.9297V531.944ZM69.9297 30.4095C46.582 30.4095 28.1211 50.997 28.1211 76.1595V455.313C28.1211 480.475 47.125 501.063 69.9297 501.063H613.441C636.789 501.063 655.25 480.475 655.25 455.313V76.1595C655.25 50.997 636.246 30.4095 613.441 30.4095H69.9297Z" fill="#C90000"/>
@@ -34,7 +34,7 @@
                         <h3 class="text-lg font-bold py-4">Certified Technicians</h3>
                         <p class="px-4">Our team is fully trained and certified to handle all major appliance brands with professional care.</p>
                     </div>
-                    <div class="bg-white px-4 py-12 flex max-w-xs flex-col shadow-lg rounded-lg">
+                    <div data-aos="zoom-in-up" class="bg-white px-4 py-12 flex flex-col shadow-lg rounded-lg">
                         <div class="flex justify-center pb-2">
                             <svg width="96" height="96" viewBox="0 0 631 594" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M134.58 155.836C127.637 141.262 124.433 125.566 124.433 108.749C124.433 48.7689 170.895 0 228.038 0C285.181 0 331.643 48.7689 331.643 108.749V111.552H302.271V108.749C302.271 65.5858 269.16 30.8309 228.038 30.8309C186.917 30.8309 153.806 65.5858 153.806 108.749C153.806 120.521 156.476 131.732 161.282 142.383L162.35 144.625L136.182 158.079L134.58 155.836Z" fill="#C90000"/>
@@ -46,7 +46,7 @@
                         <h3 class="text-lg font-bold py-4">Upfront Pricing</h3>
                         <p class="px-4">No hidden costs or surprises. You’ll always know the repair price before we begin the work.</p>
                     </div>
-                    <div class="bg-white px-4 py-12 flex max-w-xs flex-col shadow-lg rounded-lg">
+                    <div data-aos="zoom-in-up" class="bg-white px-4 py-12 flex flex-col shadow-lg rounded-lg">
                         <div class="flex justify-center pb-2">
                             <svg width="96" height="96" viewBox="0 0 621 649" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M361 580C340.169 597.166 311.021 617.502 286.5 630C109 534.5 23.7068 375.01 17 86.5L286.5 17.5L546 86.5C546 169.296 536.353 251.73 514.891 327.5" stroke="#C90000" stroke-width="33"/>
@@ -66,10 +66,15 @@
 
 </template>
 
-<script>
-export default {
-    name: "WhyChooseUsSection"
-}
+<script setup>
+
+import { onMounted } from 'vue'
+import Aos from 'aos'
+
+onMounted( async () => {
+    Aos.init()
+})
+
 </script>
 
 <style scoped>

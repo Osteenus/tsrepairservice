@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RepairRequestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -9,3 +10,16 @@ Route::inertia('/about', 'About');
 Route::inertia('/services', 'Services');
 Route::inertia('/contact', 'Contact');
 Route::inertia('/extra', 'Extra');
+
+Route::inertia('/services/refrigerator-repair', 'Services/RefrigeratorRepairService');
+Route::inertia('/services/washer-repair', 'Services/WasherRepairService');
+Route::inertia('/services/dryer-repair', 'Services/DryerRepairService');
+Route::inertia('/services/oven-repair', 'Services/OvenRepairService');
+Route::inertia('/services/dishwasher-repair', 'Services/DishwasherRepairService');
+Route::inertia('/services/stove-range-repair', 'Services/StoveRangeRepairService');
+Route::inertia('/services/microwave-repair', 'Services/MicrowaveRepairService');
+Route::inertia('/services/range-hood-repair', 'Services/RangeHoodRepairService');
+Route::inertia('/services/trash-compactor-repair', 'Services/TrashCompactorRepairService');
+Route::inertia('/services/electronic-repair', 'Services/ElectronicRepairService');
+
+Route::post('/contact', [RepairRequestController::class, 'store'])->name('contact.store');

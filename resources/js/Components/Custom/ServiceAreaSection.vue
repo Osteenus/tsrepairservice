@@ -1,8 +1,8 @@
 <template>
     <div class="flex flex-col bg-white">
         <h1 class="mt-6 text-5xl text-center font-semibold py-4">Service Area</h1>
-        <div class="flex flex-row p-12">
-            <ul class="flex flex-col basis-1/4 mt-6">
+        <div class="flex flex-col md:flex-row md:p-12">
+            <ul class="flex flex-col basis-1/4 mb-6">
                 <li v-for="location in locations" :key="location.id" class="flex flex-row py-2 pl-8">
                     <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M10.4584 9.66354C10.4584 8.88161 11.1224 8.2012 11.9999 8.2012C12.8773 8.2012 13.5413 8.88161 13.5413 9.66354C13.5413 10.4455 12.8773 11.1259 11.9999 11.1259C11.1224 11.1259 10.4584 10.4455 10.4584 9.66354Z" fill="#c90000" class="my-path"></path>
@@ -11,7 +11,7 @@
                     <span class="pl-1 text-xl">{{ location }}</span>
                 </li>
             </ul>
-            <div class="bg-white basis-3/4 px-6">
+            <div class="bg-white md:basis-3/4 md:px-6">
                 <iframe src="https://www.google.com/maps/d/embed?mid=1vKpXKOZi0MRyeTJMq5PERRIDJJRIfmQ&ehbc=2E312F&noprof=1"
                     width="100%"
                     height="480">
@@ -35,8 +35,8 @@ export default {
             locations: [
                 "Moorpark",
                 "Simi Valley",
-                "Bakersfield",
-                "Antelope Valley"
+                "San Bernandino Valley",
+                "Santa Clarita"
             ]
         }
     },
