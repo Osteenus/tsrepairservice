@@ -1,22 +1,27 @@
 <template>
 
+    <Head>
+      <title>Refrigerator Repair Moorpark CA | Same-Day Fridge Repair</title>
+      <meta name="description" content="Fast refrigerator repair in Moorpark, CA. We fix cooling issues, leaks, ice makers, and more. Same-day service available. Residental and commercial. Call now.">
+      <!-- Add other meta tags like Open Graph here -->
+    </Head>
+
     <div :style="{ 'background-image': 'url(' + '../storage/img/components/services/refrigerator-repair-1.jpg' + ')' }" 
           class="bg-cover bg-center bg-stone-600 bg-blend-multiply">
-        <h1 class="text-5xl text-white text-center font-semibold py-24 leading-16">Refrigerator Repair Service in Moorpark</h1>
+        <h1 class="text-5xl text-white text-center font-semibold py-24 leading-16">Refrigerator Repair in Moorpark, CA</h1>
     </div>
 
     <div class="bg-white flex flex-row md:flex-col">
         <div class="grid grid-cols-1 md:grid-cols-2">
             <div class="md:pl-32 pt-8 px-4 flex flex-col">
                 <h2 data-aos="fade-down" class="leading-14 text-3xl md:text-5xl text-center md:text-left text-black font-semibold py-12">
-                    Expert Refrigerator & Freezer Repair for All Major Brands and Models
+                    Same-day service for home and business refrigeration systems.
                 </h2>
                 <p data-aos="fade-right" class="leading-8 px-6 md:px-0">
-                    Your refrigerator is one of the hardest-working appliances in your home, and when it stops cooling, 
-                    leaks, or makes unusual noises, you need fast, reliable service you can trust. As a young, family-owned 
-                    local business, we provide honest diagnostics, same-day repairs, and high-quality part replacements to 
-                    keep your fridge running efficiently. Whether it's a cooling issue, a faulty control board, or a worn-out 
-                    gasket, we deliver professional results at a fair price.
+                    Fast and dependable refrigerator repair when you need it most. We provide same-day service for both residential and 
+                    commercial refrigeration systems. Our technician quickly diagnoses the issue and explains the repair clearly before 
+                    starting any work. We focus on reliable, long-term solutions — not temporary fixes. Serving homeowners and businesses 
+                    across Moorpark and Ventura County.
                 </p>
             </div>
             <img data-aos="zoom-in-up" src="/storage/img/components/services/refrigerator-repair-4.webp" alt="refrigerator repair" class="max-h-[600px] pb-12 md:pb-0 md:pl-12">
@@ -58,6 +63,8 @@ import ScheduleFormSection from '@/Components/Custom/ScheduleFormSection.vue';
 import { CheckIcon } from '@heroicons/vue/16/solid';
 import Layout from '../../Layouts/Layout.vue'
 import Aos from 'aos';
+import { Head } from '@inertiajs/vue3'
+// import CallUsButton from '@/Components/Custom/Buttons/CallUsButton.vue';
 
 const ourServices = inject('services')
 

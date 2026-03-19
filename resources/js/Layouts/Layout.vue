@@ -165,7 +165,7 @@ export default {
             {
                 id: 1,
                 name: 'Refrigerator Repair',
-                url: '/services/refrigerator-repair',
+                url: '/services/refrigerator-repair-moorpark',
                 logoUrl: '/storage/img/components/side-by-side-fridge.png',
             },
             {
@@ -222,12 +222,12 @@ export default {
                 url: '/services/electronic-repair',
                 logoUrl: '/storage/img/components/pcb.png'
             },
-            {
-                id: 11,
-                name: 'Other',
-                url: '#',
-                logoUrl: ''
-            },
+            // {
+            //     id: 11,
+            //     name: 'Other',
+            //     url: '#',
+            //     logoUrl: ''
+            // },
         ],
             dropdownIsVisible: false,
             isMenuOpen: false,
