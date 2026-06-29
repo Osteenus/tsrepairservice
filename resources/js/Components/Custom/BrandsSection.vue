@@ -1,6 +1,6 @@
 <template>
-    <div class="bg-blue-900 flex flex-col">
-        <h1 data-aos="zoom-in" class="text-5xl text-center text-white font-semibold pt-12">Brands That We Repair</h1>
+    <div class="bg-blue-900 flex flex-col px-8 text-white">
+        <h1 data-aos="zoom-in" class="title text-3xl text-center font-semibold pt-12">Brands We Service</h1>
         <Carousel
             :items-to-show="1"
             breakpoint-mode="carousel"
@@ -18,7 +18,7 @@
             <Slide v-for="brand in brands" :key="brand">
                 <div class="carousel__item">
                     <div class="bg-[url()]"></div>
-                    <img :src="brand.logoUrl" :alt="brand.name" class="px-2 py-16 md:px-8 md:py-24">
+                    <img :src="brand.logoUrl" :alt="brand.name" class="px-2 py-16 md:px-8">
                 </div> 
             </Slide>
 
@@ -26,6 +26,7 @@
                 <Navigation />
             </template>
         </Carousel>
+        <p class="title text-center text-2xl font-semibold pb-8">...and more</p>
     </div>
 </template>
 

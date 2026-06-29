@@ -1,6 +1,9 @@
 <template>
-    <div class="flex flex-col bg-white">
-        <h1 class="mt-6 text-5xl text-center font-semibold py-4">Service Area</h1>
+    <div class="flex flex-col bg-white text-center">
+        <h1 class="mt-6 text-3xl font-semibold uppercase py-4">Service Area</h1>
+        <p data-aos="fade-right" class="py-4 text-xl">
+            We provide refrigerator repair in Moorpark and surrounding areas, including:
+        </p>
         <div class="flex flex-col md:flex-row md:p-12">
             <ul class="flex flex-col basis-1/4 mb-6">
                 <li v-for="location in locations" :key="location.id" class="flex flex-row py-2 pl-8">
@@ -10,6 +13,9 @@
                     </svg>
                     <span class="pl-1 text-xl">{{ location }}</span>
                 </li>
+                <p data-aos="fade-right" class="py-4 pl-8 text-xl">
+            Not sure if you’re in our service area? Just contact us and we’ll let you know.
+        </p>
             </ul>
             <div class="bg-white md:basis-3/4 md:px-6">
                 <iframe src="https://www.google.com/maps/d/embed?mid=1vKpXKOZi0MRyeTJMq5PERRIDJJRIfmQ&ehbc=2E312F&noprof=1"
@@ -18,6 +24,7 @@
                 </iframe>
             </div>
         </div>
+        
         
     </div>
     <div>

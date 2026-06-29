@@ -24,6 +24,7 @@ const form = useForm({
 const submit = () => {
   // Use the .post() method, passing the route name or URL
   form.post(route('contact.store'), {
+    preserveScroll: true,
     onSuccess: () => {
       form.name = ''
       form.phone = ''
@@ -32,7 +33,23 @@ const submit = () => {
       form.description = ''
       form.name = ''
     },
+    onError: errors => {
+      scrollToFirstError();
+      console.log('Validation errors occurred:', errors);
+    },
   });
+
+  const scrollToFirstError = () => {
+    // Find the first element with a validation error
+    const firstErrorElement = document.querySelector('.error-message'); // Use a specific class or data attribute for error elements
+
+    if (firstErrorElement) {
+      firstErrorElement.scrollIntoView({
+        behavior: 'smooth', // Smooth scrolling animation
+        block: 'start',    // Aligns the top of the element to the start of the viewport
+      });
+    }
+  };
 }
 
 </script>
@@ -42,11 +59,7 @@ const submit = () => {
 
     <!-- FORM -->
 
-    <form 
-      @submit.prevent="submit" 
-      action="/contact"
-      method="post" 
-      class="
+    <form @submit.prevent="submit" action="/contact" method="post" class="
         relative 
         py-12 px-12 
         max-w-3xl 
@@ -58,7 +71,7 @@ const submit = () => {
         <div class="border-gray-900/10 pb-4">
           <h2 class="text-3xl font-semibold text-slate-700">Schedule Service</h2>
           <div class="mt-6 grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-6">
-            <div class="sm:col-span-4">
+            <div id="nameInput" class="sm:col-span-4">
               <label for="name" class="
                 block 
                 text-l 
@@ -91,12 +104,12 @@ const submit = () => {
                     focus:outline-none 
                     text-xl
                   " placeholder="Enter Your Name" />
-                  
+
                 </div>
               </div>
-              <div v-if="form.errors.name" class="text-red-500">{{ form.errors.name }}</div>
+              <div v-if="form.errors.name" class="text-red-500 error-message">{{ form.errors.name }}</div>
             </div>
-            <div class="sm:col-span-4">
+            <div id="phoneInput" class="sm:col-span-4">
               <label for="phone" class="
                 block 
                 text-l 
@@ -131,9 +144,9 @@ const submit = () => {
                   " placeholder="123-456-7890" />
                 </div>
               </div>
-              <div v-if="form.errors.phone" class="text-red-500">{{ form.errors.phone }}</div>
+              <div v-if="form.errors.phone" class="text-red-500 error-message">{{ form.errors.phone }}</div>
             </div>
-            <div class="sm:col-span-4">
+            <div id="emailInput" class="sm:col-span-4">
               <label for="email" class="
                 block 
                 text-l 
@@ -168,12 +181,12 @@ const submit = () => {
                     text-xl
                   " placeholder="Enter Email Address" />
                 </div>
-                
+
               </div>
-              <div v-if="form.errors.email" class="text-red-500">{{ form.errors.email }}</div>
+              <div v-if="form.errors.email" class="text-red-500 error-message">{{ form.errors.email }}</div>
             </div>
 
-            <div class="sm:col-span-4">
+            <div id="serviceInput" class="sm:col-span-4">
               <label for="service" class="
                 block 
                 text-l
@@ -206,10 +219,10 @@ const submit = () => {
                   class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-slate-700 sm:size-4"
                   aria-hidden="true" />
               </div>
-              <div v-if="form.errors.serviceId" class="text-red-500">{{ form.errors.serviceId }}</div>
+              <div v-if="form.errors.serviceId" class="text-red-500 error-message">{{ form.errors.serviceId }}</div>
             </div>
 
-            <div class="col-span-full">
+            <div id="descriptionInput" class="col-span-full">
               <label for="description" class="
                 block 
                 text-l
@@ -233,7 +246,7 @@ const submit = () => {
                   transition-all
                   duration-300
                 " />
-                <div v-if="form.errors.description" class="text-red-500">{{ form.errors.description }}</div>
+                <div v-if="form.errors.description" class="text-red-500 error-message">{{ form.errors.description }}</div>
               </div>
             </div>
             <!-- <div class="col-span-full">
@@ -287,19 +300,16 @@ const submit = () => {
       items-center 
       justify-start 
       gap-x-6">
-        <button 
-          type="submit" 
-          :disabled="form.processing"
-          class="
-            btn-primary 
-            text-xl
+
+
+        <button type="submit" :disabled="form.processing" class="
+            bg-red-700 hover:bg-red-800 text-white font-semibold 
+            md:w-120 w-full
             cursor-pointer
-            py-3
-            transition 
-            duration-300 h
-            over:bg-red-600
+            px-6 py-4 rounded-2xl shadow-lg 
+            flex items-center justify-center gap-2 
+            text-lg transition
           ">
-          Submit
           {{ form.processing ? 'Sending...' : 'Send Message' }}
         </button>
         <!-- <div v-if="$page.props.flash.success" class="alert-success">
@@ -310,21 +320,25 @@ const submit = () => {
         {{ form.progress.percentage }}%
       </progress>
       <div v-if="form.wasSuccessful" class="fixed top-0 left-0 z-100 w-screen h-screen bg-gray-300/80 backdrop-blur-sm">
-        <div class="flex flex-col max-w-xl absolute left-0 right-0 top-30 md:m-auto mx-4 bg-white text-gray-700 rounded-xl px-8 md:px-12 py-16 shadow-md">
+        <div
+          class="flex flex-col max-w-xl absolute left-0 right-0 top-30 md:m-auto mx-4 bg-white text-gray-700 rounded-xl px-8 md:px-12 py-16 shadow-md">
           <div class="flex justify-center">
             <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="32" cy="32" r="32" fill="#2DC130"/>
-              <path d="M10.9145 32.4001L23.9595 47.9465L53.1123 23.4844" stroke="white" stroke-width="8"/>
+              <circle cx="32" cy="32" r="32" fill="#2DC130" />
+              <path d="M10.9145 32.4001L23.9595 47.9465L53.1123 23.4844" stroke="white" stroke-width="8" />
             </svg>
           </div>
           <h3 class="text-center font-bold text-2xl md:text-3xl py-6">Submission Successful!</h3>
-          <p class="text-center text-lg md:text-xl leading-10 pb-6">Thanks! We received your repair request. Our team will reach out shortly to confirm details and discuss options.</p>
+          <p class="text-center text-lg md:text-xl leading-10 pb-6">Thanks! We received your repair request. Our team
+            will reach out shortly to confirm details and discuss options.</p>
           <div class="flex justify-center">
-            <a href="/" class="bg-green-500 text-white size-fit text-xl rounded-xl cursor-pointer px-8 py-3 transition duration-150 ease-in-out hover:scale-110">Back to Home</a>
+            <a href="/"
+              class="bg-green-500 text-white size-fit text-xl rounded-xl cursor-pointer px-8 py-3 transition duration-150 ease-in-out hover:scale-110">Back
+              to Home</a>
           </div>
-   
+
         </div>
-        
+
       </div>
     </form>
   </div>

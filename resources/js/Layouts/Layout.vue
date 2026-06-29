@@ -228,7 +228,42 @@ export default {
             //     url: '#',
             //     logoUrl: ''
             // },
-        ],
+            ],
+            faqRefrigerator: [
+                {
+                    question: 'Why is my refrigerator not cooling?',
+                    answer: 'This can be caused by several issues such as a faulty compressor, evaporator fan, dirty coils, or a control board problem. A proper diagnosis helps identify the exact cause.'
+                },
+                {
+                    question: 'Why is my refrigerator leaking water?',
+                    answer: 'Common reasons include a clogged or frozen defrost drain, damaged water line, or door seal issues.'
+                },
+                {
+                    question: 'Is it worth repairing an old refrigerator?',
+                    answer: 'In many cases, yes. It depends on the problem, age, and condition of the unit. We provide honest recommendations so you can decide.'
+                },
+                 {
+                    question: 'Do you repair ice makers?',
+                    answer: 'Yes, we diagnose and repair ice maker issues including water supply problems and mechanical failures.'
+                },
+                 {
+                    question: 'Do you service commercial refrigerators?',
+                    answer: 'Yes, we work on selected commercial refrigeration equipment. Contact us to confirm your unit.'
+                },
+                 {
+                    question: 'What brands do you repair?',
+                    answer: 'We service most major refrigerator brands. If you\'re unsure, just ask.'
+                },
+                {
+                    question: 'How quickly can I schedule service?',
+                    answer: 'We aim to provide fast scheduling, often with flexible appointment availability.'
+                },
+                {
+                    question: 'Do you repair freezers as well?',
+                    answer: 'Yes, we repair both refrigerators and standalone freezers.Yes, we repair both refrigerators and standalone freezers.'
+                },
+
+            ],
             dropdownIsVisible: false,
             isMenuOpen: false,
             screenWidth: ref(window.innerWidth),
@@ -244,7 +279,9 @@ export default {
     },
     provide() {
         return {
-            services: this.services
+            services: this.services,
+            contactNumber: this.contactNumber,
+            faqRefrigerator: this.faqRefrigerator,
         } 
     }
 }
