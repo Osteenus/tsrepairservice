@@ -3,7 +3,7 @@
     <Head>
         <title>Refrigerator Repair Moorpark CA | Same-Day Fridge Repair</title>
         <meta name="description"
-            content="Fast refrigerator repair in Moorpark, CA. We fix cooling issues, leaks, ice makers, and more. Same-day service available. Residental and commercial. Call now.">
+            content="Fast refrigerator repair in Moorpark, CA. We fix cooling issues, leaks, ice makers, and more. Same-day service available. Residential and commercial. Call now.">
         <!-- Add other meta tags like Open Graph here -->
     </Head>
 
@@ -18,7 +18,7 @@
             <div class="md:pl-32 pt-4 px-8 flex flex-col">
                 <h2 data-aos="fade-down"
                     class="leading-14 text-3xl md:text-5xl text-center md:text-left text-black font-semibold py-12">
-                    Same-day service for home and business refrigeration systems.
+                    Same-Day Fridge Repair for Homes & Businesses.
                 </h2>
                 <p data-aos="fade-right" class="leading-8 md:px-0">
                     Fast and dependable refrigerator repair when you need it most. We provide same-day service for both
@@ -30,7 +30,7 @@
                     across Moorpark and Ventura County.
                 </p>
                 <div class="flex flex-col items-center md:items-start">
-                    <a href="tel:+18051234567" class="bg-red-700 hover:bg-red-800 text-white font-semibold 
+                    <a :href="`tel:${contactNumber}`" class="bg-red-700 hover:bg-red-800 text-white font-semibold 
                                 md:w-120 w-full
                                 mt-8
                                 px-6 py-4 rounded-2xl shadow-lg 
@@ -69,11 +69,11 @@
                 </div>
             </div>
             <img data-aos="zoom-in-up" src="/storage/img/components/services/refrigerator-repair-4.webp"
-                alt="moorpark refrigerator repair" class="max-h-[700px] pb-12 md:pb-0 md:pl-12">
+                alt="technician repairing refrigerator in Moorpark" class="max-h-[700px] pb-12 md:pb-0 md:pl-12">
         </div>
     </div>
 
-    <div class="bg-red-700 flex flex-col md:m-12 rounded-3xl">
+    <div class="bg-red-500 flex flex-col md:m-12 rounded-3xl">
         <h3 data-aos="fade-right" class="leading-16 text-3xl text-white text-center font-semibold px-6 py-12">
             WHAT WE REPAIR</h3>
         <div class="grid grid-cols-1 md:grid-cols-3">
@@ -317,7 +317,7 @@
 
         <div class="flex flex-col md:flex-row justify-center md:px-24 pb-8 md:pb-24">
             <img data-aos="fade-down" class="basis-1/2 max-w-128 rounded-lg"
-                src="/storage/img/components/services/refrigerator-repair-2.jpg" alt="moorpark refrigerator repair">
+                src="/storage/img/components/services/refrigerator-repair-2.jpg" alt="moorpark refrigerator sealed system repair">
             <ul data-aos="zoom-in" class="basis-1/2 px-6 md:pl-24 text-white text-l md:text-xl">
                 <li class="flex flex-row items-center pb-2">
                     <CheckIcon class="size-10 pr-2 text-white" />Refrigerator not cooling or cooling inconsistently
@@ -383,11 +383,11 @@
 
             </div>
             <img data-aos="fade-down" class="basis-1/2 max-w-140 rounded-lg"
-                src="/storage/img/components/services/refrigerator-repair-5.jpg" alt="moorpark refrigerator repair">
+                src="/storage/img/components/services/refrigerator-repair-5.jpg" alt="moorpark refrigerator compressor replacement">
         </div>
     </div>
 
-    <div class="bg-red-700 flex flex-col md:m-12 text-white rounded-3xl">
+    <div class="bg-red-500 flex flex-col md:m-12 text-white rounded-3xl">
         <div class="">
             <h3 data-aos="fade-right" class="leading-16 uppercase text-3xl text-center font-semibold px-6 py-12">
                 RESIDENTIAL & COMMERCIAL REFRIGERATION</h3>
@@ -395,7 +395,7 @@
                 <div class="flex flex-col md:flex-row justify-center md:px-12 pb-8 md:pb-24">
                     <img data-aos="fade-down" class="basis-1/2 max-w-50 rounded-lg"
                         src="/storage/img/components/services/refrigerator-residential-1.jpg"
-                        alt="moorpark refrigerator repair">
+                        alt="moorpark residential refrigerator repair">
                     <div data-aos="fade-right" class="flex flex-col pl-8 pt-4 text-xl">
                         <h2 class="font-semibold pb-2">Residential Refrigerator Repair</h2>
                         <p>We repair home refrigerators and freezers, helping you restore proper cooling, prevent food
@@ -427,61 +427,18 @@
             <h3 data-aos="fade-right" class="leading-16 uppercase text-3xl text-center font-semibold px-6 py-12">
                 WHY CHOOSE US</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:px-24 pb-8 md:pb-24">
-                <div data-aos="zoom-in" data-aos-delay="50" class="flex flex-col p-6 bg-white text-slate-900 rounded-2xl text-xl">
-                    <div class="flex justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                <div v-for="item in whyChooseUsItems" :key="item.id" data-aos="zoom-in" data-aos-delay="50" class="flex flex-col p-6 bg-white text-slate-900 rounded-2xl text-xl">
+                    <div class="mx-auto border-3 border-slate-900 rounded-full p-2">
+                        <svg v-html="item.iconSvgPath" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-12">
                         </svg>
                     </div>
                     <div class="flex flex-col text-center pt-6">
-                        <h2 class="font-semibold pb-2 align-middle">Fast and Convenient Scheduling</h2>
-                        <p>We respect your time and aim to schedule service as quickly as possible.</p>
+                        <h2 class="font-semibold pb-2 align-middle">{{ item.title }}</h2>
+                        <p>{{ item.description }}</p>
                     </div>
                 </div>
-                <div data-aos="zoom-in" data-aos-delay="100" class="flex flex-col p-6 bg-white text-slate-900 rounded-2xl text-xl">
-                    <div class="flex justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                        </svg>
 
-                    </div>
-                    <div class="flex flex-col text-center pt-6">
-                        <h2 class="font-semibold pb-2 align-middle">Clear Communication</h2>
-                        <p>You receive straightforward explanations and recommendations without confusion.</p>
-                    </div>
-                </div>
-                <div data-aos="zoom-in" data-aos-delay="200" class="flex flex-col p-6 bg-white text-slate-900 rounded-2xl text-xl">
-                    <div class="flex justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
-                        </svg>
-
-                    </div>
-                    <div class="flex flex-col text-center pt-6">
-                        <h2 class="font-semibold pb-2 align-middle">Careful Diagnostics</h2>
-                        <p>We focus on identifying the real cause of the problem, not just temporary fixes.</p>
-                    </div>
-                </div>
-                <div data-aos="zoom-in" data-aos-delay="250" class="flex flex-col p-6 bg-white text-slate-900 rounded-2xl text-xl">
-                    <div class="flex justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                        </svg>
-
-                    </div>
-                    <div class="flex flex-col text-center pt-6">
-                        <h2 class="font-semibold pb-2 align-middle">Local Family-Owned Service</h2>
-                        <p>We take pride in honest work, reliable service, and long-term customer relationships.</p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -495,11 +452,11 @@
             <div data-aos="zoom-in-left" data-aos-delay="50"
                 class="flex flex-col relative items-center mx-4 border-red-700 border-8 rounded-3xl m-4 p-6 text-red-700 text-xl">
                 <div
-                    class="absolute -top-14 bg-red-700 h-24 w-24 rounded-full mb-2 border-8 border-white flex items-center justify-center text-5xl font-semibold">
-                    <span class="text-white">1</span>
+                    class="absolute -top-7 bg-red-700 h-12 w-12 rounded-full mb-2 border-4 border-white flex items-center justify-center text-5xl font-semibold">
+                    <span class="text-white text-3xl">1</span>
                 </div>
-                <div class="flex justify-center pt-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-36">
+                <div class="flex justify-center pt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-16">
                         <path fill-rule="evenodd"
                             d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z"
                             clip-rule="evenodd" />
@@ -512,11 +469,11 @@
             <div data-aos="zoom-in-left" data-aos-delay="100"
                 class="flex flex-col relative items-center mx-4 border-red-700 border-8 rounded-3xl m-4 p-6 text-red-700 text-xl">
                 <div
-                    class="absolute -top-14 bg-red-700 h-24 w-24 rounded-full mb-2 border-8 border-white flex items-center justify-center text-5xl font-semibold">
-                    <span class="text-white">2</span>
+                    class="absolute -top-7 bg-red-700 h-12 w-12 rounded-full mb-2 border-4 border-white flex items-center justify-center text-5xl font-semibold">
+                    <span class="text-white text-3xl">2</span>
                 </div>
-                <div class="flex justify-center pt-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-36">
+                <div class="flex justify-center pt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-16">
                         <path fill-rule="evenodd"
                             d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z"
                             clip-rule="evenodd" />
@@ -530,11 +487,11 @@
             <div data-aos="zoom-in-left" data-aos-delay="150"
                 class="flex flex-col relative items-center mx-4 border-red-700 border-8 rounded-3xl m-4 p-6 text-red-700 text-xl">
                 <div
-                    class="absolute -top-14 bg-red-700 h-24 w-24 rounded-full mb-2 border-8 border-white flex items-center justify-center text-5xl font-semibold">
-                    <span class="text-white">3</span>
+                    class="absolute -top-7 bg-red-700 h-12 w-12 rounded-full mb-2 border-4 border-white flex items-center justify-center text-5xl font-semibold">
+                    <span class="text-white text-3xl">3</span>
                 </div>
-                <div class="flex justify-center pt-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-36">
+                <div class="flex justify-center pt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-16">
                         <path
                             d="M17.004 10.407c.138.435-.216.842-.672.842h-3.465a.75.75 0 0 1-.65-.375l-1.732-3c-.229-.396-.053-.907.393-1.004a5.252 5.252 0 0 1 6.126 3.537ZM8.12 8.464c.307-.338.838-.235 1.066.16l1.732 3a.75.75 0 0 1 0 .75l-1.732 3c-.229.397-.76.5-1.067.161A5.23 5.23 0 0 1 6.75 12a5.23 5.23 0 0 1 1.37-3.536ZM10.878 17.13c-.447-.098-.623-.608-.394-1.004l1.733-3.002a.75.75 0 0 1 .65-.375h3.465c.457 0 .81.407.672.842a5.252 5.252 0 0 1-6.126 3.539Z" />
                         <path fill-rule="evenodd"
@@ -551,11 +508,11 @@
             <div data-aos="zoom-in-left" data-aos-delay="200"
                 class="flex flex-col relative items-center mx-4 border-red-700 border-8 rounded-3xl m-4 p-6 text-red-700 text-xl">
                 <div
-                    class="absolute -top-14 bg-red-700 h-24 w-24 rounded-full mb-2 border-8 border-white flex items-center justify-center text-5xl font-semibold">
-                    <span class="text-white">4</span>
+                    class="absolute -top-7 bg-red-700 h-12 w-12 rounded-full mb-2 border-4 border-white flex items-center justify-center text-5xl font-semibold">
+                    <span class="text-white text-3xl">4</span>
                 </div>
-                <div class="flex justify-center pt-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-36">
+                <div class="flex justify-center pt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-12">
                         <path
                             d="M7.493 18.5c-.425 0-.82-.236-.975-.632A7.48 7.48 0 0 1 6 15.125c0-1.75.599-3.358 1.602-4.634.151-.192.373-.309.6-.397.473-.183.89-.514 1.212-.924a9.042 9.042 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75A.75.75 0 0 1 15 2a2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H14.23c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23h-.777ZM2.331 10.727a11.969 11.969 0 0 0-.831 4.398 12 12 0 0 0 .52 3.507C2.28 19.482 3.105 20 3.994 20H4.9c.445 0 .72-.498.523-.898a8.963 8.963 0 0 1-.924-3.977c0-1.708.476-3.305 1.302-4.666.245-.403-.028-.959-.5-.959H4.25c-.832 0-1.612.453-1.918 1.227Z" />
                     </svg>
@@ -570,24 +527,29 @@
 
     <!-- FAQ Section -->
 
-    <div class="bg-red-700 flex flex-col md:m-12 text-white rounded-3xl">
+    <div class="bg-red-500 flex flex-col md:m-12 text-white rounded-3xl">
         <h3 data-aos="fade-right" data-aos-delay="50" class="leading-16 uppercase font-semibold text-3xl text-center px-6 py-8">
             FAQ</h3>
         <div class="grid grid-cols-1 px-32 text-xl pb-12">
-            <div data-aos="flip-up" @click="item.open = !item.open" v-for="item in faqRefrigerator" :key="item.question" class="flex flex-col pb-4 border-b-1 border-dotted cursor-pointer">
+            <div data-aos="flip-up" @click="item.open = !item.open" v-for="item in faqRefrigerator" :key="item.question" class="flex flex-col border-b-1 border-dotted cursor-pointer">
                 <div class="flex flex-row w-full text-left px-8 py-4 font-semibold">
                     <div class="flex flex-row justify-end">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 21" fill="currentColor" class="size-6 w-full text-end pr-3">
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 24 24" 
+                            fill="currentColor" 
+                            :class="{'rotate-180 transition duration-400': item.open, 'transition duration-400': !item.open}"
+                            class="size-6 w-full text-end">
                             <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd" />
                         </svg>
                     </div>
-                    <h4 class="">{{ item.question }}</h4>
+                    <h4 class="px-4">{{ item.question }}</h4>
                 </div>
                 <Transition name="collapse"
                     >
                     <div v-show="item.open" class="collapse-wrapper">
                         <div class="collapse-content">
-                            <p class="text-left px-8">{{ item.answer }}</p>
+                            <p class="text-left px-8 pb-4">{{ item.answer }}</p>
                         </div>
                     </div>
                 </Transition>
@@ -671,6 +633,7 @@ import { Head } from '@inertiajs/vue3'
 
 const ourServices = inject('services')
 const faqRefrigerator = inject('faqRefrigerator')
+const whyChooseUsItems = inject('whyChooseUsItems')
 
 onMounted(async () => {
     Aos.init()
