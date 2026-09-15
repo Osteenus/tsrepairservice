@@ -3,107 +3,85 @@
         <div class="bg-blue-900 hover:bg-blue-800 transition duration-300 cursor-pointer">
             <p class="text-md text-white text-center py-1">Get a quote for FREE estimate! Call us right now!</p>
         </div>
-        <header class="flex flex-col md:flex-row min-h-18">
-            <div class="flex flex-row">
-                <a href="/" class="flex-auto md:block w-72 md:w-64">
-                    <img src="/storage/img/logo.png" alt="Logo" class="">
+        <header ref="header" class="flex flex-col lg:flex-row lg:items-center min-h-18" @keydown.esc="closeWithEscape">
+            <div class="flex items-center justify-between lg:shrink-0">
+                <a href="/" class="w-56 max-w-[calc(100%-6rem)] lg:max-w-none lg:w-52 xl:w-64">
+                    <img src="/storage/img/logo.png" alt="Tech Solutions Repair Service home">
                 </a>
-                <div class="md:hidden flex items-center">
-                    <button @click="toggleMenu" :class="{ 'hamburger-button': true, 'active': isMenuOpen }" class="mx-8">
+                <div class="lg:hidden">
+                    <button ref="menuToggle" type="button" @click="toggleMenu"
+                        :aria-expanded="isMenuOpen" aria-controls="header-navigation"
+                        :aria-label="isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'"
+                        :class="{ active: isMenuOpen }" class="hamburger-button mx-6">
                         <span class="hamburger-line"></span>
                         <span class="hamburger-line"></span>
                         <span class="hamburger-line"></span>
-                    </button> 
+                    </button>
                 </div>
             </div>
-            <Transition name="slide-down">
-                <ul v-show="this.isMenuOpen || !this.isMobile" class="flex flex-col w-full md:flex-auto md:flex-row justify-center md:w-64 md:pb-3">
-                    <li class="content-center">
-                        <Link href="/" :class="{ 'active-link-style': $page.url === '/' }" class="flex nav-link px-8 py-6 text-2xl md:text-xl border-b-2 border-gray-200 md:border-none">
-                            Home
-                        </Link>
-                    </li>
-
-                    <li class="content-center">
-                        <Link href="/about" :class="{ 'active-link-style': $page.url === '/about'}" class="flex nav-link px-8 py-6 text-2xl md:text-xl border-b-2 border-gray-200 md:border-none">
-                            About
-                        </Link>
-                    </li>
-
-                    <li class="content-center" 
-                        @mouseover="dropdownIsVisible = true" 
-                        @mouseleave="dropdownIsVisible = false">
-                        <Link href="/services" 
-                            class="flex nav-link px-8 py-6 text-2xl md:text-xl border-b-2 border-gray-200 md:border-none" 
-                            :class="{'active-link-style': 
-                            $page.url === '/services'}"
-                            >
-                            Services
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-7 md:size-6 float-right">
-                                <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                            </svg>
-                        </Link>
-
-                        <!-- Dropdown -->
-
-                        <Transition name="fade">
-                            <div 
-                                id="dropdown" 
-                                text="Dropdown Button" 
-                                v-show="dropdownIsVisible" 
-                                class="absolute z-10 top-32 md:top-26 bg-white shadow-md flex flex-col min-w-54"
-                            >
-                                <ul class="py-2">
-                                    <li v-for="service in services" :key="service.id" class="w-full">
-                                        <Link 
-                                        @click="toggleMenu"
-                                        :href="service.url" 
-                                        class="
-                                            flex 
-                                            px-12 py-2.5 
-                                            md:px-4 md:py-1 
-                                            border-b 
-                                            border-gray-300 
-                                            hover:bg-gray-100
-                                        ">{{ service.name }}</Link>
-                                    </li>
-                                </ul>
-                            </div>
-                        </Transition>
-                        
-
-                    </li>
-
-                    <li class="content-center border-b-2 border-gray-200 md:border-none">
-                        <Link href="/contact" :class="{ 'active-link-style': $page.url === '/contact'}" class="flex nav-link px-8 py-6 text-2xl md:text-xl">
-                            Contact
-                        </Link>
-                    </li>
-                    <!-- <li class="content-center">
-                        <Link href="/extra" :class="{ 'active-link-style': $page.url === '/extra'}" class="flex nav-link px-8 py-6 text-2xl md:text-xl">
-                            Extra
-                        </Link>
-                    </li> -->
-                </ul>
-            </Transition>
-            
-            <div class="hidden md:block content-center px-12">
-                <a :href="`tel:${contactNumber}`">
-                    <button class="
-                        px-4 py-2
-                        text-xl
-                        font-bold
-                        text-red-500 
-                        transition 
-                        duration-300 
-                        border-2 
-                        rounded-xl 
-                        border-red-500 
-                        hover:border-red-600 
-                        hover:text-red-600
-                        cursor-pointer">
-                            {{ contactNumber }}
-                    </button>
+            <nav id="header-navigation" aria-label="Main navigation"
+                :inert="isMobile && !isMenuOpen" :aria-hidden="isMobile && !isMenuOpen"
+                class="header-navigation lg:flex-1" :class="{ 'header-navigation-open': isMenuOpen }">
+                <div class="header-navigation-content">
+                    <ul class="flex flex-col lg:flex-row lg:justify-center">
+                        <li class="content-center">
+                            <Link href="/" @click="closeMenus" :class="{ 'active-link-style': $page.url === '/' }"
+                                class="flex nav-link px-8 py-6 text-2xl lg:px-4 lg:text-xl border-b-2 border-gray-200 lg:border-none">
+                                Home
+                            </Link>
+                        </li>
+                        <li class="content-center">
+                            <Link href="/about" @click="closeMenus" :class="{ 'active-link-style': $page.url === '/about' }"
+                                class="flex nav-link px-8 py-6 text-2xl lg:px-4 lg:text-xl border-b-2 border-gray-200 lg:border-none">
+                                About
+                            </Link>
+                        </li>
+                        <li ref="servicesMenu" class="relative content-center"
+                            @pointerenter="openDropdownOnHover" @pointerleave="closeDropdownOnLeave"
+                            @focusout="closeDropdownOnFocusOut">
+                            <button ref="servicesToggle" type="button" @click="toggleDropdown"
+                                aria-controls="services-dropdown" :aria-expanded="dropdownIsVisible"
+                                :class="{ 'active-link-style': $page.url === '/services' || $page.url.startsWith('/services/') }"
+                                class="services-toggle nav-link flex items-center justify-between gap-2 w-full px-8 py-6 text-left text-2xl lg:px-4 lg:text-xl border-b-2 border-gray-200 lg:border-none cursor-pointer">
+                                <span>Services</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    :class="{ 'rotate-180': dropdownIsVisible }" class="size-6 transition-transform duration-300" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <Transition name="header-dropdown">
+                                <div id="services-dropdown" v-show="dropdownIsVisible" :inert="!dropdownIsVisible"
+                                    class="header-dropdown-wrapper lg:absolute lg:top-full lg:left-0 z-50 w-full lg:w-64 bg-white shadow-md">
+                                    <ul class="header-dropdown-content">
+                                        <li>
+                                            <Link href="/services" @click="closeMenus"
+                                                class="flex px-12 py-4 lg:px-4 lg:py-3 border-b border-gray-300 hover:bg-gray-100 focus-visible:bg-gray-100">
+                                                All Services
+                                            </Link>
+                                        </li>
+                                        <li v-for="service in services" :key="service.id">
+                                            <Link @click="closeMenus" :href="service.url"
+                                                class="flex px-12 py-4 lg:px-4 lg:py-3 border-b border-gray-300 hover:bg-gray-100 focus-visible:bg-gray-100">
+                                                {{ service.name }}
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </Transition>
+                        </li>
+                        <li class="content-center">
+                            <Link href="/contact" @click="closeMenus" :class="{ 'active-link-style': $page.url === '/contact' }"
+                                class="flex nav-link px-8 py-6 text-2xl lg:px-4 lg:text-xl border-b-2 border-gray-200 lg:border-none">
+                                Contact
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="hidden lg:block shrink-0 px-4 xl:px-12">
+                <a :href="`tel:${contactNumber}`"
+                    class="inline-flex px-4 py-2 text-xl font-bold text-red-500 transition duration-300 border-2 rounded-xl border-red-500 hover:border-red-600 hover:text-red-600 whitespace-nowrap">
+                    {{ contactNumber }}
                 </a>
             </div>
         </header>
@@ -147,17 +125,24 @@
 
 <script>
 import { Link } from '@inertiajs/vue3'
-import { Transition, ref } from 'vue';
+import { Transition } from 'vue';
 import Aos from 'aos';
 
 export default {
-    beforeMount() {
-        if (this.screenWidth <= 768) {
-            this.isMobile = true
-        }
-    },
     mounted() {
+        this.handleResize();
+        window.addEventListener('resize', this.handleResize);
+        document.addEventListener('pointerdown', this.handleOutsidePointer);
         Aos.init
+    },
+    beforeUnmount() {
+        window.removeEventListener('resize', this.handleResize);
+        document.removeEventListener('pointerdown', this.handleOutsidePointer);
+    },
+    watch: {
+        '$page.url'() {
+            this.closeMenus();
+        },
     },
     data() {
         return {    
@@ -292,23 +277,109 @@ export default {
             ],
             dropdownIsVisible: false,
             isMenuOpen: false,
-            screenWidth: ref(window.innerWidth),
-            isMobile: false,
-
-            contactNumber: '(805)-243-9549'
+            isMobile: typeof window !== 'undefined' ? window.innerWidth < 1024 : true,
+            contactNumber: '(805)-991-2874',
+            whatWeRepair: {
+                refrigerators: [
+                    {
+                        name: 'French Door Refrigerators',
+                        url: '/services/refrigerator-repair-moorpark/french-door-refrigerators',
+                        svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="22" y="8" width="66" height="94" fill="url(#paint0_linear_425_125)" stroke="#C90000" stroke-width="4" /> <path d="M24 69H90" stroke="#C90000" stroke-width="4" /> <path d="M28 76L83 76" stroke="#C90000" stroke-width="4" /> <path d="M55 70L55 8" stroke="#C90000" stroke-width="4" /> <path d="M62 63V25" stroke="#C90000" stroke-width="4" /> <path d="M48 63V25" stroke="#C90000" stroke-width="4" /> <path d="M74 15L83 15" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_125" x1="90" y1="55" x2="20" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFB1B1" /> <stop offset="0.5" stop-color="#FFD0D0" stop-opacity="0.48" /> <stop offset="1" stop-color="#FFB6B6" /> </linearGradient> </defs> </svg>',
+                    },
+                    {
+                        name: 'Side-by-Side Refrigerators',
+                        url: '/services/refrigerator-repair-moorpark/side-by-side-refrigerators',
+                        svg: ' <svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="22" y="8" width="66" height="94" fill="url(#paint0_linear_425_135)" stroke="#C90000" stroke-width="4" /> <path d="M50 101L50 8" stroke="#C90000" stroke-width="4" /> <path d="M57 79.0093V25" stroke="#C90000" stroke-width="4" /> <path d="M43 79L43 25" stroke="#C90000" stroke-width="4" /> <path d="M73 16L82 16" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_135" x1="90" y1="55" x2="20" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFAAAA" /> <stop offset="0.5625" stop-color="#FFE6E6" /> <stop offset="1" stop-color="#FFA1A1" /> </linearGradient> </defs> </svg>'
+                    },
+                    {
+                        name: 'Top Freezer Refrigerators',
+                        url: '/services/refrigerator-repair-moorpark/top-freezer-refrigerators',
+                        svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="27" y="8" width="56" height="94" fill="url(#paint0_linear_425_161)" stroke="#C90000" stroke-width="4" /> <path d="M28 40H82.0093" stroke="#C90000" stroke-width="4" /> <path d="M68 16L77 16" stroke="#C90000" stroke-width="4" /> <path d="M34 35V16" stroke="#C90000" stroke-width="4" /> <path d="M34 84L34 45" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_161" x1="85" y1="55" x2="25" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFA2A2" /> <stop offset="0.5" stop-color="#FFE7E7" /> <stop offset="1" stop-color="#FFCDCD" /> </linearGradient> </defs> </svg>'
+                    },
+                    {
+                        name: 'Built-In Refrigerators',
+                        url: '/services/refrigerator-repair-moorpark/built-in-refrigerators',
+                        svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="22" y="8" width="66" height="94" fill="url(#paint0_linear_425_169)" stroke="#C90000" stroke-width="4" /> <path d="M50 101L50 23" stroke="#C90000" stroke-width="4" /> <path d="M21 22H90" stroke="#C90000" stroke-width="4" /> <path d="M57 84.0093V30" stroke="#C90000" stroke-width="4" /> <path d="M43 84L43 30" stroke="#C90000" stroke-width="4" /> <path d="M75 14L84 14" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_169" x1="90" y1="55" x2="20" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFB3B3" /> <stop offset="0.572115" stop-color="#FFE2E2" /> <stop offset="1" stop-color="#FFADAD" /> </linearGradient> </defs> </svg>'
+                    },
+                    {
+                        name: 'Wine Coolers',
+                        url: '/services/refrigerator-repair-moorpark/wine-coolers',
+                        svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="32" y="13" width="45" height="85" fill="url(#paint0_linear_425_178)" stroke="#C90000" stroke-width="4" /> <path d="M31 18H78" stroke="#C90000" stroke-width="10" /> <path d="M31 34H78" stroke="#C90000" stroke-width="4" /> <path d="M31 47H78" stroke="#C90000" stroke-width="4" /> <path d="M31 60H78" stroke="#C90000" stroke-width="4" /> <path d="M31 73H78" stroke="#C90000" stroke-width="4" /> <path d="M32 86H79" stroke="#C90000" stroke-width="4" /> <path d="M64 17L73 17" stroke="#D9D9D9" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_178" x1="30" y1="55.5" x2="79" y2="55.5" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFCACA" /> <stop offset="1" stop-color="white" /> </linearGradient> </defs> </svg>'
+                    },
+                    {
+                        name: 'Freezers',
+                        url: '/services/refrigerator-repair-moorpark/freezers',
+                        svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="27" y="8" width="56" height="94" fill="url(#paint0_linear_425_189)" stroke="#C90000" stroke-width="4" /> <path d="M34 79.0093V25" stroke="#C90000" stroke-width="4" /> <path d="M68 16L77 16" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_189" x1="25" y1="55" x2="85" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFB5B5" /> <stop offset="1" stop-color="white" /> </linearGradient> </defs> </svg>'
+                    },
+                    {
+                        name: 'Commercial Refrigerators',
+                        url: '/services/refrigerator-repair-moorpark/commercial-refrigerators',
+                        svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="16" y="8" width="78" height="94" fill="url(#paint0_linear_425_195)" stroke="#C90000" stroke-width="4" /> <path d="M55 101L55 23" stroke="#C90000" stroke-width="4" /> <path d="M16 21H96" stroke="#C90000" stroke-width="4" /> <path d="M48 71V53H44" stroke="#C90000" stroke-width="4" /> <path d="M62 71V53H66" stroke="#C90000" stroke-width="4" /> <path d="M79 14L88 14" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_195" x1="96" y1="55" x2="14" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFABAB" /> <stop offset="0.5" stop-color="#FFFEFE" /> <stop offset="1" stop-color="#FFA8A8" /> </linearGradient> </defs> </svg>'
+                    },
+                    {
+                        name: 'Reach-In Coolers',
+                        url: '/services/refrigerator-repair-moorpark/reach-in-coolers',
+                        svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="16" y="8" width="78" height="94" fill="url(#paint0_linear_425_204)" stroke="#C90000" stroke-width="4" /> <rect x="20" y="25" width="31" height="73" stroke="#C90000" stroke-width="4" /> <rect x="59" y="25" width="31" height="73" stroke="#C90000" stroke-width="4" /> <path d="M55 101L55 23" stroke="#C90000" stroke-width="4" /> <path d="M16 21H96" stroke="#C90000" stroke-width="4" /> <path d="M79 14L88 14" stroke="#C90000" stroke-width="4" /> <path d="M20 62L91 62" stroke="#C90000" stroke-width="4" /> <path d="M20 74L91 74" stroke="#C90000" stroke-width="4" /> <path d="M20 49L91 49" stroke="#C90000" stroke-width="4" /> <path d="M19 86L90 86" stroke="#C90000" stroke-width="4" /> <path d="M20 37L91 37" stroke="#C90000" stroke-width="4" /> <path d="M20 37L91 37" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_204" x1="96" y1="55" x2="14" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFA6A6" /> <stop offset="0.5" stop-color="white" /> <stop offset="1" stop-color="#FFA8A8" /> </linearGradient> </defs> </svg>'
+                    },
+                ],
+            }
         }
+
     },
     methods: {
         toggleMenu() {
             this.isMenuOpen = !this.isMenuOpen;
-        }
+            if (!this.isMenuOpen) this.dropdownIsVisible = false;
+        },
+        closeMenus() {
+            this.isMenuOpen = false;
+            this.dropdownIsVisible = false;
+        },
+        toggleDropdown() {
+            this.dropdownIsVisible = !this.dropdownIsVisible;
+        },
+        openDropdownOnHover(event) {
+            if (!this.isMobile && event.pointerType === 'mouse') this.dropdownIsVisible = true;
+        },
+        closeDropdownOnLeave(event) {
+            if (!this.isMobile && event.pointerType === 'mouse' && !this.$refs.servicesMenu.contains(document.activeElement)) {
+                this.dropdownIsVisible = false;
+            }
+        },
+        closeDropdownOnFocusOut(event) {
+            if (!event.currentTarget.contains(event.relatedTarget)) this.dropdownIsVisible = false;
+        },
+        handleOutsidePointer(event) {
+            if (!this.$refs.header.contains(event.target)) {
+                this.closeMenus();
+            } else if (!this.$refs.servicesMenu.contains(event.target)) {
+                this.dropdownIsVisible = false;
+            }
+        },
+        closeWithEscape(event) {
+            if (this.dropdownIsVisible) {
+                this.dropdownIsVisible = false;
+                this.$refs.servicesToggle.focus();
+            } else if (this.isMobile && this.isMenuOpen) {
+                this.closeMenus();
+                this.$refs.menuToggle.focus();
+            }
+            event.preventDefault();
+            event.stopPropagation();
+        },
+        handleResize() {
+            const isMobile = window.innerWidth < 1024;
+            if (this.isMobile !== isMobile) this.closeMenus();
+            this.isMobile = isMobile;
+        },
     },
     provide() {
         return {
             services: this.services,
             contactNumber: this.contactNumber,
             faqRefrigerator: this.faqRefrigerator,
-            whyChooseUsItems: this.whyChooseUsItems
+            whyChooseUsItems: this.whyChooseUsItems,
+            whatWeRepair: this.whatWeRepair,
         } 
     }
 }
@@ -332,8 +403,10 @@ export default {
     transition: width 0.3s ease-in-out; /* Add transition for smooth animation */
 }
 
-.nav-link:hover::after {
-    width: 100%; /* Expand to full width */
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+    .nav-link:hover::after {
+        width: 100%;
+    }
 }
 
 .active-link-style {
@@ -403,6 +476,21 @@ export default {
   transform: translateY(-10px) rotate(-45deg); /* Example: Move and rotate bottom line */
 }
 
+.collapse-enter-active,
+.collapse-leave-active {
+  transition: max-height 0.3s ease-in-out;
+  overflow: hidden;
+}
+.collapse-enter-from,
+.collapse-leave-to {
+  max-height: 0;
+}
+.collapse-enter-to,
+.collapse-leave-from {
+  max-height: 500px; /* Adjust based on expected content height */
+}
+
+
 @import "tailwindcss";
 @layer components {
     .btn-primary {
@@ -423,4 +511,55 @@ export default {
 }
 }
 
+</style>
+
+<style scoped>
+.services-toggle[aria-expanded="true"]::after {
+    width: 100%;
+}
+
+.header-navigation,
+.header-dropdown-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease-in-out;
+}
+
+.header-navigation-content,
+.header-dropdown-content {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.header-navigation-open,
+.header-dropdown-wrapper {
+    grid-template-rows: 1fr;
+}
+
+.header-dropdown-enter-from,
+.header-dropdown-leave-to {
+    grid-template-rows: 0fr;
+}
+
+@media (min-width: 1024px) {
+    .header-navigation {
+        display: block;
+    }
+
+    .header-navigation-content {
+        overflow: visible;
+    }
+
+    .header-dropdown-content {
+        max-height: calc(100dvh - 10rem);
+        overflow-y: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .header-navigation,
+    .header-dropdown-wrapper {
+        transition: none;
+    }
+}
 </style>
