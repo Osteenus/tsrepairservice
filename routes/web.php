@@ -14,7 +14,8 @@ Route::inertia('/contact', 'Contact');
 Route::inertia('/extra', 'Extra');
 
 Route::inertia('/services/refrigerator-repair-moorpark', 'Services/RefrigeratorRepairService');
-Route::inertia('/services/washer-repair', 'Services/WasherRepairService');
+Route::inertia('/washer-repair-moorpark', 'Services/WasherRepairService')->name('services.washer');
+Route::permanentRedirect('/services/washer-repair', '/washer-repair-moorpark');
 Route::inertia('/services/dryer-repair', 'Services/DryerRepairService');
 Route::inertia('/services/oven-repair', 'Services/OvenRepairService');
 Route::inertia('/services/dishwasher-repair', 'Services/DishwasherRepairService');

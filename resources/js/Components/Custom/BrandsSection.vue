@@ -1,6 +1,6 @@
 <template>
-    <div class="bg-blue-900 flex flex-col px-8 text-white">
-        <h1 data-aos="zoom-in" class="title text-3xl text-center font-semibold pt-12">Brands We Service</h1>
+    <div class="bg-blue-900 flex flex-col px-2 md:px-8 text-white">
+        <component :is="headingTag" data-aos="zoom-in" class="title text-3xl text-center font-semibold pt-12">{{ title }}</component>
         <Carousel
             :items-to-show="1"
             breakpoint-mode="carousel"
@@ -15,10 +15,10 @@
                 }
             }"
             >
-            <Slide v-for="brand in brands" :key="brand">
+            <Slide v-for="brand in visibleBrands" :key="brand.name">
                 <div class="carousel__item">
                     <div class="bg-[url()]"></div>
-                    <img :src="brand.logoUrl" :alt="brand.name" class="px-2 py-16 md:px-8">
+                    <img :src="brand.logoUrl" :alt="brand.name" class="py-6 px-2 md:py-16 md:px-8">
                 </div> 
             </Slide>
 
@@ -32,7 +32,7 @@
 
 <script setup>
 
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import Aos from 'aos'
 import 'vue3-carousel/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
@@ -41,7 +41,14 @@ onMounted( async () => {
     Aos.init()
 })
 
-const word = "AHOPA"
+const props = defineProps({
+    title: { type: String, default: 'Brands We Service' },
+    headingTag: { type: String, default: 'h1' },
+    brandNames: { type: Array, default: null },
+})
+const visibleBrands = computed(() => props.brandNames
+    ? brands.filter(brand => props.brandNames.includes(brand.name))
+    : brands)
 
 const brands = [
     {
@@ -128,5 +135,14 @@ const brands = [
 </script>
 
 <style scoped>
+
+.carousel {
+  --vc-nav-background: rgba(0, 0, 0, 0.3);
+  --vc-nav-color: white;
+  --vc-nav-color-hover: #e5e5e5;
+  --vc-nav-border-radius: 50%;
+  --vc-nav-width: 40px;
+  --vc-nav-height: 40px;
+}
 
 </style>
