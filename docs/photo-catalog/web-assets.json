@@ -1,0 +1,32 @@
+[
+  {
+    "source": "IMG_5960.jpeg",
+    "output": "public/images/services/oven-stove-repair-moorpark.webp",
+    "crop_normalized": null,
+    "sha256_original": "a072b928c26f99950328cec06c1d6a9ebb14cca0215606bbda7d07748c9d80cf",
+    "original_unchanged": true
+  },
+  {
+    "source": "IMG_6742.jpeg",
+    "output": "public/images/services/oven-stove-diagnostics.webp",
+    "crop_normalized": null,
+    "sha256_original": "4fb9ae0ed50515bc8daa7f9dfb583f62a656ddd30df1e3f4a2353a452cea8a7f",
+    "original_unchanged": true
+  },
+  {
+    "source": "IMG_7789.JPG",
+    "output": "public/images/services/oven-stove-residential-cooktop.webp",
+    "crop_pixels": [
+      0,
+      90,
+      756,
+      657
+    ],
+    "size": [
+      756,
+      567
+    ],
+    "sha256_original": "02da28f23e6ce5f79973e4c6c1ca964863dc34026e11a834f2020df5fb84fe1a",
+    "original_unchanged": true
+  }
+]

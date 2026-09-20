@@ -41,7 +41,7 @@
                             @focusout="closeDropdownOnFocusOut">
                             <button ref="servicesToggle" type="button" @click="toggleDropdown"
                                 aria-controls="services-dropdown" :aria-expanded="dropdownIsVisible"
-                                :class="{ 'active-link-style': $page.url === '/services' || $page.url.startsWith('/services/') || $page.url === '/washer-repair-moorpark' }"
+                                :class="{ 'active-link-style': $page.url === '/services' || $page.url.startsWith('/services/') || $page.url === '/washer-repair-moorpark' || $page.url === '/oven-stove-repair-moorpark' }"
                                 class="services-toggle nav-link flex items-center justify-between gap-2 w-full px-8 py-6 text-left text-2xl lg:px-4 lg:text-xl border-b-2 border-gray-200 lg:border-none cursor-pointer">
                                 <span>Services</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -167,21 +167,15 @@ export default {
             },
             {
                 id: 4,
-                name: 'Oven Repair',
-                url: '/services/oven-repair',
-                logoUrl: '/storage/img/components/oven-microwave-combo-whirlpool-1.jpeg'
+                name: 'Oven & Stove Repair',
+                url: '/oven-stove-repair-moorpark',
+                logoUrl: '/images/services/oven-stove-repair-moorpark.webp'
             },
             {
                 id: 5,
                 name: 'Dishwasher Repair',
                 url: '/services/dishwasher-repair',
                 logoUrl: '/storage/img/components/dishwasher.png'
-            },
-            {
-                id: 6,
-                name: 'Stove & Range Repair',
-                url: '/services/stove-range-repair',
-                logoUrl: '/storage/img/components/cooktop-gas-1.jpeg'
             },
             {
                 id: 7,
