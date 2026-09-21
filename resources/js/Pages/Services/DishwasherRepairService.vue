@@ -99,14 +99,26 @@
         <h2 class="section-title">Residential & Commercial Dishwasher Repair</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-6 md:px-12 pb-8 md:pb-16">
             <div class="bg-white rounded-2xl p-6 md:p-8 text-base md:text-lg leading-7">
-                <House class="size-14 rounded-xl bg-red-50 p-3 text-red-700 mb-5" aria-hidden="true" />
+                <figure class="mb-5">
+                    <img src="/images/services/dishwasher-residential-repair.webp"
+                        alt="Illustration of a technician servicing a residential dishwasher with a cordless drill-driver"
+                        width="1200" height="900" loading="lazy" decoding="async"
+                        class="w-full aspect-[4/3] object-cover rounded-xl">
+                    <figcaption class="text-xs text-gray-500 mt-2">Illustrative image</figcaption>
+                </figure>
                 <h3 class="text-xl font-semibold pb-3 text-slate-900">Residential Dishwasher Repair</h3>
                 <p>We help with everyday cleaning, draining, drying, and leak problems in home kitchens.
                     Built-in, portable, and drawer-style machines have different access requirements.
                     Let us know if the dishwasher is behind a cabinet panel or difficult to pull out.</p>
             </div>
             <div class="bg-white rounded-2xl p-6 md:p-8 text-base md:text-lg leading-7">
-                <Building2 class="size-14 rounded-xl bg-red-50 p-3 text-red-700 mb-5" aria-hidden="true" />
+                <figure class="mb-5">
+                    <img src="/images/services/dishwasher-commercial-repair.webp"
+                        alt="Illustration of a technician servicing an undercounter commercial dishwasher in a restaurant kitchen"
+                        width="1200" height="900" loading="lazy" decoding="async"
+                        class="w-full aspect-[4/3] object-cover rounded-xl">
+                    <figcaption class="text-xs text-gray-500 mt-2">Illustrative image</figcaption>
+                </figure>
                 <h3 class="text-xl font-semibold pb-3 text-slate-900">Commercial Dishwasher Enquiries</h3>
                 <p>For a dishwasher in an office, rental property, or business kitchen, send the brand,
                     model, installation details, and symptoms. We will confirm whether the unit is within

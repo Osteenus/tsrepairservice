@@ -4,7 +4,7 @@
 - Design follows the updated Washer/Oven pages and reuses Layout, BrandsSection, ServiceAreaSection, TrustStripSection. No new shared components.
 - 12 sections: hero and CTAs, trust, appliance types, symptoms, parts, residential/commercial, brands, reasons to choose, process, service area, FAQ, final CTA.
 - Exact branded title, description, canonical, OG, Service/BreadcrumbList JSON-LD. Navigation/footer/home/Services inherit the updated Layout service entry.
-- Commercial coverage requires model confirmation; no claim to service every restaurant warewasher. Residential/commercial cards use icons; no generated photos.
+- Commercial coverage requires model confirmation; no claim to service every restaurant warewasher. Residential/commercial cards now use two generated repair illustrations; see dishwasher-images.md for prompts and provenance.
 
 ## Photos
 
