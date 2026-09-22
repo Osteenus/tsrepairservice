@@ -27,7 +27,8 @@ Route::inertia('/microwave-repair-moorpark', 'Services/MicrowaveRepairService')-
 Route::permanentRedirect('/services/microwave-repair', '/microwave-repair-moorpark');
 Route::inertia('/range-hood-repair-moorpark', 'Services/RangeHoodRepairService')->name('services.range-hood');
 Route::permanentRedirect('/services/range-hood-repair', '/range-hood-repair-moorpark');
-Route::inertia('/services/trash-compactor-repair', 'Services/TrashCompactorRepairService');
+Route::inertia('/trash-compactor-repair-moorpark', 'Services/TrashCompactorRepairService')->name('services.trash-compactor');
+Route::permanentRedirect('/services/trash-compactor-repair', '/trash-compactor-repair-moorpark');
 Route::inertia('/services/electronic-repair', 'Services/ElectronicRepairService');
 
 Route::post('/contact', [RepairRequestController::class, 'store'])->name('contact.store');

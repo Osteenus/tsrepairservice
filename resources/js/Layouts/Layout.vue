@@ -41,7 +41,7 @@
                             @focusout="closeDropdownOnFocusOut">
                             <button ref="servicesToggle" type="button" @click="toggleDropdown"
                                 aria-controls="services-dropdown" :aria-expanded="dropdownIsVisible"
-                                :class="{ 'active-link-style': $page.url === '/services' || $page.url.startsWith('/services/') || $page.url === '/washer-repair-moorpark' || $page.url === '/oven-stove-repair-moorpark' || $page.url === '/dishwasher-repair-moorpark' || $page.url === '/microwave-repair-moorpark' || $page.url === '/range-hood-repair-moorpark' }"
+                                :class="{ 'active-link-style': $page.url === '/services' || $page.url.startsWith('/services/') || $page.url === '/washer-repair-moorpark' || $page.url === '/oven-stove-repair-moorpark' || $page.url === '/dishwasher-repair-moorpark' || $page.url === '/microwave-repair-moorpark' || $page.url === '/range-hood-repair-moorpark' || $page.url === '/trash-compactor-repair-moorpark' }"
                                 class="services-toggle nav-link flex items-center justify-between gap-2 w-full px-8 py-6 text-left text-2xl lg:px-4 lg:text-xl border-b-2 border-gray-200 lg:border-none cursor-pointer">
                                 <span>Services</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
@@ -192,8 +192,8 @@ export default {
             {
                 id: 9,
                 name: 'Trash Compactor Repair',
-                url: '/services/trash-compactor-repair',
-                logoUrl: '/storage/img/components/trash-compactor-1.jpeg'
+                url: '/trash-compactor-repair-moorpark',
+                logoUrl: '/images/services/trash-compactor-repair-moorpark.webp'
             },
             {
                 id: 10,
