@@ -77,8 +77,8 @@
 
                 </div>
             </div>
-            <img src="/images/services/refrigerator-repair-work.webp"
-                alt="Refrigerator repair equipment beside a refrigerator" width="400" height="400" class="block aspect-square w-full max-w-[460px] justify-self-center rounded-3xl object-cover">
+            <img src="/images/services/refrigerator-hero.webp"
+                alt="Refrigerator compressor and sealed-system components" width="1920" height="1249" class="block h-auto w-full max-w-[560px] justify-self-center rounded-3xl">
         </div>
     </div>
 
