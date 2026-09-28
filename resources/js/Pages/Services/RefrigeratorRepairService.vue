@@ -2,19 +2,20 @@
     <Breadcrumbs :items="[{ label: 'Services', href: '/services' }, { label: 'Refrigerator Repair' }]" />
 
     <Head>
+        <link rel="preload" as="image" href="/images/services/refrigerator-hero.webp" fetchpriority="high" head-key="refrigerator-hero">
         <title>Refrigerator Repair Moorpark CA | TS Repair Service</title>
         <meta name="description"
             content="Refrigerator repair in Moorpark and Ventura County for cooling problems, leaks, and ice maker issues. Contact TS Repair Service to discuss service availability.">
         <meta property="og:title" content="Refrigerator Repair Moorpark CA | TS Repair Service">
         <meta property="og:description"
             content="Refrigerator repair in Moorpark and Ventura County for cooling problems, leaks, and ice maker issues. Contact TS Repair Service to discuss service availability.">
-        <meta property="og:image" content="https://tsrepairservice.com/storage/img/components/services/refrigerator-repair-1.jpg">
+        <meta property="og:image" content="https://tsrepairservice.com/images/services/refrigerator-hero.webp">
         <link rel="canonical" href="https://tsrepairservice.com/services/refrigerator-repair-moorpark" head-key="canonical">
         <meta property="og:url" content="https://tsrepairservice.com/services/refrigerator-repair-moorpark">
         <meta property="og:type" content="website">
     </Head>
 
-    <div :style="{ 'background-image': 'url(' + '../storage/img/components/services/refrigerator-repair-1.jpg' + ')' }"
+    <div style="background-image: url('/images/services/refrigerator-hero.webp'); background-position: 45% 55%"
         class="bg-cover bg-center bg-stone-600 bg-blend-multiply">
         <h1 class="text-5xl text-white text-center font-semibold py-8 md:py-24 leading-12 md:leading-16">Refrigerator Repair in Moorpark, CA
         </h1>
