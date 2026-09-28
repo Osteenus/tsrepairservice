@@ -18,7 +18,7 @@
             <Slide v-for="brand in visibleBrands" :key="brand.name">
                 <div class="carousel__item">
                     <div class="bg-[url()]"></div>
-                    <img :src="brand.logoUrl" :alt="brand.name" class="py-6 px-2 md:py-16 md:px-8">
+                    <img :src="brand.logoUrl" loading="lazy" decoding="async" width="360" height="180" :alt="brand.name" class="py-6 px-2 md:py-16 md:px-8">
                 </div> 
             </Slide>
 
@@ -53,79 +53,79 @@ const visibleBrands = computed(() => props.brandNames
 const brands = [
     {
         name: 'Admiral',
-        logoUrl: '/storage/img/components/brands/admiral-brand-logo.png'
+        logoUrl: '/images/brands/admiral-brand-logo.webp'
     },
     {
         name: 'Amana',
-        logoUrl: '/storage/img/components/brands/amana-brand-logo.png'
+        logoUrl: '/images/brands/amana-brand-logo.webp'
     },
     {
         name: 'Bosch',
-        logoUrl: '/storage/img/components/brands/bosch-brand-logo.png'
+        logoUrl: '/images/brands/bosch-brand-logo.webp'
     },
     {
         name: 'Electrolux',
-        logoUrl: '/storage/img/components/brands/electrolux-brand-logo.png'
+        logoUrl: '/images/brands/electrolux-brand-logo.webp'
     },
     {
         name: 'Frigidaire',
-        logoUrl: '/storage/img/components/brands/frigidaire-brand-logo.png'
+        logoUrl: '/images/brands/frigidaire-brand-logo.webp'
     },
     {
         name: 'General Electric',
-        logoUrl: '/storage/img/components/brands/ge-brand-logo.png'
+        logoUrl: '/images/brands/ge-brand-logo.webp'
     },
     {
         name: 'Haier',
-        logoUrl: '/storage/img/components/brands/haier-brand-logo.png'
+        logoUrl: '/images/brands/haier-brand-logo.webp'
     },
     {
         name: 'Hotpoint',
-        logoUrl: '/storage/img/components/brands/hotpoint-brand-logo.png'
+        logoUrl: '/images/brands/hotpoint-brand-logo.webp'
     },
     {
         name: 'Jenn-Air',
-        logoUrl: '/storage/img/components/brands/jennair-brand-logo.png'
+        logoUrl: '/images/brands/jennair-brand-logo.webp'
     },
     {
         name: 'Kenmore',
-        logoUrl: '/storage/img/components/brands/kenmore-brand-logo.png'
+        logoUrl: '/images/brands/kenmore-brand-logo.webp'
     },
     {
         name: 'KitchenAid',
-        logoUrl: '/storage/img/components/brands/kitchenaid-brand-logo.png'
+        logoUrl: '/images/brands/kitchenaid-brand-logo.webp'
     },
     {
         name: 'LG',
-        logoUrl: '/storage/img/components/brands/lg-brand-logo.png'
+        logoUrl: '/images/brands/lg-brand-logo.webp'
     },
     {
         name: 'Magic Chief',
-        logoUrl: '/storage/img/components/brands/magic-chef-brand-logo.png'
+        logoUrl: '/images/brands/magic-chef-brand-logo.webp'
     },
     {
         name: 'Maytag',
-        logoUrl: '/storage/img/components/brands/maytag-brand-logo.png'
+        logoUrl: '/images/brands/maytag-brand-logo.webp'
     },
     {
         name: 'Roper',
-        logoUrl: '/storage/img/components/brands/roper-brand-logo.png'
+        logoUrl: '/images/brands/roper-brand-logo.webp'
     },
     {
         name: 'Samsung',
-        logoUrl: '/storage/img/components/brands/samsung-brand-logo.png'
+        logoUrl: '/images/brands/samsung-brand-logo.webp'
     },
     {
         name: 'SEARS',
-        logoUrl: '/storage/img/components/brands/sears-brand-logo.png'
+        logoUrl: '/images/brands/sears-brand-logo.webp'
     },
     {
         name: 'U-Line',
-        logoUrl: '/storage/img/components/brands/uline-brand-logo.png'
+        logoUrl: '/images/brands/uline-brand-logo.webp'
     },
     {
         name: 'Whirlpool',
-        logoUrl: '/storage/img/components/brands/whirlpool-brand-logo.png'
+        logoUrl: '/images/brands/whirlpool-brand-logo.webp'
     },
 
 

@@ -13,12 +13,13 @@
                 <span class="text-base md:text-lg">{{ location }}</span>
             </li>
         </ul>
-        <div class="w-full overflow-hidden rounded-xl border border-gray-300 bg-white">
-            <iframe src="https://www.google.com/maps/d/embed?mid=1vKpXKOZi0MRyeTJMq5PERRIDJJRIfmQ&ehbc=2E312F&noprof=1"
+        <div ref="mapContainer" class="w-full min-h-[360px] md:min-h-[480px] overflow-hidden rounded-xl border border-gray-300 bg-white">
+            <iframe v-if="mapVisible" src="https://www.google.com/maps/d/embed?mid=1vKpXKOZi0MRyeTJMq5PERRIDJJRIfmQ&ehbc=2E312F&noprof=1"
                 title="TS Repair Service service area map"
                 class="block w-full h-[360px] md:h-[480px] border-0"
                 width="100%" height="480" loading="lazy">
             </iframe>
+            <noscript><a href="https://www.google.com/maps/d/viewer?mid=1vKpXKOZi0MRyeTJMq5PERRIDJJRIfmQ" class="block p-8 underline">View our service area on Google Maps</a></noscript>
         </div>
         <p class="max-w-2xl mx-auto pt-6 pb-2 text-base md:text-lg leading-7">
             Not sure if you’re in our service area?
@@ -32,6 +33,15 @@
 
 
 export default {
+    data() { return { mapVisible: false }; },
+    mounted() {
+        if (!('IntersectionObserver' in window)) { this.mapVisible = true; return; }
+        this.mapObserver = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) { this.mapVisible = true; this.mapObserver.disconnect(); }
+        }, { rootMargin: '200px' });
+        this.mapObserver.observe(this.$refs.mapContainer);
+    },
+    beforeUnmount() { this.mapObserver?.disconnect(); },
     props: {
         description: { type: String, default: 'We provide appliance repair in Moorpark, Ventura County, and surrounding service areas. Contact us with your city or ZIP code to confirm availability.' },
         headingTag: { type: String, default: 'h1' },

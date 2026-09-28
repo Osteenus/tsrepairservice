@@ -4,7 +4,7 @@
         <div class="w-full">
             <p  class="text-center text-lg md:max-w-3xl md:mx-auto px-8 md:py-8">We are a local, family-owned business based in Moorpark. We focus on understanding the problem, explaining the repair options, and helping you decide what comes next.</p>
         </div>
-        <a href="/about" class="my-8 mx-auto text-red-500 border border-red-500 hover:bg-red-600 hover:text-white
+        <a href="/about" class="my-8 mx-auto text-red-700 border border-red-700 hover:bg-red-600 hover:text-white
                 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 transition">About TS Repair Service</a>
         <div class="py-12">
             <div class="mx-auto max-w-7xl px-6 lg:px-8">

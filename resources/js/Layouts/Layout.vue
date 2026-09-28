@@ -429,7 +429,7 @@ export default {
 }
 
 
-@import "tailwindcss";
+@reference "tailwindcss";
 @layer components {
     .btn-primary {
         /*border-radius: calc(infinity * 1px);*/

@@ -41,6 +41,7 @@ onMounted(async () => { await nextTick(); Aos.refreshHard(); });
 
 <template>
     <Head>
+        <link rel="preload" as="image" href="/images/site/home-laundry-background.webp" fetchpriority="high" head-key="hero-preload">
         <title>{{ title }}</title>
         <meta name="description" :content="description" head-key="description">
         <link rel="canonical" :href="canonical" head-key="canonical">
