@@ -4,7 +4,7 @@
         <div class="mx-auto max-w-7xl px-4 lg:px-8">
             <ul class="grid grid-cols-2 gap-x-4 gap-y-4 md:grid-cols-3 md:gap-x-8 md:gap-y-16 animate-appear text-center">
                 <li v-for="(service, index) in ourServices" :key="service.id" :data-aos="compact ? 'fade-up' : undefined" :data-aos-once="compact ? 'true' : undefined" :data-aos-duration="compact ? '500' : undefined" :data-aos-delay="compact ? (index % 3) * 50 : undefined" class="flex max-w-xs flex-col p-4">
-                    <a :href="service.url" class="block">
+                    <a :href="service.url" class="service-card block">
                     <img :data-aos="compact ? undefined : 'zoom-in'" :src="service.logoUrl" loading="lazy" decoding="async" :alt="service.name" class="rounded-3xl">
                     <div :data-aos="compact ? undefined : 'zoom-in'" class="pt-2 text-lg text black">{{ service.name }}</div>
                 </a>
@@ -31,7 +31,10 @@ onMounted( async () => {
 
 <style scoped>
 .home-services ul { gap: 24px; }
-.home-services li { width: 100%; max-width: none; padding: 12px; border-radius: 20px; }
+.home-services li { width:100%; max-width:none; padding:0; }
+.service-card { height:100%; border:1px solid #e5e7eb; border-radius:20px; padding:12px; background:#fff; }
+.service-card img { width:100%; aspect-ratio:4/3; object-fit:contain; background:#f8fafc; border-radius:12px; }
+.service-card:hover { border-color:#cbd5e1; }
 .home-services a:hover { background: #f9fafb; }
 .home-services a:focus-visible { outline: 2px solid #b91c1c; outline-offset: 3px; }
 .home-services img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; }

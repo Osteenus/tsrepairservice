@@ -13,14 +13,16 @@
                 <span class="text-base md:text-lg">{{ location }}</span>
             </li>
         </ul>
-        <div ref="mapContainer" class="w-full min-h-[360px] md:min-h-[480px] overflow-hidden rounded-xl border border-gray-300 bg-white">
-            <iframe v-if="mapVisible" src="https://www.google.com/maps/d/embed?mid=1vKpXKOZi0MRyeTJMq5PERRIDJJRIfmQ&ehbc=2E312F&noprof=1"
+        <div ref="mapContainer" class="relative w-full min-h-[360px] md:min-h-[480px] overflow-hidden rounded-xl border border-gray-300 bg-white">
+            <div v-if="!mapLoaded" role="status" class="absolute inset-0 z-10 pointer-events-none flex items-center justify-center bg-slate-50 text-slate-600">Loading service area map…</div>
+            <iframe @load="mapLoaded = true" v-if="mapVisible" src="https://www.google.com/maps/d/embed?mid=1vKpXKOZi0MRyeTJMq5PERRIDJJRIfmQ&ehbc=2E312F&noprof=1"
                 title="TS Repair Service service area map"
-                class="block w-full h-[360px] md:h-[480px] border-0"
+                class="relative block w-full h-[360px] md:h-[480px] border-0"
                 width="100%" height="480" loading="lazy">
             </iframe>
             <noscript><a href="https://www.google.com/maps/d/viewer?mid=1vKpXKOZi0MRyeTJMq5PERRIDJJRIfmQ" class="block p-8 underline">View our service area on Google Maps</a></noscript>
         </div>
+        <a href="https://www.google.com/maps/d/viewer?mid=1vKpXKOZi0MRyeTJMq5PERRIDJJRIfmQ" target="_blank" rel="noopener noreferrer" class="inline-block mt-3 py-2 text-sm text-red-700 underline underline-offset-4">Open map in Google Maps</a>
         <p class="max-w-2xl mx-auto pt-6 pb-2 text-base md:text-lg leading-7">
             Not sure if you’re in our service area?
             <a href="/contact" class="font-semibold text-red-700 underline underline-offset-4 hover:text-red-800">Contact us</a>
@@ -33,7 +35,7 @@
 
 
 export default {
-    data() { return { mapVisible: false }; },
+    data() { return { mapVisible: false, mapLoaded: false }; },
     mounted() {
         if (!('IntersectionObserver' in window)) { this.mapVisible = true; return; }
         this.mapObserver = new IntersectionObserver(([entry]) => {

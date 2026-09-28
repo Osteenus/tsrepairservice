@@ -23,8 +23,8 @@ const fields = [
   { key: 'email', label: 'Email', type: 'email', autocomplete: 'email', max: 255 },
   { key: 'location', label: 'City or ZIP Code', type: 'text', required: true, max: 120 },
   { key: 'serviceId', label: 'Appliance Type', type: 'select', required: true },
-  { key: 'brand', label: 'Brand', type: 'text', placeholder: 'Example: Whirlpool, GE, Samsung', max: 120 },
-  { key: 'model', label: 'Model Number', type: 'text', placeholder: 'Usually found on the appliance label', max: 120 },
+  { key: 'brand', label: 'Brand (optional)', type: 'text', placeholder: 'Example: Whirlpool, GE, Samsung', max: 120 },
+  { key: 'model', label: 'Model Number (optional)', type: 'text', placeholder: 'Usually found on the appliance label', max: 120 },
   { key: 'description', label: 'Describe the Problem', type: 'textarea', required: true, max: 5000,
     placeholder: 'Describe the symptoms, error code, unusual sound, leak, or when the problem started' },
 ];
@@ -49,7 +49,7 @@ const submit = () => {
 
 <template>
   <section id="schedule" :class="embedded ? '' : 'bg-slate-900 px-4 py-8 md:p-12'">
-    <div id="service-request" class="scroll-mt-8 bg-white rounded-3xl p-6 sm:p-8 lg:p-10 max-w-3xl mx-auto shadow-sm border border-gray-200">
+    <div id="service-request" class="scroll-mt-16 bg-white rounded-3xl p-6 sm:p-8 lg:p-10 max-w-3xl mx-auto shadow-sm border border-gray-200">
       <div ref="resultElement" tabindex="-1" aria-live="polite" aria-atomic="true" class="rounded-xl focus-visible:outline-2 focus-visible:outline-red-700 focus-visible:outline-offset-4">
         <div v-if="received" class="rounded-2xl border border-green-200 bg-green-50 p-6 text-slate-900">
           <h2 class="text-2xl font-semibold">Your Request Has Been Received</h2>

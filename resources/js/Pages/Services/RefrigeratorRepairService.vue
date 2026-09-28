@@ -76,8 +76,8 @@
 
                 </div>
             </div>
-            <img src="/storage/img/components/services/refrigerator-repair-4.avif"
-                alt="technician repairing refrigerator in Moorpark" class="max-h-[700px] md:pt-18 md:pb-0">
+            <img src="/images/services/refrigerator-repair-work.webp"
+                alt="Refrigerator repair equipment beside a refrigerator" width="400" height="400" class="w-full max-w-[500px] rounded-3xl object-cover my-8 md:my-0">
         </div>
     </div>
 

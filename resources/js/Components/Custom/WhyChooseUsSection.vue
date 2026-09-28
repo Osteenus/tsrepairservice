@@ -8,7 +8,7 @@
                 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 transition">About TS Repair Service</a>
         <div class="py-12">
             <div class="mx-auto max-w-7xl px-6 lg:px-8">
-                <dl class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-4 md:gap-y-16 text-center">
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-4 md:gap-x-8 gap-y-4 md:gap-y-16 text-center">
                     <div data-aos="fade-up" data-aos-once="true" data-aos-duration="500" class="bg-white px-4 py-8 flex flex-col shadow-lg rounded-lg">
                         <div class="flex justify-center pb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 603 610" fill="none">
@@ -56,7 +56,7 @@
                         <h3 class="text-lg font-bold py-4">Practical Repair Options</h3>
                         <p class="px-4">The appliance’s condition, model, and parts availability help determine the next step.</p>
                     </div>
-                </dl>
+                </div>
             </div>
         </div>
     </div>
