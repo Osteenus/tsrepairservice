@@ -1,7 +1,7 @@
 <template>
     <main>
-        <div class="bg-blue-900 hover:bg-blue-800 transition duration-300 cursor-pointer">
-            <p class="text-md text-white text-center py-1">Get a quote for FREE estimate! Call us right now!</p>
+        <div class="sticky top-0 z-50 bg-blue-900 hover:bg-blue-800 transition duration-300 cursor-pointer">
+            <a :href="`tel:${contactNumber}`" class="block text-sm text-white text-center px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">Need appliance repair? Call {{ contactNumber }}</a>
         </div>
         <header ref="header" class="flex flex-col lg:flex-row lg:items-center min-h-18" @keydown.esc="closeWithEscape">
             <div class="flex items-center justify-between lg:shrink-0">
@@ -70,7 +70,7 @@
                             </Transition>
                         </li>
                         <li class="content-center">
-                            <Link href="/contact" @click="closeMenus" :class="{ 'active-link-style': $page.url === '/contact' }"
+                            <Link href="/contact" @click="closeMenus" :class="{ 'active-link-style': $page.url.split('?')[0] === '/contact' }"
                                 class="flex nav-link px-8 py-6 text-2xl lg:px-4 lg:text-xl border-b-2 border-gray-200 lg:border-none">
                                 Contact
                             </Link>
@@ -92,14 +92,14 @@
             <div class="flex flex-col flex-wrap md:px-30 md:flex-row bg-gray-700 px-12 py-8">
                 <div class="col-span-2 w-64 md:-px-20">
                     <img :src="'../storage/img/components/logo-footer.png'" alt="Logo" class="pb-4">
-                    <p class="pb-4 text-sm text-white">Localy owned and family operated appliance repair service when you need it most in Moorpark, CA</p>
+                    <p class="pb-4 text-sm text-white">Locally owned and family operated appliance repair service when you need it most in Moorpark, CA</p>
                     <div class="flex flex-row">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" fill="#ffffff"></path> <path d="M18 5C17.4477 5 17 5.44772 17 6C17 6.55228 17.4477 7 18 7C18.5523 7 19 6.55228 19 6C19 5.44772 18.5523 5 18 5Z" fill="#ffffff"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M1.65396 4.27606C1 5.55953 1 7.23969 1 10.6V13.4C1 16.7603 1 18.4405 1.65396 19.7239C2.2292 20.8529 3.14708 21.7708 4.27606 22.346C5.55953 23 7.23969 23 10.6 23H13.4C16.7603 23 18.4405 23 19.7239 22.346C20.8529 21.7708 21.7708 20.8529 22.346 19.7239C23 18.4405 23 16.7603 23 13.4V10.6C23 7.23969 23 5.55953 22.346 4.27606C21.7708 3.14708 20.8529 2.2292 19.7239 1.65396C18.4405 1 16.7603 1 13.4 1H10.6C7.23969 1 5.55953 1 4.27606 1.65396C3.14708 2.2292 2.2292 3.14708 1.65396 4.27606ZM13.4 3H10.6C8.88684 3 7.72225 3.00156 6.82208 3.0751C5.94524 3.14674 5.49684 3.27659 5.18404 3.43597C4.43139 3.81947 3.81947 4.43139 3.43597 5.18404C3.27659 5.49684 3.14674 5.94524 3.0751 6.82208C3.00156 7.72225 3 8.88684 3 10.6V13.4C3 15.1132 3.00156 16.2777 3.0751 17.1779C3.14674 18.0548 3.27659 18.5032 3.43597 18.816C3.81947 19.5686 4.43139 20.1805 5.18404 20.564C5.49684 20.7234 5.94524 20.8533 6.82208 20.9249C7.72225 20.9984 8.88684 21 10.6 21H13.4C15.1132 21 16.2777 20.9984 17.1779 20.9249C18.0548 20.8533 18.5032 20.7234 18.816 20.564C19.5686 20.1805 20.1805 19.5686 20.564 18.816C20.7234 18.5032 20.8533 18.0548 20.9249 17.1779C20.9984 16.2777 21 15.1132 21 13.4V10.6C21 8.88684 20.9984 7.72225 20.9249 6.82208C20.8533 5.94524 20.7234 5.49684 20.564 5.18404C20.1805 4.43139 19.5686 3.81947 18.816 3.43597C18.5032 3.27659 18.0548 3.14674 17.1779 3.0751C16.2777 3.00156 15.1132 3 13.4 3Z" fill="#ffffff"></path> </g></svg>
                         <svg fill="#ffffff" width="48" height="48" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff" class="mr-6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M234.33057,69.79736a23.96369,23.96369,0,0,0-14.50489-16.34619C185.55615,40.28223,130.97949,40.39209,128,40.40771c-2.978-.02392-57.55518-.126-91.8252,13.04346A23.96415,23.96415,0,0,0,21.66992,69.79639C19.083,79.72705,16,97.88574,16,128c0,30.11377,3.083,48.27246,5.66943,58.20264a23.96369,23.96369,0,0,0,14.50489,16.34619c32.80615,12.60693,84.22168,13.04541,91.167,13.04541.6206.00049.69678.00049,1.31738,0,6.95069-.00049,58.36231-.43945,91.16651-13.04541a23.96415,23.96415,0,0,0,14.50488-16.34522C236.917,176.273,240,158.11426,240,128,240,97.88623,236.917,79.72754,234.33057,69.79736Zm-72.11182,61.53076-48,32A3.99967,3.99967,0,0,1,108,160V96a3.99968,3.99968,0,0,1,6.21875-3.32813l48,32a3.99979,3.99979,0,0,1,0,6.65625Z"></path> </g></svg>
                         <svg width="48" height="48 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H15V13.9999H17.0762C17.5066 13.9999 17.8887 13.7245 18.0249 13.3161L18.4679 11.9871C18.6298 11.5014 18.2683 10.9999 17.7564 10.9999H15V8.99992C15 8.49992 15.5 7.99992 16 7.99992H18C18.5523 7.99992 19 7.5522 19 6.99992V6.31393C19 5.99091 18.7937 5.7013 18.4813 5.61887C17.1705 5.27295 16 5.27295 16 5.27295C13.5 5.27295 12 6.99992 12 8.49992V10.9999H10C9.44772 10.9999 9 11.4476 9 11.9999V12.9999C9 13.5522 9.44771 13.9999 10 13.9999H12V21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z" fill="#ffffff"></path> </g></svg>
                     </div>
                     <div class="">
-                        <h3 class="text-white text-xl pt-4">{{ contactNumber }}</h3>
+                        <a :href="`tel:${contactNumber}`" class="inline-block text-white text-xl py-3 focus-visible:outline-2 focus-visible:outline-white">{{ contactNumber }}</a>
                     </div>
                 </div>
                 <div class="flex-col mt-16 md:mt-2 md:px-20">
@@ -116,7 +116,8 @@
                     </ul>
                 </div>
                 <div class="mt-6 w-full">
-                    <span class="text-white text-md md:text-sm text-nowrap">© 2024 Tech Solutions Repair Service Inc.</span>
+                    <BusinessRegistration class="text-white mb-3" />
+                    <span class="text-white text-md md:text-sm text-nowrap">© {{ new Date().getFullYear() }} Tech Solutions Repair Service Inc.</span>
                 </div>
             </div>
         </footer>
@@ -124,11 +125,13 @@
 </template>
 
 <script>
+import BusinessRegistration from '@/Components/Custom/BusinessRegistration.vue';
 import { Link } from '@inertiajs/vue3'
 import { Transition } from 'vue';
 import Aos from 'aos';
 
 export default {
+    components: { BusinessRegistration },
     mounted() {
         this.handleResize();
         window.addEventListener('resize', this.handleResize);
@@ -146,68 +149,7 @@ export default {
     },
     data() {
         return {    
-            services: [
-            {
-                id: 1,
-                name: 'Refrigerator Repair',
-                url: '/services/refrigerator-repair-moorpark',
-                logoUrl: '/storage/img/components/side-by-side-fridge.png',
-            },
-            {
-                id: 2,
-                name: 'Washer Repair',
-                url: '/washer-repair-moorpark',
-                logoUrl: '/storage/img/components/top-load-washer.jpeg'
-            },
-            {
-                id: 3,
-                name: 'Dryer Repair',
-                url: '/services/dryer-repair',
-                logoUrl: '/storage/img/components/dryer-1.jpg'
-            },
-            {
-                id: 4,
-                name: 'Oven & Stove Repair',
-                url: '/oven-stove-repair-moorpark',
-                logoUrl: '/images/services/oven-stove-repair-moorpark.webp'
-            },
-            {
-                id: 5,
-                name: 'Dishwasher Repair',
-                url: '/dishwasher-repair-moorpark',
-                logoUrl: '/images/services/dishwasher-repair-moorpark.webp'
-            },
-            {
-                id: 7,
-                name: 'Microwave Repair',
-                url: '/microwave-repair-moorpark',
-                logoUrl: '/images/services/microwave-repair-moorpark.webp'
-            },
-            {
-                id: 8,
-                name: 'Range Hood Repair',
-                url: '/range-hood-repair-moorpark',
-                logoUrl: '/images/services/range-hood-repair-moorpark.webp'
-            },
-            {
-                id: 9,
-                name: 'Trash Compactor Repair',
-                url: '/trash-compactor-repair-moorpark',
-                logoUrl: '/images/services/trash-compactor-repair-moorpark.webp'
-            },
-            {
-                id: 10,
-                name: 'Electronic Repair',
-                url: '/services/electronic-repair',
-                logoUrl: '/storage/img/components/pcb.png'
-            },
-            // {
-            //     id: 11,
-            //     name: 'Other',
-            //     url: '#',
-            //     logoUrl: ''
-            // },
-            ],
+            services: this.$page.props.repair.services,
             faqRefrigerator: [
                 {
                     question: 'Why is my refrigerator not cooling?',
@@ -272,7 +214,7 @@ export default {
             dropdownIsVisible: false,
             isMenuOpen: false,
             isMobile: typeof window !== 'undefined' ? window.innerWidth < 1024 : true,
-            contactNumber: '(805)-991-2874',
+            contactNumber: this.$page.props.repair.phone,
             whatWeRepair: {
                 refrigerators: [
                     {

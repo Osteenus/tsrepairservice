@@ -41,7 +41,7 @@
             </p>
             <div class="flex flex-col items-start gap-3 mt-6">
                 <a :href="`tel:${contactNumber}`" class="call-button"><PhoneIcon class="size-6" aria-hidden="true" />Call Us Now</a>
-                <Link href="/contact" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Book Service</Link>
+                <Link href="/contact?service=range-hood#service-request" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Request Service</Link>
             </div>
             <p class="mt-4 text-sm leading-6 text-gray-500">Have your brand, model number, and symptoms ready when you contact us.</p>
         </div>
@@ -193,7 +193,7 @@
                 or send a service request with your appliance’s brand, model, and symptoms.</p>
             <div class="flex flex-col items-center mt-8 gap-6">
                 <a :href="`tel:${contactNumber}`" class="call-button"><PhoneIcon class="size-7" aria-hidden="true" />Call Us Now</a>
-                <Link href="/contact" class="book-button"><WrenchScrewdriverIcon class="size-7" aria-hidden="true" />Book Service</Link>
+                <Link href="/contact?service=range-hood#service-request" class="book-button"><WrenchScrewdriverIcon class="size-7" aria-hidden="true" />Request Service</Link>
             </div>
         </div>
     </section>

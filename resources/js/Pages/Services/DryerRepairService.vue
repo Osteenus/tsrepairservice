@@ -1,10 +1,14 @@
 <template>
+    <Breadcrumbs :items="[{ label: 'Services', href: '/services' }, { label: 'Dryer Repair' }]" />
     <Head>
         <title>Dryer Repair Moorpark CA | TS Repair Service</title>
         <meta name="description" :content="description">
         <meta property="og:title" content="Dryer Repair Moorpark CA | TS Repair Service">
         <meta property="og:description" :content="description">
-        <meta property="og:image" content="/storage/img/components/services/dryer-repair-1.jpg">
+        <meta property="og:image" content="https://tsrepairservice.com/storage/img/components/services/dryer-repair-1.jpg">
+        <link rel="canonical" href="https://tsrepairservice.com/services/dryer-repair" head-key="canonical">
+        <meta property="og:url" content="https://tsrepairservice.com/services/dryer-repair">
+        <meta property="og:type" content="website">
     </Head>
 
     <div class="bg-cover bg-center bg-stone-600 bg-blend-multiply" style="background-image: url('/storage/img/components/services/dryer-repair-1.jpg')">
@@ -26,7 +30,7 @@
             </p>
             <div class="flex flex-col items-start gap-3 mt-6">
                 <a :href="`tel:${contactNumber}`" class="call-button"><PhoneIcon class="size-6" aria-hidden="true" />Call Us Now</a>
-                <Link href="/contact" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Book Service</Link>
+                <Link href="/contact?service=dryer#service-request" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Request Service</Link>
             </div>
             <p class="mt-4 text-sm leading-6 text-gray-500">Have your brand, model number, and symptoms ready when you contact us.</p>
         </div>
@@ -83,9 +87,9 @@
         <h2 class="section-title">Residential & Commercial Dryer Repair</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-6 md:px-12 pb-8 md:pb-16">
             <div class="bg-white rounded-2xl p-6 md:p-8 text-base md:text-lg leading-7">
-                <img src="/images/services/dryer-residential.png"
+                <img src="/images/services/dryer-residential.webp"
                     alt="Illustration of a white residential tumble dryer"
-                    width="1254" height="1254" loading="lazy" decoding="async"
+                    width="960" height="960" loading="lazy" decoding="async"
                     class="w-full h-64 lg:h-80 object-contain mb-6">
                 <h3 class="text-xl font-semibold pb-3 text-slate-900">Residential Dryer Repair</h3>
                 <p>Keep laundry moving without running the same load again and again. We troubleshoot household
@@ -93,9 +97,9 @@
                     closets, stacked equipment, and the symptoms you notice so we can plan for access.</p>
             </div>
             <div class="bg-white rounded-2xl p-6 md:p-8 text-base md:text-lg leading-7">
-                <img src="/images/services/dryer-commercial.png"
+                <img src="/images/services/dryer-commercial.webp"
                     alt="Illustration of a stainless steel commercial tumble dryer"
-                    width="1254" height="1254" loading="lazy" decoding="async"
+                    width="960" height="960" loading="lazy" decoding="async"
                     class="w-full h-64 lg:h-80 object-contain mb-6">
                 <h3 class="text-xl font-semibold pb-3 text-slate-900">Commercial Dryer Repair</h3>
                 <p>Repeated drying cycles and unexpected shutdowns can interrupt a business’s laundry schedule.
@@ -175,13 +179,14 @@
                 or send a service request with your dryer’s brand, model, and symptoms.</p>
             <div class="flex flex-col items-center mt-8 gap-6">
                 <a :href="`tel:${contactNumber}`" class="call-button"><PhoneIcon class="size-7" aria-hidden="true" />Call Us Now</a>
-                <Link href="/contact" class="book-button"><WrenchScrewdriverIcon class="size-7" aria-hidden="true" />Book Service</Link>
+                <Link href="/contact?service=dryer#service-request" class="book-button"><WrenchScrewdriverIcon class="size-7" aria-hidden="true" />Request Service</Link>
             </div>
         </div>
     </section>
 </template>
 
 <script setup>
+import Breadcrumbs from '@/Components/Custom/Breadcrumbs.vue';
 import { inject, onMounted, ref } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/16/solid';

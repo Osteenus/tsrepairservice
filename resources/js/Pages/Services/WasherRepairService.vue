@@ -1,10 +1,14 @@
 <template>
+    <Breadcrumbs :items="[{ label: 'Services', href: '/services' }, { label: 'Washer Repair' }]" />
     <Head>
         <title>Washer Repair Moorpark CA | TS Repair Service</title>
         <meta name="description" :content="description">
         <meta property="og:title" content="Washer Repair Moorpark CA | TS Repair Service">
         <meta property="og:description" :content="description">
-        <meta property="og:image" content="/storage/img/components/services/washer-repair-1.jpg">
+        <meta property="og:image" content="https://tsrepairservice.com/storage/img/components/services/washer-repair-1.jpg">
+        <link rel="canonical" href="https://tsrepairservice.com/washer-repair-moorpark" head-key="canonical">
+        <meta property="og:url" content="https://tsrepairservice.com/washer-repair-moorpark">
+        <meta property="og:type" content="website">
     </Head>
 
     <div class="bg-cover bg-center bg-stone-600 bg-blend-multiply" style="background-image: url('/storage/img/components/services/washer-repair-1.jpg')">
@@ -25,7 +29,7 @@
             </p>
             <div class="flex flex-col items-start gap-3 mt-6">
                 <a :href="`tel:${contactNumber}`" class="call-button"><PhoneIcon class="size-6" aria-hidden="true" />Call Us Now</a>
-                <Link href="/contact" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Book Service</Link>
+                <Link href="/contact?service=washer#service-request" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Request Service</Link>
             </div>
             <p class="mt-4 text-sm leading-6 text-gray-500">Have your brand, model number, and symptoms ready when you contact us.</p>
         </div>
@@ -82,9 +86,9 @@
         <h2 class="section-title">Residential & Commercial Washer Repair</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-6 md:px-12 pb-8 md:pb-16">
             <div class="bg-white rounded-2xl p-6 md:p-8 text-base md:text-lg leading-7">
-                <img src="/images/services/washer-residential.png"
+                <img src="/images/services/washer-residential.webp"
                     alt="Illustration of a white residential front-load washing machine"
-                    width="1254" height="1254" loading="lazy" decoding="async"
+                    width="960" height="960" loading="lazy" decoding="async"
                     class="w-full h-64 lg:h-80 object-contain mb-6">
                 <h3 class="text-xl font-semibold pb-3 text-slate-900">Residential Washer Repair</h3>
                 <p>From a household top-loader to a front-load machine in a laundry closet, we help resolve filling,
@@ -92,9 +96,9 @@
                     so we can discuss access before the visit.</p>
             </div>
             <div class="bg-white rounded-2xl p-6 md:p-8 text-base md:text-lg leading-7">
-                <img src="/images/services/washer-commercial.png"
+                <img src="/images/services/washer-commercial.webp"
                     alt="Illustration of a stainless steel commercial front-load washing machine"
-                    width="1254" height="1254" loading="lazy" decoding="async"
+                    width="960" height="960" loading="lazy" decoding="async"
                     class="w-full h-64 lg:h-80 object-contain mb-6">
                 <h3 class="text-xl font-semibold pb-3 text-slate-900">Commercial Washer Repair</h3>
                 <p>A laundry breakdown can disrupt your business as well as your wash schedule. Contact us with your
@@ -174,13 +178,14 @@
                 or send a service request with your washer’s brand, model, and symptoms.</p>
             <div class="flex flex-col items-center mt-8 gap-6">
                 <a :href="`tel:${contactNumber}`" class="call-button"><PhoneIcon class="size-7" aria-hidden="true" />Call Us Now</a>
-                <Link href="/contact" class="book-button"><WrenchScrewdriverIcon class="size-7" aria-hidden="true" />Book Service</Link>
+                <Link href="/contact?service=washer#service-request" class="book-button"><WrenchScrewdriverIcon class="size-7" aria-hidden="true" />Request Service</Link>
             </div>
         </div>
     </section>
 </template>
 
 <script setup>
+import Breadcrumbs from '@/Components/Custom/Breadcrumbs.vue';
 import { inject, onMounted, ref } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/16/solid';

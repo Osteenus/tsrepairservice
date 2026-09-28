@@ -1,16 +1,19 @@
 <?php
 
 use App\Http\Controllers\RepairRequestController;
-use App\Mail\WebFormRequestReceivedEmail;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
+Route::get('/sitemap.xml', function () {
+    $paths = array_merge(['/', '/about', '/services', '/contact'], array_column(config('repair.services'), 'url'));
+
+    return response()->view('sitemap', ['paths' => array_unique($paths)])
+        ->header('Content-Type', 'application/xml; charset=UTF-8');
+});
 
 Route::inertia('/', 'Home');
 Route::inertia('/about', 'About');
 Route::inertia('/services', 'Services');
-Route::inertia('/contact', 'Contact');
+Route::get('/contact', [RepairRequestController::class, 'create'])->name('contact');
 Route::inertia('/extra', 'Extra');
 
 Route::inertia('/services/refrigerator-repair-moorpark', 'Services/RefrigeratorRepairService');
@@ -31,9 +34,5 @@ Route::inertia('/trash-compactor-repair-moorpark', 'Services/TrashCompactorRepai
 Route::permanentRedirect('/services/trash-compactor-repair', '/trash-compactor-repair-moorpark');
 Route::inertia('/services/electronic-repair', 'Services/ElectronicRepairService');
 
-Route::post('/contact', [RepairRequestController::class, 'store'])->name('contact.store');
-
-Route::get('/send-request-received-email', function () {
-    Mail::to('ilmetal44@gmail.com')->send(new WebFormRequestReceivedEmail());
-    return 'Test email sent!';
-});
+Route::post('/contact', [RepairRequestController::class, 'store'])
+    ->middleware('throttle:service-requests')->name('contact.store');

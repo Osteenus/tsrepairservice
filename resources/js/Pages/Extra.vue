@@ -33,7 +33,7 @@
                 href="#booking"
                 class="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-6 py-4 text-base font-semibold text-white transition hover:bg-white/15"
               >
-                Book Service
+                Request Service
               </a>
             </div>
 
@@ -279,7 +279,7 @@
     <section id="booking" class="bg-white">
       <div class="mx-auto max-w-5xl px-6 py-16 lg:px-8">
         <div class="rounded-[2rem] border border-slate-200 bg-slate-50 px-8 py-10 text-center shadow-sm lg:px-12">
-          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Book Service</p>
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Request Service</p>
           <h2 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Need Refrigerator Repair Today?</h2>
           <p class="mt-4 text-lg leading-8 text-slate-600">
             Call now for fast scheduling and dependable service for residential and commercial refrigeration systems in Moorpark and nearby areas.
@@ -292,7 +292,7 @@
               Call Now
             </a>
             <a
-              href="/contact"
+              href="/contact#service-request"
               class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-6 py-4 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
             >
               Request Service

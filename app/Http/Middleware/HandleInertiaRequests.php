@@ -37,7 +37,15 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            //
+            'repair' => fn () => [
+                'phone' => config('repair.phone'),
+                'services' => config('repair.services'),
+                'serviceAreas' => config('repair.service_areas'),
+                'registration' => config('repair.registration'),
+            ],
+            'flash' => [
+                'requestReceived' => fn () => $request->session()->get('requestReceived', false),
+            ],
         ];
     }
 }

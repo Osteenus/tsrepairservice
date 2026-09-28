@@ -1,13 +1,17 @@
 <template>
+    <Breadcrumbs :items="[{ label: 'Services', href: '/services' }, { label: 'Refrigerator Repair' }]" />
 
     <Head>
-        <title>Refrigerator Repair Moorpark CA | Same-Day Fridge Repair</title>
+        <title>Refrigerator Repair Moorpark CA | TS Repair Service</title>
         <meta name="description"
-            content="Fast refrigerator repair in Moorpark, CA. We fix cooling issues, leaks, ice makers, and more. Same-day service available. Residential and commercial. Call now.">
-        <meta property="og:title" content="Refrigerator Repair Moorpark CA | Same-Day Fridge Repair">
+            content="Refrigerator repair in Moorpark and Ventura County for cooling problems, leaks, and ice maker issues. Contact TS Repair Service to discuss service availability.">
+        <meta property="og:title" content="Refrigerator Repair Moorpark CA | TS Repair Service">
         <meta property="og:description"
-            content="Fast refrigerator repair in Moorpark, CA. We fix cooling issues, leaks, ice makers, and more. Same-day service available. Residential and commercial. Call now.">
-        <meta property="og:image" content="../storage/img/components/services/refrigerator-repair-1.jpg">
+            content="Refrigerator repair in Moorpark and Ventura County for cooling problems, leaks, and ice maker issues. Contact TS Repair Service to discuss service availability.">
+        <meta property="og:image" content="https://tsrepairservice.com/storage/img/components/services/refrigerator-repair-1.jpg">
+        <link rel="canonical" href="https://tsrepairservice.com/services/refrigerator-repair-moorpark" head-key="canonical">
+        <meta property="og:url" content="https://tsrepairservice.com/services/refrigerator-repair-moorpark">
+        <meta property="og:type" content="website">
     </Head>
 
     <div :style="{ 'background-image': 'url(' + '../storage/img/components/services/refrigerator-repair-1.jpg' + ')' }"
@@ -48,7 +52,7 @@
 
                         Call Us Now
                     </a>
-                    <a href="/contact" class="bg-white hover:bg-red-700 active:bg-red-700 text-red-700 hover:text-white active:text-white font-semibold 
+                    <a href="/contact?service=refrigerator#service-request" class="bg-white hover:bg-red-700 active:bg-red-700 text-red-700 hover:text-white active:text-white font-semibold
                             border-2 border-red-700
                             md:w-120 w-full
                             my-6
@@ -66,7 +70,7 @@
                                 clip-rule="evenodd" />
                         </svg>
 
-                        Book Service Online
+                        Request Service
                     </a>
 
 
@@ -220,7 +224,7 @@
 
     </div>
 
-    <BrandsSection class="bg-white text-black">
+    <BrandsSection heading-tag="h2" class="bg-white text-black">
 
     </BrandsSection>
 
@@ -272,7 +276,7 @@
         </ol>
     </section>
 
-    <ServiceAreaSection>
+    <ServiceAreaSection heading-tag="h2">
 
     </ServiceAreaSection>
 
@@ -337,7 +341,7 @@
 
                         Call Us Now
                     </a>
-                    <a href="/contact" class="bg-white hover:bg-red-700 active:bg-red-800 text-slate-900 hover:text-white active:text-white font-semibold 
+                    <a href="/contact?service=refrigerator#service-request" class="bg-white hover:bg-red-700 active:bg-red-800 text-slate-900 hover:text-white active:text-white font-semibold
                             
                             md:w-120 w-full
                             my-8
@@ -355,7 +359,7 @@
                                 clip-rule="evenodd" />
                         </svg>
 
-                        Book Service Online
+                        Request Service
                     </a>
 
 
@@ -367,6 +371,7 @@
 </template>
 
 <script setup>
+import Breadcrumbs from '@/Components/Custom/Breadcrumbs.vue';
 
 import { onMounted, inject } from 'vue';
 import ScheduleFormSection from '@/Components/Custom/ScheduleFormSection.vue';
@@ -383,7 +388,7 @@ import { Head } from '@inertiajs/vue3'
 const howItWorksSteps = [
     {
         title: 'Contact Us',
-        description: 'Book online or call us to schedule your service at a convenient time.',
+        description: 'Send a service request or call us to discuss availability.',
         icon: PhoneIcon,
     },
     {

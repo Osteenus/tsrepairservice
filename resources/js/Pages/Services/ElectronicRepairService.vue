@@ -1,9 +1,13 @@
 <template>
+    <Breadcrumbs :items="[{ label: 'Services', href: '/services' }, { label: 'Electronic Repair' }]" />
     <Head>
         <title>Electronic Repair Moorpark CA | TS Repair Service</title>
         <meta name="description" :content="description">
         <meta property="og:title" content="Electronic Repair Moorpark CA | TS Repair Service">
         <meta property="og:description" :content="description">
+        <link rel="canonical" href="https://tsrepairservice.com/services/electronic-repair" head-key="canonical">
+        <meta property="og:url" content="https://tsrepairservice.com/services/electronic-repair">
+        <meta property="og:type" content="website">
     </Head>
 
     <div class="bg-cover bg-center bg-stone-600 bg-blend-multiply" style="background-image: url('/storage/img/components/services/electronic-repair-1.jpg')">
@@ -24,7 +28,7 @@
             </p>
             <div class="flex flex-col items-start gap-3 mt-6">
                 <a :href="`tel:${contactNumber}`" class="call-button"><PhoneIcon class="size-6" aria-hidden="true" />Call Us Now</a>
-                <a href="#schedule" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Book Service</a>
+                <a href="/contact?service=electronic#service-request" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Request Service</a>
             </div>
         </div>
         <figure class="w-full max-w-[520px] mx-auto overflow-hidden rounded-3xl bg-gray-100 border border-gray-200">
@@ -67,17 +71,18 @@
             <p>Contact TS Repair Service about your equipment and the problem you are experiencing.</p>
             <div class="flex flex-col items-center mt-6 gap-4">
                 <a :href="`tel:${contactNumber}`" class="call-button"><PhoneIcon class="size-6" aria-hidden="true" />Call Us Now</a>
-                <a href="#schedule" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Book Service</a>
+                <a href="/contact?service=electronic#service-request" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Request Service</a>
             </div>
         </div>
     </section>
 
     <div class="m-4 md:m-12 rounded-3xl overflow-hidden electronic-schedule">
-        <ScheduleFormSection />
+        <ScheduleFormSection :selected-service-id="10" />
     </div>
 </template>
 
 <script setup>
+import Breadcrumbs from '@/Components/Custom/Breadcrumbs.vue';
 import { inject } from 'vue';
 import { Head } from '@inertiajs/vue3';
 import { CheckIcon } from '@heroicons/vue/16/solid';
@@ -152,5 +157,4 @@ const problems = [
 .call-button { @apply bg-red-700 hover:bg-red-800 text-white shadow-lg; }
 .book-button { @apply bg-white hover:bg-red-700 text-red-700 hover:text-white border-2 border-red-700 shadow-md; }
 .electronic-schedule :deep(#schedule) { @apply bg-slate-900 px-4 py-8 md:p-12; }
-.electronic-schedule :deep(form) { @apply rounded-2xl px-5 py-8 sm:px-8 md:px-12; }
 </style>
