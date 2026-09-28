@@ -1,4 +1,5 @@
 <template>
+    <ServiceStructuredData />
     <main>
         <div class="sticky top-0 z-50 bg-blue-900 hover:bg-blue-800 transition duration-300 cursor-pointer">
             <a :href="`tel:${contactNumber}`" class="block text-sm text-white text-center px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">Need appliance repair? Call {{ contactNumber }}</a>
@@ -125,13 +126,14 @@
 </template>
 
 <script>
+import ServiceStructuredData from '@/Components/Custom/ServiceStructuredData.vue';
 import BusinessRegistration from '@/Components/Custom/BusinessRegistration.vue';
 import { Link } from '@inertiajs/vue3'
 import { Transition } from 'vue';
 import Aos from 'aos';
 
 export default {
-    components: { BusinessRegistration },
+    components: { BusinessRegistration, ServiceStructuredData },
     mounted() {
         this.handleResize();
         window.addEventListener('resize', this.handleResize);
@@ -213,7 +215,7 @@ export default {
             ],
             dropdownIsVisible: false,
             isMenuOpen: false,
-            isMobile: typeof window !== 'undefined' ? window.innerWidth < 1024 : true,
+            isMobile: false,
             contactNumber: this.$page.props.repair.phone,
             whatWeRepair: {
                 refrigerators: [

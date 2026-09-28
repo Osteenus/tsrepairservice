@@ -23,6 +23,7 @@ export default defineConfig({
         tailwindcss(),
         laravel({
             input: 'resources/js/app.js',
+            ssr: 'resources/js/ssr.js',
             refresh: true,
         }),
         vue({
@@ -36,8 +37,6 @@ export default defineConfig({
 
     ],
     resolve: {
-        alias: {
-            vue: 'vue/dist/vue.esm-bundler.js',
-        },
+        alias: [{ find: /^vue$/, replacement: 'vue/dist/vue.esm-bundler.js' }],
     },
 });
