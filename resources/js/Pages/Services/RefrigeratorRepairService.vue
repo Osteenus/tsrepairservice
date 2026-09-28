@@ -22,10 +22,10 @@
 
     <!-- HERO SECTION -->
 
-    <div class="bg-white flex flex-row md:flex-col">
-        <div class="grid grid-cols-1 md:grid-cols-2">
-            <div class="md:pl-16 pt-4 px-8 flex flex-col">
-                <h2 class="leading-10 md:leading-14 text-3xl md:text-5xl text-center md:text-left text-black font-semibold py-6 md:pt-16 md:pb-8">
+    <div class="bg-white">
+        <div class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-6 py-10 lg:grid-cols-2 md:gap-12 md:px-8 md:py-16">
+            <div class="min-w-0 flex flex-col">
+                <h2 class="leading-10 md:leading-14 text-3xl md:text-5xl text-center md:text-left text-black font-semibold pb-6">
                     Same-Day Fridge Repair for Homes & Businesses.
                 </h2>
                 <p class="leading-8 md:px-0 text-sm">
@@ -39,7 +39,7 @@
                 </p>
                 <div class="flex flex-col items-center md:items-start">
                     <a :href="`tel:${contactNumber}`" class="bg-red-700 hover:bg-red-800 text-white font-semibold 
-                                md:w-120 w-full
+                                w-full max-w-[480px]
                                 mt-8
                                 px-6 py-4 rounded-2xl shadow-lg 
                                 flex items-center justify-center gap-2 
@@ -54,8 +54,8 @@
                     </a>
                     <a href="/contact?service=refrigerator#service-request" class="bg-white hover:bg-red-700 active:bg-red-700 text-red-700 hover:text-white active:text-white font-semibold
                             border-2 border-red-700
-                            md:w-120 w-full
-                            my-6
+                            w-full max-w-[480px]
+                            mt-4
                             px-6 py-4 rounded-2xl shadow-md 
                             flex items-center justify-center gap-2 
                             text-lg transition">
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <img src="/images/services/refrigerator-repair-work.webp"
-                alt="Refrigerator repair equipment beside a refrigerator" width="400" height="400" class="w-full max-w-[500px] rounded-3xl object-cover my-8 md:my-0">
+                alt="Refrigerator repair equipment beside a refrigerator" width="400" height="400" class="block aspect-square w-full max-w-[460px] justify-self-center rounded-3xl object-cover">
         </div>
     </div>
 
