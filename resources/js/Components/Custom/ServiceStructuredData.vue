@@ -13,8 +13,8 @@ const json = computed(() => service.value ? JSON.stringify({
     name: service.value.name,
     serviceType: service.value.name,
     url: `https://tsrepairservice.com${service.value.url}`,
-    provider: { '@type': 'Organization', '@id': 'https://tsrepairservice.com/#organization', name: 'TS Repair Service', telephone: page.props.repair.phone },
-    areaServed: page.props.repair.serviceAreas.map(name => ({ '@type': 'Place', name })),
+    provider: { '@type': 'Organization', '@id': 'https://tsrepairservice.com/#organization', name: 'Tech Solutions Repair Service', telephone: page.props.repair.phone },
+    areaServed: page.props.repair.serviceAreas.map(name => ({ '@type': name === 'Ventura County' ? 'AdministrativeArea' : 'City', name })),
 }).replace(/</g, '\\u003c') : '');
 </script>
 

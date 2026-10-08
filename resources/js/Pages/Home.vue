@@ -14,17 +14,21 @@ defineOptions({ layout: Layout });
 const page = usePage();
 const phone = computed(() => page.props.repair.phone);
 const registration = computed(() => page.props.repair.registration);
-const title = 'Appliance Repair Moorpark CA | TS Repair Service';
-const description = 'Residential and commercial appliance repair in Moorpark and Ventura County. Contact TS Repair Service to discuss your appliance, location, and service availability.';
+const title = 'Appliance Repair Moorpark CA | Tech Solutions Repair Service';
+const description = 'Residential and commercial appliance repair in Moorpark and Ventura County. Contact Tech Solutions Repair Service to discuss your appliance, location, and service availability.';
 const canonical = 'https://tsrepairservice.com/';
 const schema = computed(() => JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
-        { '@type': 'Organization', '@id': `${canonical}#organization`, name: 'TS Repair Service',
+        { '@type': 'HomeAndConstructionBusiness', '@id': `${canonical}#organization`, name: 'Tech Solutions Repair Service',
+            description: 'Residential and commercial appliance repair in Moorpark and Ventura County.',
+            address: { '@type': 'PostalAddress', addressLocality: 'Moorpark', addressRegion: 'CA', addressCountry: 'US' },
+            areaServed: page.props.repair.serviceAreas.filter(name => name !== 'Ventura County').map(name => ({ '@type': 'City', name })),
+            openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '10:00', closes: '20:00' }],
             legalName: registration.value.business_name, url: canonical, telephone: phone.value,
             logo: `${canonical}storage/img/logo.png`,
             identifier: { '@type': 'PropertyValue', propertyID: 'California BHGS Major Appliance Repair Registration', value: registration.value.number } },
-        { '@type': 'WebSite', '@id': `${canonical}#website`, url: canonical, name: 'TS Repair Service', publisher: { '@id': `${canonical}#organization` } },
+        { '@type': 'WebSite', '@id': `${canonical}#website`, url: canonical, name: 'Tech Solutions Repair Service', publisher: { '@id': `${canonical}#organization` } },
     ],
 }).replace(/</g, '\\u003c'));
 const reveal = (delay = 0) => ({
@@ -71,7 +75,7 @@ onMounted(async () => { await nextTick(); Aos.refreshHard(); });
 
     <!-- CustomerReviewsSection is retained in the project pending verification of review sources. -->
     <ServiceAreaSection heading-tag="h2"
-        description="We provide appliance repair in Moorpark, Ventura County, and surrounding communities, including Simi Valley and Santa Clarita. Share your city or ZIP code to confirm availability for your equipment." />
+        description="We provide appliance repair in Moorpark, Ventura County, and surrounding communities, including Simi Valley, Camarillo, Thousand Oaks, Oxnard, and Ventura. Share your city or ZIP code to confirm availability for your equipment." />
 
     <section v-bind="reveal()" class="m-4 md:m-12 rounded-3xl bg-slate-900 px-6 py-10 md:p-12 text-white text-center">
         <h2 class="text-3xl md:text-4xl font-semibold">Need Help With an Appliance?</h2>

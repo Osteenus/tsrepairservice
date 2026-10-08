@@ -24,8 +24,8 @@ const reveal = (delay = 0) => ({
 const page = usePage();
 const phone = computed(() => page.props.repair.phone);
 const services = computed(() => page.props.repair.services);
-const title = 'About Us | Moorpark CA | TS Repair Service';
-const description = 'Meet TS Repair Service, a local family-owned appliance repair business serving Moorpark and surrounding areas. Learn about our approach to diagnostics and service for homes and businesses.';
+const title = 'About Us | Moorpark CA | Tech Solutions Repair Service';
+const description = 'Meet Tech Solutions Repair Service, a local family-owned appliance repair business serving Moorpark and surrounding areas. Learn about our approach to diagnostics and service for homes and businesses.';
 const canonical = 'https://tsrepairservice.com/about';
 const trustItems = [
     { title: 'Local Family-Owned Service', icon: House },
@@ -55,7 +55,7 @@ const approach = [
 
     <section class="bg-slate-900 text-white text-center px-6 py-10 md:py-14">
         <p class="text-sm uppercase tracking-widest font-semibold text-red-300">Local Service · Moorpark, California</p>
-        <h1 class="text-3xl md:text-5xl font-semibold leading-tight mt-3">About TS Repair Service</h1>
+        <h1 class="text-3xl md:text-5xl font-semibold leading-tight mt-3">About Tech Solutions Repair Service</h1>
         <p class="mt-5 max-w-2xl mx-auto text-slate-200 leading-7 md:text-lg">Appliance repair with a personal approach, careful diagnosis, and a clear conversation about what comes next.</p>
     </section>
 
@@ -63,7 +63,7 @@ const approach = [
         <div v-bind="reveal()">
             <p class="eyebrow">A Local, Family-Owned Business</p>
             <h2 class="text-3xl lg:text-4xl font-semibold leading-tight text-slate-900 mt-3">People You Can Talk to About Your Repair</h2>
-            <p class="body-copy mt-5">TS Repair Service is a family-owned business based in Moorpark, serving homes and businesses in Ventura County and surrounding service areas. We help with kitchen and laundry appliances, as well as selected electronic controls and circuit boards.</p>
+            <p class="body-copy mt-5">Tech Solutions Repair Service is a family-owned business based in Moorpark, serving homes and businesses in Ventura County and surrounding service areas. We help with kitchen and laundry appliances, as well as selected electronic controls and circuit boards.</p>
             <p class="body-copy mt-4">A broken appliance disrupts your day. Our approach starts with listening to the problem, checking the equipment, and explaining the available repair options in plain language.</p>
             <div class="flex flex-col gap-3 mt-6">
                 <a :href="`tel:${phone}`" class="call-button"><Phone class="size-5" aria-hidden="true" />Call {{ phone }}</a>
@@ -120,7 +120,7 @@ const approach = [
         <div v-bind="reveal()" class="rounded-3xl bg-gray-100 p-6 md:p-8">
             <p class="eyebrow">Close to Home</p>
             <h2 class="text-2xl font-semibold text-slate-900 mt-3">Based in Moorpark</h2>
-            <p class="body-copy mt-4">We serve Moorpark and nearby communities in Ventura County, including Simi Valley, as well as Santa Clarita. Tell us your city or ZIP code so we can confirm coverage for your appliance.</p>
+            <p class="body-copy mt-4">We serve Moorpark and nearby communities in Ventura County, including Simi Valley, Camarillo, Thousand Oaks, Oxnard, and Ventura. Tell us your city or ZIP code so we can confirm coverage for your appliance.</p>
             <Link href="/contact#service-request" class="service-link inline-flex items-center gap-2 text-red-700 font-semibold py-3 mt-2 underline underline-offset-4"><MapPin class="size-5" aria-hidden="true" />Check Service Availability</Link>
         </div>
     </section>

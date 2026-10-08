@@ -92,7 +92,7 @@
         <footer class="site-footer">
             <div class="footer-grid bg-gray-700">
                 <div class="footer-business">
-                    <img :src="'/storage/img/components/logo-footer.png'" alt="TS Repair Service" class="pb-4">
+                    <img :src="'/storage/img/components/logo-footer.png'" alt="Tech Solutions Repair Service" class="pb-4">
                     <p class="pb-4 text-sm text-white">Locally owned and family operated appliance repair service when you need it most in Moorpark, CA</p>
                     <div class="">
                         <a :href="`tel:${contactNumber}`" class="inline-block text-white text-xl py-3 focus-visible:outline-2 focus-visible:outline-white">{{ contactNumber }}</a>

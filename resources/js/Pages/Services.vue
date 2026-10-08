@@ -19,11 +19,11 @@ defineProps({ user: Object })
 
 <template>
     <Head>
-        <title>Appliance Repair Services Moorpark CA | TS Repair Service</title>
-        <meta name="description" content="Explore appliance repair services in Moorpark and Ventura County, from refrigerators and washers to ovens and dishwashers. Contact TS Repair Service." head-key="description">
+        <title>Repair Services Moorpark | Tech Solutions Repair Service</title>
+        <meta name="description" content="Explore appliance repair services in Moorpark and Ventura County, from refrigerators and washers to ovens and dishwashers. Contact Tech Solutions Repair Service." head-key="description">
         <link rel="canonical" href="https://tsrepairservice.com/services" head-key="canonical">
-        <meta property="og:title" content="Appliance Repair Services Moorpark CA | TS Repair Service">
-        <meta property="og:description" content="Explore kitchen and laundry appliance repair services in Moorpark and Ventura County. Contact TS Repair Service to discuss your equipment and location.">
+        <meta property="og:title" content="Repair Services Moorpark | Tech Solutions Repair Service">
+        <meta property="og:description" content="Explore kitchen and laundry appliance repair services in Moorpark and Ventura County. Contact Tech Solutions Repair Service to discuss your equipment and location.">
         <meta property="og:url" content="https://tsrepairservice.com/services">
         <meta property="og:type" content="website">
     </Head>

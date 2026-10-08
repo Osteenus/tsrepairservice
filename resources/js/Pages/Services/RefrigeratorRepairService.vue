@@ -3,12 +3,12 @@
 
     <Head>
         <link rel="preload" as="image" href="/images/services/refrigerator-hero.webp" fetchpriority="high" head-key="refrigerator-hero">
-        <title>Refrigerator Repair Moorpark CA | TS Repair Service</title>
+        <title>Refrigerator Repair Moorpark | Tech Solutions Repair Service</title>
         <meta name="description"
-            content="Refrigerator repair in Moorpark and Ventura County for cooling problems, leaks, and ice maker issues. Contact TS Repair Service to discuss service availability.">
-        <meta property="og:title" content="Refrigerator Repair Moorpark CA | TS Repair Service">
+            content="Refrigerator repair in Moorpark and Ventura County for cooling problems, leaks, and ice maker issues. Contact Tech Solutions Repair Service to discuss service availability.">
+        <meta property="og:title" content="Refrigerator Repair Moorpark | Tech Solutions Repair Service">
         <meta property="og:description"
-            content="Refrigerator repair in Moorpark and Ventura County for cooling problems, leaks, and ice maker issues. Contact TS Repair Service to discuss service availability.">
+            content="Refrigerator repair in Moorpark and Ventura County for cooling problems, leaks, and ice maker issues. Contact Tech Solutions Repair Service to discuss service availability.">
         <meta property="og:image" content="https://tsrepairservice.com/images/services/refrigerator-hero.webp">
         <link rel="canonical" href="https://tsrepairservice.com/services/refrigerator-repair-moorpark" head-key="canonical">
         <meta property="og:url" content="https://tsrepairservice.com/services/refrigerator-repair-moorpark">
@@ -27,10 +27,10 @@
         <div class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-6 py-10 lg:grid-cols-2 md:gap-12 md:px-8 md:py-16">
             <div class="min-w-0 flex flex-col">
                 <h2 class="leading-10 md:leading-14 text-3xl md:text-5xl text-center md:text-left text-black font-semibold pb-6">
-                    Same-Day Fridge Repair for Homes & Businesses.
+                    Fast Fridge Repair for Homes & Businesses.
                 </h2>
                 <p class="leading-8 md:px-0 text-sm">
-                    Fast and dependable refrigerator repair when you need it most. We provide same-day service for both
+                    Fast and dependable refrigerator repair when you need it most. We offer prompt scheduling for both
                     residential and
                     commercial refrigeration systems. Our technician quickly diagnoses the issue and explains the repair
                     clearly before

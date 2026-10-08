@@ -28,10 +28,10 @@ defineProps({
   items: {
     type: Array,
     default: () => [
-      { title: 'Same-Day Service', icon: Clock },
+      { title: 'Fast Scheduling', icon: Clock },
       { title: 'Residential & Commercial', icon: Building2 },
-      { title: 'Licensed & Insured', icon: ShieldCheck },
-      { title: 'Transparent Pricing', icon: Receipt },
+      { title: 'BHGS Registered (A 50537)', icon: ShieldCheck },
+      { title: 'Approval Before Repairs', icon: Receipt },
     ],
   },
 })

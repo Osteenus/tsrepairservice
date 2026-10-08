@@ -16,7 +16,7 @@
 
             <p class="mt-6 max-w-3xl text-lg leading-8 text-slate-200">
               Fast and dependable refrigerator repair when you need it most.
-              We provide same-day service for both residential and commercial refrigeration systems.
+              We offer prompt scheduling for both residential and commercial refrigeration systems.
               Our technician quickly diagnoses the issue and explains the repair clearly before starting any work.
               We focus on reliable, long-term solutions — not temporary fixes.
               Serving homeowners and businesses across Moorpark and Ventura County.
@@ -37,7 +37,7 @@
               </a>
             </div>
 
-            <div class="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="mt-8 grid gap-3 sm:grid-cols-3">
               <div
                 v-for="item in heroHighlights"
                 :key="item"
@@ -61,7 +61,7 @@
               </p>
 
               <div class="mt-6 space-y-3">
-                <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">Same-day appointments when available</div>
+                <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">Prompt scheduling based on availability</div>
                 <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">Service throughout Moorpark & Ventura County</div>
                 <div class="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">Residential homes, restaurants, cafes, and businesses</div>
               </div>
@@ -70,7 +70,7 @@
                 href="tel:+18050000000"
                 class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-slate-950 px-6 py-4 text-base font-semibold text-white transition hover:bg-slate-800"
               >
-                Call TS Repair Service
+                Call Tech Solutions Repair Service
               </a>
             </div>
           </div>
@@ -80,7 +80,7 @@
 
     <!-- Trust Bar -->
     <section class="border-b border-slate-200 bg-slate-50">
-      <div class="mx-auto grid max-w-7xl gap-4 px-6 py-6 text-sm font-medium text-slate-700 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
+      <div class="mx-auto grid max-w-7xl gap-4 px-6 py-6 text-sm font-medium text-slate-700 sm:grid-cols-3 lg:px-8">
         <div v-for="item in trustBar" :key="item" class="rounded-2xl bg-white px-4 py-4 shadow-sm ring-1 ring-slate-200">
           {{ item }}
         </div>
@@ -234,7 +234,7 @@
     <section class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
       <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <div>
-          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Why TS Repair Service</p>
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Why Tech Solutions Repair Service</p>
           <h2 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">A Better Choice for Refrigerator Repair</h2>
           <p class="mt-4 text-lg leading-8 text-slate-600">
             We combine responsive scheduling, clear communication, and reliable workmanship to make the repair process easier from start to finish.
@@ -306,17 +306,15 @@
 
 <script setup>
 const heroHighlights = [
-  'Same-Day Service Available',
+  'Fast Scheduling',
   'Residential & Commercial Repairs',
-  'Warranty on Repairs',
   'Local Moorpark Service',
 ]
 
 const trustBar = [
-  'Same-Day Service Available',
+  'Fast Scheduling',
   'Residential & Commercial Repairs',
-  'Warranty on Repairs',
-  'Transparent Pricing',
+  'Approval Before Repairs',
 ]
 
 const residentialTypes = [
@@ -398,9 +396,9 @@ const faqs = [
       'Yes. We service both residential and commercial refrigeration systems, including many business-related units.',
   },
   {
-    question: 'Do you offer same-day refrigerator repair?',
+    question: 'How fast can you schedule refrigerator repair?',
     answer:
-      'Yes, same-day appointments may be available depending on scheduling and service area.',
+      'We schedule as quickly as we can. Availability depends on our calendar and your location, so contact us and we will confirm a time.',
   },
   {
     question: 'Should I repair or replace my refrigerator?',

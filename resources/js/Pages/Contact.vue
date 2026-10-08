@@ -11,8 +11,8 @@ defineOptions({ layout: Layout });
 defineProps({ selectedServiceId: { type: Number, default: null } });
 const page = usePage();
 const phone = computed(() => page.props.repair.phone);
-const title = 'Request Appliance Repair | Moorpark CA | TS Repair Service';
-const description = 'Request appliance repair in Moorpark and nearby service areas. Share your appliance type, location, model information, and symptoms with TS Repair Service.';
+const title = 'Request Repair Moorpark | Tech Solutions Repair Service';
+const description = 'Request appliance repair in Moorpark and nearby service areas. Share your appliance type, location, model information, and symptoms with Tech Solutions Repair Service.';
 const canonical = 'https://tsrepairservice.com/contact';
 const trustItems = [
   { title: 'Local Family-Owned Service', icon: House },
@@ -40,7 +40,7 @@ const steps = [
   </Head>
   <section class="bg-slate-900 text-white px-6 py-10 md:px-12 md:py-14">
     <div class="max-w-6xl mx-auto">
-      <p class="text-sm font-semibold tracking-widest uppercase text-red-300">TS Repair Service · Moorpark, CA</p>
+      <p class="text-sm font-semibold tracking-widest uppercase text-red-300">Tech Solutions Repair Service · Moorpark, CA</p>
       <h1 class="text-3xl md:text-5xl font-semibold leading-tight mt-3">Request Appliance Repair</h1>
       <p class="max-w-3xl text-base md:text-lg leading-8 text-slate-200 mt-5">Tell us what appliance needs attention, what it is doing, and where you are located. We’ll review your request and contact you to discuss service availability.</p>
       <div class="flex flex-col sm:flex-row gap-3 mt-7">

@@ -10,7 +10,7 @@ import 'aos/dist/aos.css'
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
-    title: (title) => !title ? appName : title.endsWith(' | TS Repair Service') ? title : `${title} - ${appName}`,
+    title: (title) => !title ? appName : title.endsWith(' | Tech Solutions Repair Service') ? title : `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
         return (el.hasChildNodes() ? createSSRApp : createApp)({ render: () => h(App, props) })

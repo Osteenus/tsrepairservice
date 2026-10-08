@@ -9,7 +9,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const render = page => createInertiaApp({
     page,
     render: renderToString,
-    title: title => !title ? appName : title.endsWith(' | TS Repair Service') ? title : `${title} - ${appName}`,
+    title: title => !title ? appName : title.endsWith(' | Tech Solutions Repair Service') ? title : `${title} - ${appName}`,
     resolve: name => pages[`./Pages/${name}.vue`](),
     setup: ({ App, props, plugin }) => createSSRApp({ render: () => h(App, props) })
         .use(plugin).component('Link', Link).use(ZiggyVue, page.props.ziggy),

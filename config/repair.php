@@ -9,7 +9,7 @@ return [
         'type' => 'Major Appliance Repair',
         'verification_url' => 'https://search.dca.ca.gov/details/3900/A/50537/27a445340e03876e4bbb527b372f7689',
     ],
-    'service_areas' => ['Moorpark', 'Ventura County', 'Simi Valley', 'Santa Clarita'],
+    'service_areas' => ['Moorpark', 'Simi Valley', 'Camarillo', 'Thousand Oaks', 'Oxnard', 'Ventura', 'Ventura County'],
     'services' => [
         ['id' => 1, 'slug' => 'refrigerator', 'name' => 'Refrigerator Repair', 'url' => '/services/refrigerator-repair-moorpark', 'logoUrl' => '/images/thumbnails/side-by-side-fridge.webp'],
         ['id' => 2, 'slug' => 'washer', 'name' => 'Washer Repair', 'url' => '/washer-repair-moorpark', 'logoUrl' => '/images/thumbnails/top-load-washer.webp'],

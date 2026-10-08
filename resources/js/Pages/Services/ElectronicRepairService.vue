@@ -1,9 +1,9 @@
 <template>
     <Breadcrumbs :items="[{ label: 'Services', href: '/services' }, { label: 'Electronic Repair' }]" />
     <Head>
-        <title>Electronic Repair Moorpark CA | TS Repair Service</title>
+        <title>Electronic Repair Moorpark CA | Tech Solutions Repair Service</title>
         <meta name="description" :content="description">
-        <meta property="og:title" content="Electronic Repair Moorpark CA | TS Repair Service">
+        <meta property="og:title" content="Electronic Repair Moorpark CA | Tech Solutions Repair Service">
         <meta property="og:description" :content="description">
         <link rel="canonical" href="https://tsrepairservice.com/services/electronic-repair" head-key="canonical">
         <meta property="og:url" content="https://tsrepairservice.com/services/electronic-repair">
@@ -21,7 +21,7 @@
             <p class="text-xs font-semibold uppercase tracking-widest text-red-700">Electronic Controls & Circuit Boards</p>
             <h2 class="leading-tight text-3xl lg:text-5xl text-slate-900 font-semibold mt-3 mb-5">Component-Level Electronics Repair</h2>
             <p class="leading-7 text-base text-gray-600 max-w-xl">
-                Not every problem requires full board replacement. TS Repair Service provides electronic
+                Not every problem requires full board replacement. Tech Solutions Repair Service provides electronic
                 control and circuit board diagnostics and repair for residential, commercial, and
                 light-industrial equipment. Services include appliance controls,
                 HVAC electronics, audio amplifiers, and equipment modules.
@@ -68,7 +68,7 @@
     <section class="bg-slate-900 text-white rounded-3xl m-4 md:m-12">
         <h2 class="section-title">Discuss Your Electronics Repair</h2>
         <div class="max-w-3xl mx-auto px-6 md:px-8 pb-8 md:pb-12 text-base md:text-lg leading-8">
-            <p>Contact TS Repair Service about your equipment and the problem you are experiencing.</p>
+            <p>Contact Tech Solutions Repair Service about your equipment and the problem you are experiencing.</p>
             <div class="flex flex-col items-center mt-6 gap-4">
                 <a :href="`tel:${contactNumber}`" class="call-button"><PhoneIcon class="size-6" aria-hidden="true" />Call Us Now</a>
                 <a href="/contact?service=electronic#service-request" class="book-button"><WrenchScrewdriverIcon class="size-6" aria-hidden="true" />Request Service</a>
@@ -93,7 +93,7 @@ import ScheduleFormSection from '@/Components/Custom/ScheduleFormSection.vue';
 
 defineOptions({ layout: Layout });
 const contactNumber = inject('contactNumber');
-const description = 'Electronic control and circuit board repair in Moorpark. Appliance controls, HVAC electronics, audio amplifiers and equipment modules. Contact TS Repair Service.';
+const description = 'Electronic control and circuit board repair in Moorpark. Appliance controls, HVAC electronics, audio amplifiers and equipment modules. Contact Tech Solutions Repair Service.';
 const categoryIcons = [Fan, CircuitBoard, AudioLines, Cpu];
 const categories = [
     {

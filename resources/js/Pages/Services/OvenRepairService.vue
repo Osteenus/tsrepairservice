@@ -1,8 +1,8 @@
 <template>
     <Head>
-        <title>Oven & Stove Repair Moorpark CA | TS Repair Service</title>
+        <title>Oven & Stove Repair Moorpark CA | Tech Solutions Repair Service</title>
         <meta name="description" :content="description">
-        <meta property="og:title" content="Oven & Stove Repair Moorpark CA | TS Repair Service">
+        <meta property="og:title" content="Oven & Stove Repair Moorpark CA | Tech Solutions Repair Service">
         <meta property="og:description" :content="description">
         <link rel="canonical" :href="canonicalUrl" head-key="canonical">
         <meta property="og:url" :content="canonicalUrl">
@@ -132,7 +132,7 @@
     <p class="text-center px-6 pb-8 leading-7">Have a different brand or a commercial model? Share the model number so we can confirm service and parts availability.</p>
 
     <section class="bg-slate-900 flex flex-col m-4 md:m-12 text-white rounded-3xl">
-        <h2 class="section-title">Why Choose TS Repair Service</h2>
+        <h2 class="section-title">Why Choose Tech Solutions Repair Service</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 md:gap-8 md:px-12 pb-8 md:pb-24">
             <div v-for="item in whyChooseUsItems" :key="item.id" data-aos="zoom-in" class="flex flex-col m-4 p-6 bg-white text-slate-900 rounded-2xl text-xl">
                 <div class="mx-auto border-3 border-slate-900 rounded-full p-2">
@@ -193,7 +193,7 @@
         <h2 class="section-title">Schedule Your Oven & Stove Repair</h2>
         <div class="max-w-3xl mx-auto px-6 md:px-8 pb-8 md:pb-16 text-base md:text-xl leading-8">
             <p>Get help with an oven that will not heat, an unreliable burner, or a cooktop that interrupts meal
-                preparation. Share the model, fuel type, and symptoms with TS Repair Service to request a visit.</p>
+                preparation. Share the model, fuel type, and symptoms with Tech Solutions Repair Service to request a visit.</p>
             <p class="pt-4">Call <a :href="`tel:${contactNumber}`" class="underline">{{ contactNumber }}</a>
                 or send a service request with your appliance’s brand, model, and symptoms.</p>
             <div class="flex flex-col items-center mt-8 gap-6">
@@ -206,7 +206,7 @@
 
 <script setup>
 import { inject, onMounted, ref } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/16/solid';
 import { PhoneIcon, CalendarDaysIcon, WrenchScrewdriverIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
 import { House, Building2, MessagesSquare, Search, CookingPot, PanelsTopLeft, Flame, Zap, Layers3 } from 'lucide-vue-next';
@@ -219,7 +219,7 @@ import TrustStripSection from '@/Components/Custom/TrustStripSection.vue';
 defineOptions({ layout: Layout });
 const contactNumber = inject('contactNumber');
 const whyChooseUsItems = inject('whyChooseUsItems');
-const description = 'Oven, stove, range and cooktop repair in Moorpark and Ventura County. Help with heating, ignition and temperature problems. Contact TS Repair Service.';
+const description = 'Oven, stove, range and cooktop repair in Moorpark and Ventura County. Help with heating, ignition and temperature problems. Contact Tech Solutions Repair Service.';
 const canonicalUrl = 'https://tsrepairservice.com/oven-stove-repair-moorpark';
 const structuredDataJson = JSON.stringify({
     '@context': 'https://schema.org',
@@ -232,11 +232,8 @@ const structuredDataJson = JSON.stringify({
             url: canonicalUrl,
             description,
             image: 'https://tsrepairservice.com/images/services/oven-stove-repair-moorpark.webp',
-            provider: { '@type': 'Organization', name: 'TS Repair Service', url: 'https://tsrepairservice.com', telephone: contactNumber },
-            areaServed: [
-                { '@type': 'City', name: 'Moorpark' },
-                { '@type': 'AdministrativeArea', name: 'Ventura County' },
-            ],
+            provider: { '@type': 'Organization', '@id': 'https://tsrepairservice.com/#organization', name: 'Tech Solutions Repair Service', url: 'https://tsrepairservice.com', telephone: contactNumber },
+            areaServed: usePage().props.repair.serviceAreas.map(name => ({ '@type': name === 'Ventura County' ? 'AdministrativeArea' : 'City', name })),
         },
         {
             '@type': 'BreadcrumbList',

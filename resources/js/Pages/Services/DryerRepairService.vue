@@ -1,9 +1,9 @@
 <template>
     <Breadcrumbs :items="[{ label: 'Services', href: '/services' }, { label: 'Dryer Repair' }]" />
     <Head>
-        <title>Dryer Repair Moorpark CA | TS Repair Service</title>
+        <title>Dryer Repair Moorpark CA | Tech Solutions Repair Service</title>
         <meta name="description" :content="description">
-        <meta property="og:title" content="Dryer Repair Moorpark CA | TS Repair Service">
+        <meta property="og:title" content="Dryer Repair Moorpark CA | Tech Solutions Repair Service">
         <meta property="og:description" :content="description">
         <meta property="og:image" content="https://tsrepairservice.com/storage/img/components/services/dryer-repair-1.jpg">
         <link rel="canonical" href="https://tsrepairservice.com/services/dryer-repair" head-key="canonical">
@@ -113,7 +113,7 @@
     <p class="text-center px-6 pb-8 leading-7">Have a different brand or a commercial model? Share the model number so we can confirm service and parts availability.</p>
 
     <section class="bg-slate-900 flex flex-col m-4 md:m-12 text-white rounded-3xl">
-        <h2 class="section-title">Why Choose TS Repair Service</h2>
+        <h2 class="section-title">Why Choose Tech Solutions Repair Service</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 md:gap-8 md:px-12 pb-8 md:pb-24">
             <div v-for="item in whyChooseUsItems" :key="item.id" data-aos="zoom-in" class="flex flex-col m-4 p-6 bg-white text-slate-900 rounded-2xl text-xl">
                 <div class="mx-auto border-3 border-slate-900 rounded-full p-2">
@@ -173,7 +173,7 @@
     <section class="bg-slate-900 flex flex-col m-4 md:m-12 text-white rounded-3xl">
         <h2 class="section-title">Schedule Your Dryer Repair</h2>
         <div class="max-w-3xl mx-auto px-6 md:px-8 pb-8 md:pb-16 text-base md:text-xl leading-8">
-            <p>A dryer that runs without heat or leaves every load damp adds time to your day. Tell TS Repair Service
+            <p>A dryer that runs without heat or leaves every load damp adds time to your day. Tell Tech Solutions Repair Service
                 when the problem happens and whether your dryer uses gas or electricity, and request a service visit.</p>
             <p class="pt-4">Call <a :href="`tel:${contactNumber}`" class="underline">{{ contactNumber }}</a>
                 or send a service request with your dryer’s brand, model, and symptoms.</p>
@@ -201,7 +201,7 @@ import TrustStripSection from '@/Components/Custom/TrustStripSection.vue';
 defineOptions({ layout: Layout });
 const contactNumber = inject('contactNumber');
 const whyChooseUsItems = inject('whyChooseUsItems');
-const description = 'Electric and gas dryer repair in Moorpark and Ventura County. Help with no heat, long drying cycles and drum problems. Contact TS Repair Service.';
+const description = 'Electric and gas dryer repair in Moorpark and Ventura County. Help with no heat, long drying cycles and drum problems. Contact Tech Solutions Repair Service.';
 const trustItems = [
     { title: 'Local Family-Owned Service', icon: House },
     { title: 'Residential & Commercial', icon: Building2 },
