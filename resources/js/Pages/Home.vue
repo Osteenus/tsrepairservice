@@ -25,6 +25,7 @@ const schema = computed(() => JSON.stringify({
             address: { '@type': 'PostalAddress', addressLocality: 'Moorpark', addressRegion: 'CA', addressCountry: 'US' },
             areaServed: page.props.repair.serviceAreas.filter(name => name !== 'Ventura County').map(name => ({ '@type': 'City', name })),
             openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '10:00', closes: '20:00' }],
+            sameAs: page.props.repair.social.map(item => item.url),
             legalName: registration.value.business_name, url: canonical, telephone: phone.value,
             logo: `${canonical}storage/img/logo.png`,
             identifier: { '@type': 'PropertyValue', propertyID: 'California BHGS Major Appliance Repair Registration', value: registration.value.number } },

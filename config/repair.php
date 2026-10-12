@@ -9,6 +9,11 @@ return [
         'type' => 'Major Appliance Repair',
         'verification_url' => 'https://search.dca.ca.gov/details/3900/A/50537/27a445340e03876e4bbb527b372f7689',
     ],
+    'social' => [
+        ['name' => 'Facebook', 'url' => 'https://www.facebook.com/profile.php?id=61594227033622'],
+        ['name' => 'LinkedIn', 'url' => 'https://www.linkedin.com/company/tsrepairservice/'],
+        ['name' => 'YouTube', 'url' => 'https://www.youtube.com/channel/UCqgiIZSOqEhuWbgAu7hNNnA'],
+    ],
     'service_areas' => ['Moorpark', 'Simi Valley', 'Camarillo', 'Thousand Oaks', 'Oxnard', 'Ventura', 'Ventura County'],
     'services' => [
         ['id' => 1, 'slug' => 'refrigerator', 'name' => 'Refrigerator Repair', 'url' => '/services/refrigerator-repair-moorpark', 'logoUrl' => '/images/thumbnails/side-by-side-fridge.webp'],

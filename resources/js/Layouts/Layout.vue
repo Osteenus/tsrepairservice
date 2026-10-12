@@ -97,6 +97,7 @@
                     <div class="">
                         <a :href="`tel:${contactNumber}`" class="inline-block text-white text-xl py-3 focus-visible:outline-2 focus-visible:outline-white">{{ contactNumber }}</a>
                     </div>
+                    <SocialLinks />
                 </div>
                 <div class="footer-links">
                     <span class="text-sm text-white font-bold">Our Services</span>
@@ -123,12 +124,13 @@
 <script>
 import ServiceStructuredData from '@/Components/Custom/ServiceStructuredData.vue';
 import BusinessRegistration from '@/Components/Custom/BusinessRegistration.vue';
+import SocialLinks from '@/Components/Custom/SocialLinks.vue';
 import { Link } from '@inertiajs/vue3'
 import { Transition } from 'vue';
 import Aos from 'aos';
 
 export default {
-    components: { BusinessRegistration, ServiceStructuredData },
+    components: { BusinessRegistration, ServiceStructuredData, SocialLinks },
     mounted() {
         this.handleResize();
         window.addEventListener('resize', this.handleResize);

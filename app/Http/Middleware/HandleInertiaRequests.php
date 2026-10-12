@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
                 'services' => config('repair.services'),
                 'serviceAreas' => config('repair.service_areas'),
                 'registration' => config('repair.registration'),
+                'social' => config('repair.social'),
             ],
             'flash' => [
                 'requestReceived' => fn () => $request->session()->get('requestReceived', false),
