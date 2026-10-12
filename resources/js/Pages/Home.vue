@@ -29,7 +29,7 @@ const schema = computed(() => JSON.stringify({
             legalName: registration.value.business_name, url: canonical, telephone: phone.value,
             logo: `${canonical}storage/img/logo.png`,
             identifier: { '@type': 'PropertyValue', propertyID: 'California BHGS Major Appliance Repair Registration', value: registration.value.number } },
-        { '@type': 'WebSite', '@id': `${canonical}#website`, url: canonical, name: 'Tech Solutions Repair Service', publisher: { '@id': `${canonical}#organization` } },
+        { '@type': 'WebSite', '@id': `${canonical}#website`, url: canonical, name: 'Tech Solutions Repair Service', alternateName: ['TS Repair Service', 'tsrepairservice.com'], publisher: { '@id': `${canonical}#organization` } },
     ],
 }).replace(/</g, '\\u003c'));
 const reveal = (delay = 0) => ({
