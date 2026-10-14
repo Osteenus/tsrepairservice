@@ -34,4 +34,12 @@ return [
         'enabled' => false,
         'default_rate' => 0.0725,
     ],
+
+    // Headless Chromium for PDFs (spatie/browsershot + puppeteer). Leave null to use what is on PATH.
+    'pdf' => [
+        'node_binary' => env('CRM_PDF_NODE_BINARY'),
+        'npm_binary' => env('CRM_PDF_NPM_BINARY'),
+        'chrome_path' => env('CRM_PDF_CHROME_PATH'),
+        'no_sandbox' => (bool) env('CRM_PDF_NO_SANDBOX', false),
+    ],
 ];

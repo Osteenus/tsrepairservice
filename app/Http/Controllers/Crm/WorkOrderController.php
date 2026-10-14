@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Crm;
 use App\Crm\LocalTime;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Document;
 use App\Models\WorkOrder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -61,7 +63,7 @@ class WorkOrderController extends Controller
 
     public function show(WorkOrder $job): Response
     {
-        $job->load(['customer', 'appliance']);
+        $job->load(['customer', 'appliance', 'documents' => fn ($query) => $query->latest('id')]);
 
         return Inertia::render('Crm/Jobs/Show', [
             'job' => [
@@ -71,7 +73,17 @@ class WorkOrderController extends Controller
                 'repair_request_id' => $job->repair_request_id,
                 'customer' => $job->customer->only('id', 'name', 'phone', 'email'),
                 'appliance' => $job->appliance?->only('id', 'type', 'brand', 'model', 'serial'),
+                'has_approved_estimate' => $job->documents->contains(fn (Document $document) => $document->isEstimate() && $document->status === 'approved'),
             ],
+            'documents' => $job->documents->map(fn (Document $document) => [
+                'id' => $document->id,
+                'type' => $document->type,
+                'title' => $document->title(),
+                'status' => $document->status,
+                'status_label' => Document::STATUSES[$document->status],
+                'total' => $document->total_cents,
+                'href' => $document->isDraft() ? route('crm.documents.edit', $document) : route('crm.documents.show', $document),
+            ]),
             'statuses' => WorkOrder::STATUSES,
             'manualStatuses' => self::MANUAL_STATUSES,
         ]);
@@ -107,6 +119,12 @@ class WorkOrderController extends Controller
     public function status(Request $request, WorkOrder $job): RedirectResponse
     {
         $data = $request->validate(['status' => ['required', Rule::in(self::MANUAL_STATUSES)]]);
+
+        // BHGS: no repair work before the customer authorizes a written estimate.
+        if ($data['status'] === 'in_progress' && ! $job->approvedEstimate()) {
+            throw ValidationException::withMessages(['status' => 'Get the customer\'s signature on a written estimate before starting the repair.']);
+        }
+
         $job->update($data);
 
         return back()->with('flash.banner', 'Status: '.WorkOrder::STATUSES[$data['status']].'.');

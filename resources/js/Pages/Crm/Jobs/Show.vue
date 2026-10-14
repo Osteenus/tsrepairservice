@@ -3,15 +3,19 @@ import { Link, router } from '@inertiajs/vue3';
 import { MapPin, Pencil, Phone } from 'lucide-vue-next';
 import CrmLayout from '@/Layouts/CrmLayout.vue';
 import StatusBadge from '@/Components/Crm/StatusBadge.vue';
+import Button from '@/Components/Crm/Button.vue';
+import { money } from '@/crm/money.js';
 
 const props = defineProps({
     job: Object,
     statuses: Object,
     manualStatuses: Array,
+    documents: Array,
 });
 
 const tel = (props.job.customer.phone || '').replace(/[^\d+]/g, '');
 const setStatus = status => router.patch(route('crm.jobs.status', props.job.id), { status }, { preserveScroll: true });
+const createEstimate = () => router.post(route('crm.estimates.store', props.job.id));
 </script>
 
 <template>
@@ -64,7 +68,24 @@ const setStatus = status => router.patch(route('crm.jobs.status', props.job.id),
         </section>
 
         <section class="mt-3 rounded-xl bg-white p-4 shadow-sm">
+            <h2 class="mb-2 text-xs font-bold uppercase tracking-wider text-[#c8000a]">Estimates &amp; invoices</h2>
+            <ul v-if="documents.length" class="mb-3 divide-y divide-gray-200">
+                <li v-for="document in documents" :key="document.id">
+                    <Link :href="document.href" class="flex items-center justify-between gap-2 py-3">
+                        <span>
+                            <span class="block font-semibold">{{ document.title }}</span>
+                            <span class="block text-sm text-gray-500">{{ document.status_label }}</span>
+                        </span>
+                        <span class="font-semibold" :class="document.status === 'void' && 'text-gray-400 line-through'">{{ money(document.total) }}</span>
+                    </Link>
+                </li>
+            </ul>
+            <Button class="w-full" @click="createEstimate">Create estimate</Button>
+        </section>
+
+        <section class="mt-3 rounded-xl bg-white p-4 shadow-sm">
             <h2 class="mb-2 text-xs font-bold uppercase tracking-wider text-[#c8000a]">Status</h2>
+            <p v-if="$page.props.errors.status" class="mb-2 text-sm text-red-600">{{ $page.props.errors.status }}</p>
             <div class="grid grid-cols-2 gap-2">
                 <button
                     v-for="status in manualStatuses"

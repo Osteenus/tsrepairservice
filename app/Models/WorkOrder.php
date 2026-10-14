@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkOrder extends Model
@@ -47,5 +48,16 @@ class WorkOrder extends Model
     public function repairRequest(): BelongsTo
     {
         return $this->belongsTo(RepairRequest::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
+    }
+
+    /** The estimate the customer authorized most recently (a revision replaces the original). */
+    public function approvedEstimate(): ?Document
+    {
+        return $this->documents()->estimates()->where('status', 'approved')->latest('approved_at')->latest('id')->first();
     }
 }

@@ -44,8 +44,8 @@ class WorkOrderTest extends CrmTestCase
         $this->signIn();
         $job = WorkOrder::factory()->create();
 
-        $this->patch(route('crm.jobs.status', $job), ['status' => 'in_progress'])->assertRedirect();
-        $this->assertSame('in_progress', $job->fresh()->status);
+        $this->patch(route('crm.jobs.status', $job), ['status' => 'cancelled'])->assertRedirect();
+        $this->assertSame('cancelled', $job->fresh()->status);
 
         foreach (['approved', 'paid', 'estimate_sent', 'bogus'] as $status) {
             $this->patch(route('crm.jobs.status', $job), ['status' => $status])->assertSessionHasErrors('status');
