@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Invoice {{ invoice.number }} - Tech Solutions Repair Service</title>
+<style>
+  @page { size: Letter; margin: 0; }
+  :root { --red: #c8000a; --ink: #151515; --muted: #6b6b6b; --line: #e3e3e3; --soft: #f6f6f6; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: Inter, "Helvetica Neue", Arial, sans-serif; color: var(--ink); font-size: 10pt; line-height: 1.4; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 8.5in; height: 11in; padding: 0.4in 0.55in 0.3in; position: relative; display: flex; flex-direction: column; }
+  .topbar { position: absolute; left: 0; right: 0; top: 0; height: 0.14in; background: linear-gradient(90deg, var(--red) 0 50%, var(--ink) 50% 100%); }
+
+  header { display: flex; justify-content: space-between; align-items: center; margin-top: 0.1in; }
+  .logo { height: 0.95in; width: auto; display: block; margin-left: -0.04in; }
+  .company { text-align: right; font-size: 9pt; color: var(--muted); line-height: 1.5; }
+  .company strong { color: var(--ink); font-size: 10pt; }
+
+  .title-row { display: flex; justify-content: space-between; align-items: flex-end; margin: 0.16in 0 0.12in; border-bottom: 2px solid var(--ink); padding-bottom: 0.06in; }
+  h1 { margin: 0; font-size: 22pt; letter-spacing: 0.08em; font-weight: 800; }
+  h1 span { color: var(--red); }
+  .meta { display: flex; gap: 0.3in; text-align: right; }
+  .meta div small { display: block; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .meta div b { font-size: 10.5pt; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.2in; margin-bottom: 0.14in; }
+  .box h3 { margin: 0 0 0.05in; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.1em; color: var(--red); }
+  .box p { margin: 0; }
+  .box .name { font-weight: 700; }
+  .box .muted { color: var(--muted); }
+
+  table.items { width: 100%; border-collapse: collapse; }
+  table.items thead th { background: var(--ink); color: #fff; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.08em; text-align: left; padding: 0.07in 0.1in; }
+  table.items th.num, table.items td.num { text-align: right; white-space: nowrap; }
+  table.items td { padding: 0.05in 0.1in; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.items tr.group td { background: var(--soft); font-weight: 700; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.08em; color: var(--red); padding: 0.05in 0.1in; }
+  table.items td .sub { display: block; color: var(--muted); font-size: 8.5pt; }
+
+  .bottom { display: grid; grid-template-columns: 1fr 2.9in; gap: 0.3in; margin-top: 0.14in; }
+  .notes h3 { margin: 0 0 0.05in; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.1em; color: var(--red); }
+  .notes p { margin: 0 0 0.07in; font-size: 8.5pt; color: #333; }
+  .totals table { width: 100%; border-collapse: collapse; }
+  .totals td { padding: 0.04in 0.1in; }
+  .totals td:last-child { text-align: right; white-space: nowrap; }
+  .totals tr.grand td { background: var(--red); color: #fff; font-weight: 800; font-size: 12pt; padding: 0.09in 0.1in; }
+  .totals tr.balance td { font-weight: 700; border-top: 2px solid var(--ink); }
+  .status { display: inline-block; margin-top: 0.1in; padding: 0.03in 0.14in; border: 2px solid; border-radius: 4px; font-weight: 800; letter-spacing: 0.12em; font-size: 11pt; transform: rotate(-4deg); }
+  .status.paid { color: #1a7f37; border-color: #1a7f37; }
+  .status.due { color: var(--red); border-color: var(--red); }
+
+  .sign { display: flex; gap: 0.3in; margin-top: 0.2in; }
+  .sign div { flex: 1; border-top: 1px solid var(--ink); padding-top: 0.04in; font-size: 8pt; color: var(--muted); }
+
+  .return { margin: 0.08in 0 0.06in; font-size: 8.5pt; color: #333; }
+  .legal { border: 1.5px solid var(--ink); padding: 0.05in 0.1in; font-size: 7.8pt; font-weight: 700; line-height: 1.35; }
+  footer { margin-top: auto; border-top: 1px solid var(--line); padding-top: 0.06in; text-align: center; font-size: 8.5pt; color: var(--muted); }
+  footer b { color: var(--ink); }
+  .sample { position: absolute; top: 4.2in; left: 1.2in; font-size: 90pt; font-weight: 900; color: rgba(200,0,10,0.07); transform: rotate(-28deg); pointer-events: none; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar"></div>
+  {% if invoice.sample %}<div class="sample">SAMPLE</div>{% endif %}
+
+  <header>
+    <img class="logo" src="logo.png" alt="Tech Solutions Repair Service">
+    <div class="company">
+      <strong>{{ company.legal_name }}</strong><br>
+      {% if company.address %}{{ company.address }}<br>{% endif %}{{ company.service_area }}<br>
+      {{ company.phone }}{% if company.email %} · {{ company.email }}{% endif %}<br>
+      {{ company.website }}<br>
+      {{ company.registration }}
+    </div>
+  </header>
+
+  <div class="title-row">
+    <h1>INVOICE<span>.</span></h1>
+    <div class="meta">
+      <div><small>Invoice No.</small><b>{{ invoice.number }}</b></div>
+      <div><small>Date</small><b>{{ invoice.date }}</b></div>
+      <div><small>Service date</small><b>{{ invoice.service_date }}</b></div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="box">
+      <h3>Bill to</h3>
+      <p class="name">{{ customer.name }}</p>
+      <p>{{ customer.address_line1 }}</p>
+      <p>{{ customer.city_state_zip }}</p>
+      {% if customer.phone %}<p class="muted">{{ customer.phone }}</p>{% endif %}
+      {% if customer.email %}<p class="muted">{{ customer.email }}</p>{% endif %}
+    </div>
+    <div class="box">
+      <h3>Appliance</h3>
+      <p class="name">{{ appliance.type }}</p>
+      <p>{{ appliance.brand }} {{ appliance.model }}</p>
+      {% if appliance.serial %}<p class="muted">S/N {{ appliance.serial }}</p>{% endif %}
+    </div>
+    <div class="box">
+      <h3>Reported problem</h3>
+      <p>{{ appliance.problem }}</p>
+      {% if appliance.diagnosis %}<p class="muted" style="margin-top:4px"><b>Findings:</b> {{ appliance.diagnosis }}</p>{% endif %}
+    </div>
+  </div>
+
+  <table class="items">
+    <thead>
+      <tr><th>Description</th><th class="num">Qty</th><th class="num">Unit price</th><th class="num">Amount</th></tr>
+    </thead>
+    <tbody>
+      {% if labor_items %}
+      <tr class="group"><td colspan="4">Service &amp; labor</td></tr>
+      {% for it in labor_items %}
+      <tr><td>{{ it.description }}{% if it.warranty %}<span class="sub">Covered by warranty - no charge</span>{% endif %}{% if it.note %}<span class="sub">{{ it.note }}</span>{% endif %}</td><td class="num">{{ it.qty }}</td><td class="num">{{ money(it.unit) }}</td><td class="num">{{ money(it.qty * it.unit) }}</td></tr>
+      {% endfor %}
+      {% endif %}
+      {% if part_items %}
+      <tr class="group"><td colspan="4">Parts</td></tr>
+      {% for it in part_items %}
+      <tr><td>{{ it.description }}{% if it.part_number %}<span class="sub">Part # {{ it.part_number }}</span>{% endif %}<span class="sub">{% if it.warranty %}Warranty replacement - no charge{% else %}Non-warranty part - charged{% endif %}{% if it.used %} · USED / EXCHANGED part{% endif %}</span></td><td class="num">{{ it.qty }}</td><td class="num">{{ money(it.unit) }}</td><td class="num">{{ money(it.qty * it.unit) }}</td></tr>
+      {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div class="bottom">
+    <div class="notes">
+      {% if invoice.work_performed %}<h3>Work performed</h3><p>{{ invoice.work_performed }}</p>{% endif %}
+      <h3>Used or exchanged parts</h3><p>{{ used_parts_statement }}</p>
+      {% if estimate_ref %}<h3>Estimate</h3><p>{{ estimate_ref }}</p>{% endif %}
+      {% if warranty %}<h3>Warranty</h3><p>{{ warranty }}</p>{% endif %}
+      {% if notes %}<h3>Notes</h3><p>{{ notes }}</p>{% endif %}
+      <h3>Payment</h3>
+      <p>{{ payment.methods }}{% if payment.method_used %}<br>Paid by: <b>{{ payment.method_used }}</b>{% endif %}</p>
+      <span class="status {{ 'paid' if totals.balance == 0 else 'due' }}">{{ 'PAID' if totals.balance == 0 else 'BALANCE DUE' }}</span>
+    </div>
+    <div class="totals">
+      <table>
+        <tr><td>Labor &amp; service</td><td>{{ money(totals.labor) }}</td></tr>
+        <tr><td>Parts</td><td>{{ money(totals.parts) }}</td></tr>
+        {% if totals.show_tax %}<tr><td>Sales tax on parts ({{ tax_rate_label }})</td><td>{{ money(totals.tax) }}</td></tr>{% endif %}
+        {% if totals.discount %}<tr><td>Discount</td><td>−{{ money(totals.discount) }}</td></tr>{% endif %}
+        <tr class="grand"><td>Total</td><td>{{ money(totals.total) }}</td></tr>
+        {% if totals.paid %}<tr><td>Paid</td><td>−{{ money(totals.paid) }}</td></tr>{% endif %}
+        <tr class="balance"><td>Balance due</td><td>{{ money(totals.balance) }}</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="sign">
+    <div>Customer signature</div>
+    <div>Invoice completed by (signature or employee no.)</div>
+    <div>Repair performed by (signature or employee no.)</div>
+  </div>
+  <p class="return">&#9744; Repairs satisfactorily completed and replaced parts returned to customer. Customer initials: ______</p>
+
+  <div class="legal">
+    An estimate as required (Section 9844 of the California Business and Professions Code) for repairs shall be given to the customer by the service dealer in writing, and the service dealer may not charge for work done or parts supplied in excess of the estimate without prior consent of the customer. Where provided in writing, the service dealer may charge a reasonable fee for services provided in determining the nature of the malfunction in preparation of a written estimate for repair. For information contact the Bureau of Household Goods and Services, Department of Consumer Affairs, Sacramento 95834.
+  </div>
+
+  <footer>
+    <b>Thank you for choosing {{ company.name }}!</b><br>
+    {{ company.phone }} · {{ company.website }}
+  </footer>
+</div>
+</body>
+</html>

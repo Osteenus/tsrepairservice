@@ -1,0 +1,48 @@
+{
+  "invoice": {
+    "number": "TS-2026-0001",
+    "date": "Oct 13, 2026",
+    "service_date": "Oct 13, 2026",
+    "sample": true,
+    "work_performed": "Replaced the suspension rod kit, leveled the tub and ran a test cycle."
+  },
+  "customer": {
+    "name": "Sample Customer",
+    "address_line1": "123 Sample Street",
+    "city_state_zip": "Moorpark, CA 93021",
+    "phone": "(805) 555-0100",
+    "email": "customer@example.com"
+  },
+  "appliance": {
+    "type": "Washer (top load)",
+    "brand": "Whirlpool",
+    "model": "WTW4950XW2",
+    "serial": "XXXXXXXXXX",
+    "problem": "Tub shakes and bounces during spin cycle.",
+    "diagnosis": "Worn suspension rods."
+  },
+  "labor_items": [
+    {
+      "description": "Service call / diagnostic fee",
+      "qty": 1,
+      "unit": 95.0
+    },
+    {
+      "description": "Labor: replace suspension rods",
+      "qty": 1,
+      "unit": 120.0
+    }
+  ],
+  "part_items": [
+    {
+      "description": "Suspension rod kit (set of 4)",
+      "part_number": "W10780051",
+      "qty": 1,
+      "unit": 52.0
+    }
+  ],
+  "warranty": "",
+  "notes": "Sample data for layout preview only.",
+  "paid": 0,
+  "estimate_ref": "Written estimate no. TS-E-2026-0001 dated Oct 13, 2026, authorized by customer: $267.00 (excludes tax)."
+}
