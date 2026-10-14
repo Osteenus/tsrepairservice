@@ -39,8 +39,8 @@ class PdfRenderer
             if ($config['npm_binary']) {
                 $browser->setNpmBinary($config['npm_binary']);
             }
-            if ($config['chrome_path']) {
-                $browser->setChromePath($config['chrome_path']);
+            if ($chrome = $this->chromePath()) {
+                $browser->setChromePath($chrome);
             }
             if ($config['no_sandbox']) {
                 $browser->noSandbox();
@@ -52,6 +52,25 @@ class PdfRenderer
 
             throw new PdfRenderingFailed('The PDF could not be created. Try again in a minute; if it keeps failing, check the PDF setup in docs/crm/deploy.md.', previous: $exception);
         }
+    }
+
+    /**
+     * The configured browser, else the newest Chrome that `npm ci` put in .cache/puppeteer.
+     * Found by path because PHP-FPM's working directory is not the project, so Puppeteer's config is not read there.
+     */
+    public function chromePath(): ?string
+    {
+        if ($path = config('crm.pdf.chrome_path')) {
+            return $path;
+        }
+
+        $candidates = array_merge(
+            glob(base_path('.cache/puppeteer/chrome/*/chrome-linux64/chrome')) ?: [],
+            glob(base_path('.cache/puppeteer/chrome/*/chrome-mac*/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing')) ?: [],
+        );
+        natsort($candidates);
+
+        return end($candidates) ?: null;
     }
 
     public function filename(Document $document): string
