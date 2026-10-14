@@ -5,3 +5,4 @@ public/build
 public/storage
 vite.config.js
 /bootstrap/ssr
+/.cache

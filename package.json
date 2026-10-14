@@ -27,6 +27,7 @@
         "@heroicons/vue": "^2.2.0",
         "aos": "^2.3.4",
         "lucide-vue-next": "^1.0.0",
+        "puppeteer": "^24.43.1",
         "tailwindcss": "^4.1.12",
         "vue3-carousel": "^0.16.0"
     }
