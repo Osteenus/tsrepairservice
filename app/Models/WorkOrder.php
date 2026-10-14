@@ -55,6 +55,11 @@ class WorkOrder extends Model
         return $this->hasMany(Document::class);
     }
 
+    public function photos(): HasMany
+    {
+        return $this->hasMany(Photo::class);
+    }
+
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);

@@ -6,6 +6,7 @@ use App\Crm\LocalTime;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Document;
+use App\Models\Photo;
 use App\Models\WorkOrder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -63,7 +64,7 @@ class WorkOrderController extends Controller
 
     public function show(WorkOrder $job): Response
     {
-        $job->load(['customer', 'appliance', 'documents' => fn ($query) => $query->latest('id')]);
+        $job->load(['customer', 'appliance', 'photos', 'documents' => fn ($query) => $query->latest('id')]);
 
         return Inertia::render('Crm/Jobs/Show', [
             'job' => [
@@ -84,6 +85,13 @@ class WorkOrderController extends Controller
                 'total' => $document->total_cents,
                 'href' => $document->isDraft() ? route('crm.documents.edit', $document) : route('crm.documents.show', $document),
             ]),
+            'photos' => $job->photos->map(fn (Photo $photo) => [
+                'id' => $photo->id,
+                'url' => route('crm.photos.show', $photo),
+                'kind' => Photo::KINDS[$photo->kind],
+                'caption' => $photo->caption,
+            ]),
+            'photoKinds' => Photo::KINDS,
             'statuses' => WorkOrder::STATUSES,
             'manualStatuses' => self::MANUAL_STATUSES,
         ]);

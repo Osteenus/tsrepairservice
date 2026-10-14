@@ -6,6 +6,7 @@ use App\Http\Controllers\Crm\DashboardController;
 use App\Http\Controllers\Crm\DocumentController;
 use App\Http\Controllers\Crm\EstimateController;
 use App\Http\Controllers\Crm\InvoiceController;
+use App\Http\Controllers\Crm\PhotoController;
 use App\Http\Controllers\Crm\RepairRequestController;
 use App\Http\Controllers\Crm\WorkOrderController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,10 @@ Route::prefix('crm')
 
             Route::resource('jobs', WorkOrderController::class)->except('destroy');
             Route::patch('jobs/{job}/status', [WorkOrderController::class, 'status'])->name('jobs.status');
+
+            Route::post('jobs/{job}/photos', [PhotoController::class, 'store'])->name('photos.store');
+            Route::get('photos/{photo}', [PhotoController::class, 'show'])->name('photos.show');
+            Route::delete('photos/{photo}', [PhotoController::class, 'destroy'])->name('photos.destroy');
 
             Route::post('jobs/{job}/estimates', [EstimateController::class, 'store'])->name('estimates.store');
             Route::post('documents/{document}/issue', [EstimateController::class, 'issue'])->name('estimates.issue');

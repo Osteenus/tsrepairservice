@@ -4,6 +4,7 @@ import { MapPin, Pencil, Phone } from 'lucide-vue-next';
 import CrmLayout from '@/Layouts/CrmLayout.vue';
 import StatusBadge from '@/Components/Crm/StatusBadge.vue';
 import Button from '@/Components/Crm/Button.vue';
+import JobPhotos from '@/Components/Crm/JobPhotos.vue';
 import { money } from '@/crm/money.js';
 
 const props = defineProps({
@@ -11,6 +12,8 @@ const props = defineProps({
     statuses: Object,
     manualStatuses: Array,
     documents: Array,
+    photos: Array,
+    photoKinds: Object,
 });
 
 const tel = (props.job.customer.phone || '').replace(/[^\d+]/g, '');
@@ -88,6 +91,8 @@ const hasEstimate = props.documents.some(d => d.type === 'estimate' && ['issued'
                 <Button v-if="hasEstimate" @click="createInvoice">Create invoice</Button>
             </div>
         </section>
+
+        <JobPhotos :job-id="job.id" :photos="photos" :kinds="photoKinds" />
 
         <section class="mt-3 rounded-xl bg-white p-4 shadow-sm">
             <h2 class="mb-2 text-xs font-bold uppercase tracking-wider text-[#c8000a]">Status</h2>
