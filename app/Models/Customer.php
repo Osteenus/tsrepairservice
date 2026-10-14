@@ -60,6 +60,16 @@ class Customer extends Model
         return $this->hasMany(Appliance::class);
     }
 
+    public function workOrders(): HasMany
+    {
+        return $this->hasMany(WorkOrder::class);
+    }
+
+    public function fullAddress(): string
+    {
+        return implode(', ', array_filter([$this->address_line1, $this->cityStateZip()]));
+    }
+
     public function cityStateZip(): string
     {
         return trim(implode(', ', array_filter([$this->city, trim($this->state.' '.$this->zip)])));

@@ -5,10 +5,12 @@ import { MapPin, MessageSquare, Pencil, Phone } from 'lucide-vue-next';
 import CrmLayout from '@/Layouts/CrmLayout.vue';
 import Field from '@/Components/Crm/Field.vue';
 import Button from '@/Components/Crm/Button.vue';
+import StatusBadge from '@/Components/Crm/StatusBadge.vue';
 
 const props = defineProps({
     customer: Object,
     appliances: Array,
+    jobs: Array,
 });
 
 const address = [props.customer.address_line1, props.customer.city, [props.customer.state, props.customer.zip].filter(Boolean).join(' ')]
@@ -61,6 +63,10 @@ const save = () => {
             <p v-if="customer.notes" class="mt-3 whitespace-pre-line text-sm text-gray-700">{{ customer.notes }}</p>
         </section>
 
+        <Link :href="route('crm.jobs.create', { customer: customer.id })" class="mt-3 flex h-12 items-center justify-center rounded-lg bg-[#151515] font-bold text-white">
+            + New job
+        </Link>
+
         <section class="mt-4">
             <div class="mb-2 flex items-center justify-between">
                 <h2 class="text-sm font-bold uppercase tracking-wider text-[#c8000a]">Appliances</h2>
@@ -103,6 +109,21 @@ const save = () => {
                     </form>
                 </li>
                 <li v-if="!appliances.length && editing !== 'new'" class="rounded-xl bg-white p-4 text-center text-gray-500 shadow-sm">No appliances yet.</li>
+            </ul>
+        </section>
+
+        <section v-if="jobs.length" class="mt-4">
+            <h2 class="mb-2 text-sm font-bold uppercase tracking-wider text-[#c8000a]">Job history</h2>
+            <ul class="divide-y divide-gray-200 overflow-hidden rounded-xl bg-white shadow-sm">
+                <li v-for="job in jobs" :key="job.id">
+                    <Link :href="route('crm.jobs.show', job.id)" class="flex items-center justify-between gap-2 px-4 py-3 active:bg-gray-50">
+                        <span>
+                            <span class="block font-semibold">#{{ job.id }} · {{ job.appliance || 'Appliance not set' }}</span>
+                            <span class="block text-sm text-gray-500">{{ job.date }}</span>
+                        </span>
+                        <StatusBadge :status="job.status" :label="job.status_label" />
+                    </Link>
+                </li>
             </ul>
         </section>
     </CrmLayout>

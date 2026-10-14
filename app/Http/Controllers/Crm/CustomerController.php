@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Crm;
 
+use App\Crm\LocalTime;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\WorkOrder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -47,6 +49,13 @@ class CustomerController extends Controller
         return Inertia::render('Crm/Customers/Show', [
             'customer' => $customer->only('id', 'name', 'phone', 'email', 'address_line1', 'city', 'state', 'zip', 'notes'),
             'appliances' => $customer->appliances()->latest()->get(['id', 'type', 'brand', 'model', 'serial', 'notes']),
+            'jobs' => $customer->workOrders()->with('appliance')->latest()->get()->map(fn (WorkOrder $job) => [
+                'id' => $job->id,
+                'status' => $job->status,
+                'status_label' => WorkOrder::STATUSES[$job->status],
+                'appliance' => $job->appliance?->label(),
+                'date' => LocalTime::display($job->scheduled_at ?? $job->created_at, 'M j, Y'),
+            ]),
         ]);
     }
 
