@@ -110,5 +110,6 @@
     {{ $company['phone'] }} · {{ $company['website'] }}
   </footer>
 </div>
+@include('crm.pdf._fit')
 </body>
 </html>

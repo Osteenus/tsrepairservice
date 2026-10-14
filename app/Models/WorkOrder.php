@@ -55,6 +55,11 @@ class WorkOrder extends Model
         return $this->hasMany(Document::class);
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     /** The estimate the customer authorized most recently (a revision replaces the original). */
     public function approvedEstimate(): ?Document
     {

@@ -18,7 +18,13 @@ const form = useForm({
     items: props.document.items.map(item => ({ ...item, unit: item.unit.toFixed(2) })),
     discount: props.document.discount ? props.document.discount.toFixed(2) : '',
     notes: props.document.notes ?? '',
+    work_performed: props.document.work_performed ?? '',
+    completed_by: props.document.completed_by ?? '',
+    performed_by: props.document.performed_by ?? '',
+    service_date: props.document.service_date ?? '',
 });
+
+const overLimit = computed(() => isInvoice && props.document.limit_cents !== null && live.value.total - live.value.tax > props.document.limit_cents);
 
 const live = computed(() => totals(form.items, form.discount));
 
@@ -48,6 +54,9 @@ const deleteDraft = () => {
             <p class="font-semibold">{{ document.job.customer_name }}</p>
             <p class="text-sm text-gray-600">{{ document.job.appliance || 'Appliance not set' }}</p>
             <p class="mt-1 text-sm text-gray-500">{{ document.job.reported_problem }}</p>
+            <p v-if="isInvoice && document.limit_cents !== null" class="mt-2 text-sm text-gray-700">
+                Customer authorized: <b>{{ money(document.limit_cents) }}</b> before tax.
+            </p>
             <p v-if="document.revision_of" class="mt-2 rounded-lg bg-amber-50 p-2 text-sm text-amber-900">
                 Revision of {{ document.revision_of.number }} ({{ money(document.revision_of.total_cents) }}). The customer must consent to the new total before the extra work.
             </p>
@@ -94,6 +103,13 @@ const deleteDraft = () => {
                 <Button type="button" variant="secondary" @click="add('part')">+ Part</Button>
             </div>
 
+            <div v-if="isInvoice" class="grid gap-3 rounded-xl bg-white p-4 shadow-sm">
+                <Field v-model="form.work_performed" as="textarea" label="Work performed" :error="form.errors.work_performed" />
+                <Field v-model="form.service_date" type="date" label="Service date" :error="form.errors.service_date" />
+                <Field v-model="form.completed_by" label="Invoice completed by (name or employee no.)" :error="form.errors.completed_by" />
+                <Field v-model="form.performed_by" label="Repair performed by (name or employee no.)" :error="form.errors.performed_by" />
+            </div>
+
             <div class="grid gap-3 rounded-xl bg-white p-4 shadow-sm">
                 <Field v-model="form.discount" label="Discount, $" type="number" inputmode="decimal" step="0.01" min="0" :error="form.errors.discount" />
                 <Field v-model="form.notes" as="textarea" label="Notes printed on the document" :error="form.errors.notes" />
@@ -102,11 +118,14 @@ const deleteDraft = () => {
             <p v-if="form.errors.items" class="text-sm text-red-600">{{ form.errors.items }}</p>
 
             <div class="sticky bottom-16 z-10 -mx-3 border-t border-gray-200 bg-white/95 px-3 pb-3 pt-2 backdrop-blur">
+                <p v-if="overLimit" class="mb-2 rounded-lg bg-red-50 p-2 text-sm font-semibold text-red-700">
+                    Above the authorized {{ money(document.limit_cents) }}. Get consent with a revised estimate before issuing.
+                </p>
                 <div class="mb-2 flex justify-between text-sm text-gray-600">
                     <span>Labor {{ money(live.labor) }} · Parts {{ money(live.parts) }}<template v-if="live.discount"> · −{{ money(live.discount) }}</template></span>
                     <span class="text-lg font-extrabold text-[#c8000a]">{{ money(live.total) }}</span>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid gap-2" :class="isInvoice ? 'grid-cols-1' : 'grid-cols-2'">
                     <Button type="submit" variant="dark" :disabled="form.processing">Save</Button>
                     <Button v-if="!isInvoice" type="button" :disabled="form.processing || !form.items.length" @click="save('present')">Present</Button>
                 </div>

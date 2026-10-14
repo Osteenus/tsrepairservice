@@ -16,6 +16,8 @@ const props = defineProps({
 const tel = (props.job.customer.phone || '').replace(/[^\d+]/g, '');
 const setStatus = status => router.patch(route('crm.jobs.status', props.job.id), { status }, { preserveScroll: true });
 const createEstimate = () => router.post(route('crm.estimates.store', props.job.id));
+const createInvoice = () => router.post(route('crm.invoices.store', props.job.id));
+const hasEstimate = props.documents.some(d => d.type === 'estimate' && ['issued', 'approved'].includes(d.status));
 </script>
 
 <template>
@@ -80,7 +82,11 @@ const createEstimate = () => router.post(route('crm.estimates.store', props.job.
                     </Link>
                 </li>
             </ul>
-            <Button class="w-full" @click="createEstimate">Create estimate</Button>
+            <p v-if="$page.props.errors.document" class="mb-2 text-sm text-red-600">{{ $page.props.errors.document }}</p>
+            <div class="grid gap-2" :class="hasEstimate && 'grid-cols-2'">
+                <Button :variant="hasEstimate ? 'secondary' : 'primary'" @click="createEstimate">Create estimate</Button>
+                <Button v-if="hasEstimate" @click="createInvoice">Create invoice</Button>
+            </div>
         </section>
 
         <section class="mt-3 rounded-xl bg-white p-4 shadow-sm">

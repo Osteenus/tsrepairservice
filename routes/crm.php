@@ -5,6 +5,7 @@ use App\Http\Controllers\Crm\CustomerController;
 use App\Http\Controllers\Crm\DashboardController;
 use App\Http\Controllers\Crm\DocumentController;
 use App\Http\Controllers\Crm\EstimateController;
+use App\Http\Controllers\Crm\InvoiceController;
 use App\Http\Controllers\Crm\RepairRequestController;
 use App\Http\Controllers\Crm\WorkOrderController;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +35,13 @@ Route::prefix('crm')
             Route::post('documents/{document}/approve', [EstimateController::class, 'approve'])->name('estimates.approve');
             Route::post('documents/{document}/revise', [EstimateController::class, 'revise'])->name('estimates.revise');
 
+            Route::post('jobs/{job}/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
+            Route::post('documents/{document}/issue-invoice', [InvoiceController::class, 'issue'])->name('invoices.issue');
+            Route::post('documents/{document}/payments', [InvoiceController::class, 'storePayment'])->name('payments.store');
+            Route::delete('payments/{payment}', [InvoiceController::class, 'destroyPayment'])->name('payments.destroy');
+
             Route::get('documents/{document}', [DocumentController::class, 'show'])->name('documents.show');
+            Route::post('documents/{document}/email', [DocumentController::class, 'email'])->name('documents.email');
             Route::get('documents/{document}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
             Route::put('documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
             Route::post('documents/{document}/void', [DocumentController::class, 'void'])->name('documents.void');

@@ -10,10 +10,12 @@ use App\Crm\PdfRenderingFailed;
 use App\Http\Controllers\Controller;
 use App\Models\Document;
 use App\Models\DocumentItem;
+use App\Mail\CrmDocumentMail;
 use App\Models\Signature;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -54,6 +56,10 @@ class DocumentController extends Controller
             'items.*.is_used_or_exchanged' => ['boolean'],
             'discount' => ['nullable', 'numeric', 'min:0', 'max:100000'],
             'notes' => ['nullable', 'string', 'max:2000'],
+            'work_performed' => ['nullable', 'string', 'max:2000'],
+            'completed_by' => ['nullable', 'string', 'max:120'],
+            'performed_by' => ['nullable', 'string', 'max:120'],
+            'service_date' => ['nullable', 'date_format:Y-m-d'],
         ]);
 
         DB::transaction(function () use ($document, $data) {
@@ -74,7 +80,16 @@ class DocumentController extends Controller
             $document->fill([
                 'discount_cents' => Money::parse($data['discount'] ?? 0),
                 'notes' => $data['notes'] ?? null,
-            ])->save();
+            ]);
+            if (! $document->isEstimate()) {
+                $document->fill([
+                    'work_performed' => $data['work_performed'] ?? null,
+                    'completed_by' => $data['completed_by'] ?? null,
+                    'performed_by' => $data['performed_by'] ?? null,
+                    'service_date' => $data['service_date'] ?? $document->service_date,
+                ]);
+            }
+            $document->save();
             $document->refreshTotals();
         });
 
@@ -91,6 +106,23 @@ class DocumentController extends Controller
         $workflow->void($document);
 
         return to_route('crm.jobs.show', $job)->with('flash.banner', $document->trashed() ? 'Draft deleted.' : $document->title().' voided.');
+    }
+
+    public function email(Document $document): RedirectResponse
+    {
+        $email = $document->workOrder->customer->email;
+
+        if ($document->isDraft() || $document->status === 'void') {
+            return back()->with('flash.banner', 'Only issued documents can be emailed.')->with('flash.bannerStyle', 'danger');
+        }
+        if (! $email) {
+            return back()->with('flash.banner', 'Add the customer\'s email first.')->with('flash.bannerStyle', 'danger');
+        }
+
+        Mail::to($email)->queue(new CrmDocumentMail($document));
+        $document->forceFill(['emailed_at' => now()])->save();
+
+        return back()->with('flash.banner', "Sending {$document->number} to {$email}.");
     }
 
     public function preview(Document $document, PdfRenderer $renderer): HttpResponse

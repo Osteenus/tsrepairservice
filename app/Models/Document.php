@@ -44,6 +44,7 @@ class Document extends Model
             'valid_until' => 'date',
             'service_date' => 'date',
             'approved_at' => 'datetime',
+            'emailed_at' => 'datetime',
             'charge_tax' => 'boolean',
             'tax_rate' => 'float',
             'snapshot' => 'array',
@@ -68,6 +69,16 @@ class Document extends Model
     public function consent(): HasOne
     {
         return $this->hasOne(Consent::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function paidCents(): int
+    {
+        return (int) $this->payments()->sum('amount_cents');
     }
 
     public function revisionOf(): BelongsTo

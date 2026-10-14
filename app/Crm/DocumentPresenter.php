@@ -14,7 +14,7 @@ class DocumentPresenter
 {
     public static function pdfContext(Document $document): array
     {
-        $document->loadMissing(['items', 'signatures', 'consent.signature', 'revisionOf', 'workOrder.customer', 'workOrder.appliance']);
+        $document->loadMissing(['items', 'signatures', 'consent.signature', 'revisionOf', 'estimate', 'payments', 'workOrder.customer', 'workOrder.appliance']);
         $snapshot = $document->snapshot ?? DocumentSnapshot::make($document);
         $totals = $document->isDraft() ? $document->calculateTotals() : null;
 
@@ -34,6 +34,11 @@ class DocumentPresenter
         if ($document->revisionOf) {
             $notes = trim('Revises estimate '.$document->revisionOf->number.'. '.$notes);
         }
+
+        $total = $totals?->total ?? $document->total_cents;
+        $paid = (int) $document->payments->sum('amount_cents');
+        $used = $document->items->where('is_used_or_exchanged', true)->pluck('description');
+        $taxRate = (float) $document->tax_rate;
 
         return [
             'logo' => 'data:image/png;base64,'.base64_encode(file_get_contents(resource_path('images/crm-logo.png'))),
@@ -62,8 +67,22 @@ class DocumentPresenter
                 'parts' => $totals?->parts ?? $document->parts_cents,
                 'tax' => $totals?->tax ?? $document->tax_cents,
                 'discount' => $totals?->discount ?? $document->discount_cents,
-                'total' => $totals?->total ?? $document->total_cents,
+                'total' => $total,
+                'paid' => $paid,
+                'balance' => $total - $paid,
             ],
+            'service_date' => self::date($document->service_date ?? $document->issued_on ?? LocalTime::today()),
+            'work_performed' => $document->work_performed,
+            'completed_by' => $document->completed_by,
+            'performed_by' => $document->performed_by,
+            'used_parts_statement' => $used->isEmpty()
+                ? 'No used or exchanged parts were installed.'
+                : 'Used or exchanged parts were installed: '.$used->implode('; ').'.',
+            'estimate_ref' => self::estimateReference($document),
+            'payment_method_used' => $document->payments->pluck('method')->unique()
+                ->map(fn ($method) => \App\Models\Payment::METHODS[$method] ?? $method)->implode(', '),
+            'show_tax' => $document->charge_tax,
+            'tax_rate_label' => rtrim(rtrim(number_format($taxRate * 100, 3), '0'), '.').'%',
             'customer_signature' => $customerSignature ? self::signature($customerSignature) : null,
             'consent' => $document->consent ? [
                 'at' => LocalTime::display($document->consent->consented_at, 'M j, Y g:i A'),
@@ -74,6 +93,20 @@ class DocumentPresenter
                     : 'Signed: '.$document->consent->authorized_by,
             ] : null,
         ];
+    }
+
+    private static function estimateReference(Document $document): ?string
+    {
+        $estimate = $document->estimate;
+        if ($document->isEstimate() || ! $estimate?->number) {
+            return null;
+        }
+
+        $label = $estimate->revision_of_id ? 'Revised written estimate' : 'Written estimate';
+        $authorized = $estimate->status === 'approved' ? 'authorized by customer' : 'repair declined by customer';
+
+        return sprintf('%s no. %s dated %s, %s: %s (excludes tax).',
+            $label, $estimate->number, self::date($estimate->issued_on), $authorized, Money::format($estimate->total_cents));
     }
 
     public static function date(\DateTimeInterface $date): string

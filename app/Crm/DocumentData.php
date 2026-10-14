@@ -4,6 +4,7 @@ namespace App\Crm;
 
 use App\Models\Document;
 use App\Models\DocumentItem;
+use App\Models\Payment;
 use App\Models\Signature;
 
 /**
@@ -13,7 +14,9 @@ class DocumentData
 {
     public static function make(Document $document): array
     {
-        $document->load(['items', 'workOrder.customer', 'workOrder.appliance', 'signatures', 'consent', 'revisionOf']);
+        $document->load(['items', 'workOrder.customer', 'workOrder.appliance', 'signatures', 'consent', 'revisionOf', 'payments']);
+        $invoices = app(InvoiceWorkflow::class);
+        $paid = (int) $document->payments->sum('amount_cents');
         $totals = $document->calculateTotals();
         $job = $document->workOrder;
 
@@ -32,6 +35,22 @@ class DocumentData
             'notes' => $document->notes,
             'diagnostic_terms' => $document->snapshot['diagnostic_terms'] ?? config('crm.diagnostic_terms'),
             'discount' => $document->discount_cents / 100,
+            'work_performed' => $document->work_performed,
+            'completed_by' => $document->completed_by,
+            'performed_by' => $document->performed_by,
+            'service_date' => $document->service_date?->toDateString(),
+            'emailed_at' => LocalTime::display($document->emailed_at, 'M j, Y g:i A'),
+            'limit_cents' => $document->isEstimate() ? null : $invoices->limitCents($document),
+            'missing' => $document->isEstimate() || ! $document->isDraft() ? [] : $invoices->missingBhgsFields($document),
+            'paid' => $paid,
+            'balance' => $document->isEstimate() ? null : $totals->total - $paid,
+            'payments' => $document->payments->map(fn (Payment $payment) => [
+                'id' => $payment->id,
+                'amount' => $payment->amount_cents,
+                'method' => Payment::METHODS[$payment->method] ?? $payment->method,
+                'paid_on' => DocumentPresenter::date($payment->paid_on),
+                'note' => $payment->note,
+            ]),
             'items' => $document->items->map(fn (DocumentItem $item) => [
                 'kind' => $item->kind,
                 'description' => $item->description,
@@ -67,6 +86,7 @@ class DocumentData
                 'id' => $job->id,
                 'customer_name' => $job->customer->name,
                 'customer_phone' => $job->customer->phone,
+                'customer_email' => $job->customer->email,
                 'appliance' => $job->appliance?->label(),
                 'reported_problem' => $job->reported_problem,
             ],
