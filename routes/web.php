@@ -36,3 +36,5 @@ Route::inertia('/services/electronic-repair', 'Services/ElectronicRepairService'
 
 Route::post('/contact', [RepairRequestController::class, 'store'])
     ->middleware('throttle:service-requests')->name('contact.store');
+
+require __DIR__.'/crm.php';

@@ -1,4 +1,5 @@
 User-agent: *
-Disallow:
+Disallow: /crm
+Disallow: /user/
 
 Sitemap: https://tsrepairservice.com/sitemap.xml

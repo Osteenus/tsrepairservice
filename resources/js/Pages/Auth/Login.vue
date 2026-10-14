@@ -2,7 +2,6 @@
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -16,21 +15,20 @@ defineProps({
 const form = useForm({
     email: '',
     password: '',
-    remember: false,
 });
 
+// No "remember me": the CRM session must expire after inactivity.
 const submit = () => {
-    form.transform(data => ({
-        ...data,
-        remember: form.remember ? 'on' : '',
-    })).post(route('login'), {
+    form.post(route('login'), {
         onFinish: () => form.reset('password'),
     });
 };
 </script>
 
 <template>
-    <Head title="Log in" />
+    <Head title="Log in">
+        <meta name="robots" content="noindex, nofollow">
+    </Head>
 
     <AuthenticationCard>
         <template #logo>
@@ -67,13 +65,6 @@ const submit = () => {
                     autocomplete="current-password"
                 />
                 <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
-                </label>
             </div>
 
             <div class="flex items-center justify-end mt-4">

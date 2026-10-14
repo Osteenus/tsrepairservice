@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureTwoFactorConfirmed;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\PrivateArea;
 use App\Http\Middleware\RedirectWwwToApex;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +23,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
+        ]);
+        $middleware->alias([
+            'private' => PrivateArea::class,
+            'two-factor' => EnsureTwoFactorConfirmed::class,
         ]);
 
     })
