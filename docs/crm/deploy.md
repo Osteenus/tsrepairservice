@@ -4,7 +4,7 @@ Server: Ubuntu 24.04, nginx, PHP 8.4-FPM running as `www-data`, PostgreSQL 16, a
 `/var/www/html/tsrepairservice` (checkout owned by `osteen`). The public site release steps in
 `docs/ssr-deployment.md` still apply; this file adds what the CRM (`/crm`) needs.
 
-Checked on the server on 2026-10-14: `upload_max_filesize=2M`, `post_max_size=8M`, nginx has no
+Checked on the server on 2026-10-14 (steps 2 and 3 done on 2026-10-15): `upload_max_filesize=2M`, `post_max_size=8M`, nginx has no
 `client_max_body_size` (default 1 MB), no system Node or Chromium, no queue worker, no cron jobs.
 The one-time steps below fix each of these.
 
@@ -16,7 +16,6 @@ Add:
 
 ```
 CRM_PDF_NODE_BINARY=/usr/bin/node
-CRM_PDF_NPM_BINARY=/usr/bin/npm
 CRM_PDF_NO_SANDBOX=true
 ```
 
@@ -55,7 +54,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ```
 sudo apt update
-sudo apt install -y nodejs npm fonts-liberation fonts-inter \
+sudo apt install -y nodejs fonts-liberation fonts-inter \
   libasound2t64 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 libdrm2 libgbm1 \
   libgtk-3-0t64 libnss3 libxcomposite1 libxdamage1 libxrandr2 libxkbcommon0 libpango-1.0-0
 ```
@@ -141,7 +140,10 @@ sudo ufw status verbose
 ```
 
 Keep the current SSH session open while enabling ufw and test a new SSH login before closing it.
-PostgreSQL listens on 127.0.0.1 only and stays closed. Add the same three rules in the Hostinger
+PostgreSQL was found listening on all addresses (`listen_addresses = '*'`) with port 5432 reachable
+from the internet (2026-10-15). ufw closes the port; also set `listen_addresses = 'localhost'` in
+`/etc/postgresql/16/main/postgresql.conf` and run `sudo systemctl restart postgresql`, so the database
+stays private even if the firewall is ever disabled. Add the same three rules in the Hostinger
 panel firewall as a second layer.
 
 ### Database user (recommended)
