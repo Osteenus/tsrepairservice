@@ -39,17 +39,31 @@ class WorkOrderTest extends CrmTestCase
         ])->assertSessionHasErrors('appliance_id');
     }
 
-    public function test_only_manual_statuses_can_be_set_by_hand(): void
+    public function test_only_allowed_manual_transitions_are_accepted(): void
     {
         $this->signIn();
         $job = WorkOrder::factory()->create();
 
-        $this->patch(route('crm.jobs.status', $job), ['status' => 'cancelled'])->assertRedirect();
-        $this->assertSame('cancelled', $job->fresh()->status);
-
-        foreach (['approved', 'paid', 'estimate_sent', 'bogus'] as $status) {
+        foreach (['approved', 'paid', 'estimate_sent', 'completed', 'bogus'] as $status) {
             $this->patch(route('crm.jobs.status', $job), ['status' => $status])->assertSessionHasErrors('status');
         }
+
+        $this->patch(route('crm.jobs.status', $job), ['status' => 'cancelled'])->assertSessionHasNoErrors();
+        $this->assertSame('cancelled', $job->fresh()->status);
+        $this->patch(route('crm.jobs.status', $job), ['status' => 'new'])->assertSessionHasNoErrors();
+        $this->assertSame('new', $job->fresh()->status);
+    }
+
+    public function test_a_paid_job_is_closed_for_manual_changes(): void
+    {
+        $this->signIn();
+        $job = WorkOrder::factory()->create(['status' => 'paid']);
+
+        foreach (['completed', 'in_progress', 'cancelled', 'new'] as $status) {
+            $this->patch(route('crm.jobs.status', $job), ['status' => $status])->assertSessionHasErrors('status');
+        }
+        $this->assertSame('paid', $job->fresh()->status);
+        $this->get(route('crm.jobs.show', $job))->assertInertia(fn ($page) => $page->where('actions', []));
     }
 
     public function test_today_filter_uses_pacific_time(): void

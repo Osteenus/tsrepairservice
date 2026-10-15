@@ -1,6 +1,7 @@
 <script setup>
+import { computed } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
-import { MapPin, Pencil, Phone } from 'lucide-vue-next';
+import { Check, MapPin, Pencil, Phone } from 'lucide-vue-next';
 import CrmLayout from '@/Layouts/CrmLayout.vue';
 import StatusBadge from '@/Components/Crm/StatusBadge.vue';
 import Button from '@/Components/Crm/Button.vue';
@@ -10,15 +11,18 @@ import { money } from '@/crm/money.js';
 const props = defineProps({
     job: Object,
     statuses: Object,
-    manualStatuses: Array,
+    actions: Object,
     documents: Array,
     photos: Array,
     photoKinds: Object,
 });
 
 const tel = (props.job.customer.phone || '').replace(/[^\d+]/g, '');
-const setStatus = status => {
-    if (!confirm(`Change job #${props.job.id} status from "${props.job.status_label}" to "${props.statuses[status]}"?`)) return;
+const steps = ['new', 'estimate_sent', 'approved', 'in_progress', 'completed', 'paid'];
+const currentStep = computed(() => steps.indexOf(props.job.status));
+
+const setStatus = (status, label) => {
+    if (!confirm(`${label}? Job #${props.job.id} goes from "${props.job.status_label}" to "${props.statuses[status]}".`)) return;
     router.patch(route('crm.jobs.status', props.job.id), { status }, { preserveScroll: true });
 };
 const createEstimate = () => router.post(route('crm.estimates.store', props.job.id));
@@ -100,17 +104,31 @@ const hasEstimate = props.documents.some(d => d.type === 'estimate' && ['issued'
         <section class="mt-3 rounded-xl bg-white p-4 shadow-sm">
             <h2 class="mb-2 text-xs font-bold uppercase tracking-wider text-[#c8000a]">Status</h2>
             <p v-if="$page.props.errors.status" class="mb-2 text-sm text-red-600">{{ $page.props.errors.status }}</p>
-            <div class="grid grid-cols-2 gap-2">
+            <p v-if="job.status === 'cancelled'" class="mb-3 rounded-lg bg-gray-100 p-3 font-semibold text-gray-700">This job is cancelled.</p>
+            <ol v-else class="mb-3 grid gap-1">
+                <li v-for="(status, index) in steps" :key="status" class="flex items-center gap-3">
+                    <span
+                        class="flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+                        :class="index < currentStep || (index === currentStep && status === 'paid') ? 'bg-green-600 text-white' : index === currentStep ? 'bg-[#c8000a] text-white' : 'bg-gray-200 text-gray-500'"
+                    >
+                        <Check v-if="index < currentStep || (index === currentStep && status === 'paid')" class="size-4" />
+                        <template v-else>{{ index + 1 }}</template>
+                    </span>
+                    <span :class="index === currentStep ? 'font-bold' : index < currentStep ? 'text-gray-700' : 'text-gray-400'">{{ statuses[status] }}</span>
+                </li>
+            </ol>
+            <p v-if="job.status === 'paid'" class="text-sm text-green-700">Paid in full. The job is closed; removing a payment on the invoice reopens it.</p>
+            <p v-else-if="['new', 'estimate_sent'].includes(job.status)" class="mb-2 text-sm text-gray-500">The next steps follow the estimate: issuing it, then the customer's signature.</p>
+            <div v-if="Object.keys(actions).length" class="grid gap-2" :class="Object.keys(actions).length > 1 && 'grid-cols-2'">
                 <button
-                    v-for="status in manualStatuses"
+                    v-for="(label, status) in actions"
                     :key="status"
                     type="button"
                     class="h-12 rounded-lg border font-semibold"
-                    :class="job.status === status ? 'border-[#151515] bg-[#151515] text-white' : 'border-gray-300 bg-white'"
-                    :disabled="job.status === status"
-                    @click="setStatus(status)"
+                    :class="status === 'cancelled' ? 'border-gray-300 bg-white text-gray-600' : 'border-[#151515] bg-[#151515] text-white'"
+                    @click="setStatus(status, label)"
                 >
-                    {{ statuses[status] }}
+                    {{ label }}
                 </button>
             </div>
         </section>

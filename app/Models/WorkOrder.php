@@ -22,6 +22,21 @@ class WorkOrder extends Model
         'cancelled' => 'Cancelled',
     ];
 
+    /**
+     * Status changes the owner makes by hand, with button labels. The others follow documents:
+     * issuing an estimate → estimate_sent, signing it → approved, issuing an invoice → completed,
+     * full payment → paid. A paid job is closed; removing a payment reopens it automatically.
+     */
+    public const MANUAL_TRANSITIONS = [
+        'new' => ['cancelled' => 'Cancel job'],
+        'estimate_sent' => ['cancelled' => 'Cancel job'],
+        'approved' => ['in_progress' => 'Start repair', 'completed' => 'Mark completed', 'cancelled' => 'Cancel job'],
+        'in_progress' => ['completed' => 'Mark completed', 'cancelled' => 'Cancel job'],
+        'completed' => ['in_progress' => 'Back to in progress', 'cancelled' => 'Cancel job'],
+        'paid' => [],
+        'cancelled' => ['new' => 'Reopen job'],
+    ];
+
     /** Statuses still needing work or money; everything else is closed. */
     public const OPEN_STATUSES = ['new', 'estimate_sent', 'approved', 'in_progress', 'completed'];
 

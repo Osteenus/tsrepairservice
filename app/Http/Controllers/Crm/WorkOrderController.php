@@ -17,9 +17,6 @@ use Inertia\Response;
 
 class WorkOrderController extends Controller
 {
-    /** Statuses the owner sets by hand; the others follow estimates, invoices and payments. */
-    public const MANUAL_STATUSES = ['new', 'in_progress', 'completed', 'cancelled'];
-
     public function index(Request $request): Response
     {
         $filter = $request->input('filter', 'open');
@@ -93,7 +90,7 @@ class WorkOrderController extends Controller
             ]),
             'photoKinds' => Photo::KINDS,
             'statuses' => WorkOrder::STATUSES,
-            'manualStatuses' => self::MANUAL_STATUSES,
+            'actions' => WorkOrder::MANUAL_TRANSITIONS[$job->status],
         ]);
     }
 
@@ -126,7 +123,12 @@ class WorkOrderController extends Controller
 
     public function status(Request $request, WorkOrder $job): RedirectResponse
     {
-        $data = $request->validate(['status' => ['required', Rule::in(self::MANUAL_STATUSES)]]);
+        $allowed = array_keys(WorkOrder::MANUAL_TRANSITIONS[$job->status]);
+        $data = $request->validate(['status' => ['required', Rule::in($allowed)]], [
+            'status.in' => $job->status === 'paid'
+                ? 'This job is paid and closed. Remove the payment on the invoice to change it.'
+                : 'This status cannot be set by hand from "'.WorkOrder::STATUSES[$job->status].'".',
+        ]);
 
         // BHGS: no repair work before the customer authorizes a written estimate.
         if ($data['status'] === 'in_progress' && ! $job->approvedEstimate()) {
