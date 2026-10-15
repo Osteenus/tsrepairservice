@@ -50,13 +50,18 @@ class ConvertRepairRequest
 
             $request->forceFill(['archived_at' => now()])->save();
 
-            return WorkOrder::create([
+            $job = WorkOrder::create([
                 'customer_id' => $customer->id,
                 'appliance_id' => $appliance->id,
                 'repair_request_id' => $request->id,
                 'reported_problem' => $request->description,
                 'service_address' => $customer->fullAddress() ?: null,
             ]);
+
+            // The customer's photos move to the job; they stay marked "From customer".
+            $request->photos()->update(['work_order_id' => $job->id]);
+
+            return $job;
         });
     }
 }

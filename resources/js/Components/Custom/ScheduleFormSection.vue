@@ -2,6 +2,7 @@
 import { computed, nextTick, ref, watch } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { vFormat } from '@/forms/format.js';
+import { formatSize, shrinkImages } from '@/forms/images.js';
 
 const props = defineProps({
   embedded: { type: Boolean, default: false },
@@ -15,8 +16,33 @@ const resultElement = ref(null);
 const received = computed(() => page.props.flash?.requestReceived === true);
 const form = useForm({
   name: '', phone: '', email: '', location: '', serviceId: props.selectedServiceId ?? '',
-  brand: '', model: '', description: '', website: '',
+  brand: '', model: '', description: '', website: '', photos: [],
 });
+
+// Optional photos, shrunk in the browser before upload.
+const MAX_PHOTOS = 5;
+const previews = ref([]);
+const preparingPhotos = ref(false);
+const photoError = computed(() => form.errors.photos || Object.entries(form.errors).find(([key]) => key.startsWith('photos.'))?.[1]);
+const addPhotos = async event => {
+  const files = Array.from(event.target.files).slice(0, MAX_PHOTOS - form.photos.length);
+  event.target.value = '';
+  if (!files.length) return;
+  preparingPhotos.value = true;
+  const shrunk = await shrinkImages(files);
+  preparingPhotos.value = false;
+  form.photos = [...form.photos, ...shrunk];
+  previews.value = [...previews.value, ...shrunk.map(file => ({ url: URL.createObjectURL(file), size: formatSize(file.size) }))];
+};
+const removePhoto = index => {
+  URL.revokeObjectURL(previews.value[index].url);
+  form.photos = form.photos.filter((_, i) => i !== index);
+  previews.value = previews.value.filter((_, i) => i !== index);
+};
+const clearPhotos = () => {
+  previews.value.forEach(preview => URL.revokeObjectURL(preview.url));
+  previews.value = [];
+};
 watch(() => props.selectedServiceId, value => { form.serviceId = value ?? ''; });
 const fields = [
   { key: 'name', label: 'Name', type: 'text', autocomplete: 'name', required: true, max: 255, format: 'words' },
@@ -36,6 +62,7 @@ const submit = () => {
     onSuccess: async () => {
       if (!received.value) return;
       form.reset();
+      clearPhotos();
       await nextTick();
       resultElement.value?.focus();
     },
@@ -79,12 +106,28 @@ const submit = () => {
             <p v-if="form.errors[field.key]" :id="`error-${field.key}`" class="text-sm text-red-800 mt-2">{{ form.errors[field.key] }}</p>
           </div>
         </div>
+        <div class="mt-5">
+          <p id="request-photos-label" class="block text-sm font-semibold text-slate-800 mb-2">Photos (optional)</p>
+          <p id="request-photos-hint" class="mb-3 text-sm leading-6 text-gray-600">Up to {{ MAX_PHOTOS }} photos: the model/serial label, an error code, a leak. They are private and used only to diagnose your appliance.</p>
+          <ul v-if="previews.length" class="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-5">
+            <li v-for="(preview, index) in previews" :key="preview.url" class="relative aspect-square overflow-hidden rounded-xl border border-gray-300 bg-gray-100">
+              <img :src="preview.url" :alt="`Photo ${index + 1}`" class="size-full object-cover">
+              <span class="absolute inset-x-0 bottom-0 bg-black/60 px-1 py-0.5 text-center text-[11px] text-white">{{ preview.size }}</span>
+              <button type="button" class="absolute right-1 top-1 flex size-8 items-center justify-center rounded-full bg-white/90 text-lg leading-none text-slate-900 shadow" :aria-label="`Remove photo ${index + 1}`" @click="removePhoto(index)">&times;</button>
+            </li>
+          </ul>
+          <label v-if="form.photos.length < MAX_PHOTOS" class="request-photo-button" :class="{ 'opacity-60 cursor-wait': preparingPhotos }">
+            {{ preparingPhotos ? 'Preparing photos…' : (form.photos.length ? 'Add more photos' : 'Add photos') }}
+            <input type="file" accept="image/*" multiple class="sr-only" aria-labelledby="request-photos-label" aria-describedby="request-photos-hint" :disabled="preparingPhotos || form.processing" @change="addPhotos">
+          </label>
+          <p v-if="photoError" class="text-sm text-red-800 mt-2">{{ photoError }}</p>
+        </div>
         <div class="request-trap" aria-hidden="true" inert>
           <label for="request-website">Leave this field empty</label>
           <input id="request-website" v-model="form.website" name="website" tabindex="-1" autocomplete="off">
         </div>
         <p class="mt-6 text-sm leading-6 text-gray-600">This is a service request, not a confirmed appointment. Availability depends on your appliance, location, and our schedule.</p>
-        <button type="submit" :disabled="form.processing" class="request-button mt-5 disabled:opacity-60 disabled:cursor-wait">{{ form.processing ? 'Sending…' : 'Request Service' }}</button>
+        <button type="submit" :disabled="form.processing || preparingPhotos" class="request-button mt-5 disabled:opacity-60 disabled:cursor-wait">{{ form.processing ? (form.photos.length ? `Sending… ${form.progress?.percentage ?? 0}%` : 'Sending…') : 'Request Service' }}</button>
       </form>
     </div>
   </section>
@@ -95,5 +138,6 @@ const submit = () => {
 .request-field { @apply w-full min-w-0 rounded-xl border border-gray-400 bg-white px-3 py-3 text-base text-slate-900 placeholder:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700; }
 .request-field[aria-invalid="true"] { @apply border-red-700 bg-red-50; }
 .request-button { @apply flex w-full items-center justify-center rounded-2xl bg-red-700 px-5 py-4 text-base font-semibold text-white hover:bg-red-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-red-700 transition-colors; }
+.request-photo-button { @apply flex w-full cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-400 bg-white px-4 py-4 text-base font-semibold text-slate-800 hover:border-red-700 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-red-700; }
 .request-trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 </style>

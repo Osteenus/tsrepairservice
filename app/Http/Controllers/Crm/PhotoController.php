@@ -8,7 +8,6 @@ use App\Models\WorkOrder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -24,14 +23,11 @@ class PhotoController extends Controller
         ]);
 
         foreach ($data['photos'] as $file) {
-            $extension = $file->guessExtension() ?: 'jpg';
-            $path = $file->storeAs("photos/{$job->id}", Str::uuid().'.'.$extension, 'local');
-
             $job->photos()->create([
-                'path' => $path,
-                'mime' => $file->getMimeType(),
+                ...Photo::storeUpload($file, "photos/{$job->id}"),
                 'kind' => $data['kind'],
                 'caption' => $data['caption'] ?? null,
+                'source' => 'technician',
             ]);
         }
 

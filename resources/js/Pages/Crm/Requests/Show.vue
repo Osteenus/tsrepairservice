@@ -37,6 +37,15 @@ const archive = () => {
             <p class="text-sm text-gray-600">{{ [request.brand, request.model].filter(Boolean).join(' · ') }}</p>
             <h2 class="mt-3 text-xs font-bold uppercase tracking-wider text-[#c8000a]">Problem</h2>
             <p class="whitespace-pre-line">{{ request.description }}</p>
+            <template v-if="request.photos.length">
+                <h2 class="mt-3 text-xs font-bold uppercase tracking-wider text-[#c8000a]">Customer photos</h2>
+                <div class="mt-1 grid grid-cols-3 gap-2">
+                    <a v-for="photo in request.photos" :key="photo.id" :href="photo.url" target="_blank" class="aspect-square overflow-hidden rounded-lg bg-gray-100">
+                        <img :src="photo.url" alt="Customer photo" loading="lazy" class="size-full object-cover">
+                    </a>
+                </div>
+                <p v-if="!request.work_order_id" class="mt-1 text-xs text-gray-500">They move to the job when you create it.</p>
+            </template>
         </section>
 
         <div class="mt-4 grid gap-2">

@@ -189,6 +189,7 @@ Then open `/crm`, open a job and download any estimate PDF.
 | Customers, appliances, jobs, estimates, invoices, payments, photos | PostgreSQL | Soft delete only (`deleted_at`) |
 | Customer signatures (PNG) | `storage/app/private/signatures/{document}/` | Never |
 | Job photos | `storage/app/private/photos/{job}/` | File kept when a photo is removed |
+| Customer photos from website requests | `storage/app/private/requests/{request}/` | Linked to the job when the request becomes one |
 | Issued document details | `documents.snapshot` (JSON) | Frozen at issue; PDFs are re-rendered from it |
 
 Private files are served only through signed-in routes (`/crm/photos/{id}`, `/crm/signatures/{id}`),

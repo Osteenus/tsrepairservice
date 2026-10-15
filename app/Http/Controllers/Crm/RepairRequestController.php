@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Crm;
 use App\Crm\ConvertRepairRequest;
 use App\Crm\LocalTime;
 use App\Http\Controllers\Controller;
+use App\Models\Photo;
 use App\Models\RepairRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -53,6 +54,7 @@ class RepairRequestController extends Controller
                 'received' => LocalTime::display($repairRequest->created_at),
                 'archived' => (bool) $repairRequest->archived_at,
                 'work_order_id' => $repairRequest->workOrder?->id,
+                'photos' => $repairRequest->photos->map(fn (Photo $photo) => ['id' => $photo->id, 'url' => route('crm.photos.show', $photo)]),
             ],
         ]);
     }

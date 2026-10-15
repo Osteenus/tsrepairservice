@@ -86,6 +86,7 @@ class WorkOrderController extends Controller
                 'id' => $photo->id,
                 'url' => route('crm.photos.show', $photo),
                 'kind' => Photo::KINDS[$photo->kind],
+                'from_customer' => $photo->source === 'customer',
                 'caption' => $photo->caption,
             ]),
             'photoKinds' => Photo::KINDS,

@@ -50,12 +50,15 @@ class StoreRepairRequest extends FormRequest
             'model' => ['nullable', 'string', 'max:120'],
             'description' => ['required', 'string', 'max:5000'],
             'website' => ['nullable', 'string', 'max:0'],
+            // Optional photos (label, error code, leak). The form shrinks them before upload.
+            'photos' => ['nullable', 'array', 'max:5'],
+            'photos.*' => ['file', 'mimetypes:image/jpeg,image/png,image/webp,image/heic,image/heif', 'max:10240'],
         ];
     }
 
     public function attributes(): array
     {
-        return ['serviceId' => 'appliance type', 'location' => 'city or ZIP code'];
+        return ['serviceId' => 'appliance type', 'location' => 'city or ZIP code', 'photos' => 'photos', 'photos.*' => 'photo'];
     }
 
     public function messages(): array

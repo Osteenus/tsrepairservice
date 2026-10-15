@@ -55,6 +55,7 @@ class WebFormRequestReceivedEmail extends Mailable
                 'location' => $this->repairRequest->location,
                 'brand' => $this->repairRequest->brand,
                 'model' => $this->repairRequest->model,
+                'photoCount' => $this->repairRequest->photos()->count(),
 
             ],
         );

@@ -8,3 +8,6 @@
 <strong>Model:</strong> {{ $model ?: 'Not provided' }}</p>
 <p><strong>Problem:</strong></p>
 <p style="white-space: pre-wrap">{{ $messageText }}</p>
+@if ($photoCount)
+<p><strong>Photos:</strong> {{ $photoCount }} attached — open the request in the CRM to view them.</p>
+@endif
