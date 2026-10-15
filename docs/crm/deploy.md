@@ -76,9 +76,12 @@ It prints `OK: rendered a … byte PDF` or the Chromium error. Memory: one rende
 If rendering fails in the app, the user sees "The PDF could not be created…" and the error is in
 `storage/logs/laravel.log`. Estimates and invoices are still saved; only the PDF is missing.
 
-### 4. Queue worker (customer emails)
+### 4. Queue worker (all emails)
 
-`QUEUE_CONNECTION=database`, so emails with PDFs are sent by a worker:
+`QUEUE_CONNECTION=database`, so emails are sent by a worker: estimates and invoices to customers, and
+the website request notifications to you. **Start the worker in the same release as the CRM**,
+otherwise request notifications wait in the queue (the requests themselves are saved and visible in
+the CRM inbox either way). Each email is retried 3 times if the mail server is down.
 
 ```
 sudo cp deploy/tsrepair-queue.service /etc/systemd/system/
