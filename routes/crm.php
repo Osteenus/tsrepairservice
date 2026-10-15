@@ -42,6 +42,8 @@ Route::prefix('crm')
 
             Route::post('jobs/{job}/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
             Route::post('documents/{document}/issue-invoice', [InvoiceController::class, 'issue'])->name('invoices.issue');
+            Route::get('documents/{document}/sign-invoice', [InvoiceController::class, 'present'])->name('invoices.present');
+            Route::post('documents/{document}/sign-invoice', [InvoiceController::class, 'sign'])->name('invoices.sign');
             Route::post('documents/{document}/payments', [InvoiceController::class, 'storePayment'])->name('payments.store');
             Route::delete('payments/{payment}', [InvoiceController::class, 'destroyPayment'])->name('payments.destroy');
 

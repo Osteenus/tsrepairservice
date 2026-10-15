@@ -8,9 +8,14 @@ const canvas = ref(null);
 let ctx;
 let drawing = false;
 let dirty = false;
+let width = 0;
 
 const resize = () => {
     const el = canvas.value;
+    // Mobile browsers fire resize when the address bar shows or hides while scrolling;
+    // only a real width change (rotation) resets the pad, otherwise the signature would be lost.
+    if (el.offsetWidth === width) return;
+    width = el.offsetWidth;
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
     el.width = el.offsetWidth * ratio;
     el.height = el.offsetHeight * ratio;
@@ -30,7 +35,11 @@ const point = event => {
 
 const start = event => {
     event.preventDefault();
-    canvas.value.setPointerCapture(event.pointerId);
+    try {
+        canvas.value.setPointerCapture(event.pointerId);
+    } catch {
+        // Capture is only a convenience; drawing works without it.
+    }
     drawing = true;
     const [x, y] = point(event);
     ctx.beginPath();

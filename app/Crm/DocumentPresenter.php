@@ -81,6 +81,8 @@ class DocumentPresenter
             'estimate_ref' => self::estimateReference($document),
             'payment_method_used' => $document->payments->pluck('method')->unique()
                 ->map(fn ($method) => \App\Models\Payment::METHODS[$method] ?? $method)->implode(', '),
+            'parts_returned' => $document->parts_returned,
+            'customer_initials' => $customerSignature ? self::initials($customerSignature->signed_name) : null,
             'show_tax' => $document->charge_tax,
             'tax_rate_label' => rtrim(rtrim(number_format($taxRate * 100, 3), '0'), '.').'%',
             'customer_signature' => $customerSignature ? self::signature($customerSignature) : null,
@@ -107,6 +109,11 @@ class DocumentPresenter
 
         return sprintf('%s no. %s dated %s, %s: %s (excludes tax).',
             $label, $estimate->number, self::date($estimate->issued_on), $authorized, Money::format($estimate->total_cents));
+    }
+
+    private static function initials(string $name): string
+    {
+        return collect(preg_split('/\s+/', trim($name)))->filter()->map(fn ($part) => mb_strtoupper(mb_substr($part, 0, 1)).'.')->implode('');
     }
 
     public static function date(\DateTimeInterface $date): string

@@ -12,9 +12,10 @@ const props = defineProps({
 });
 
 const isEstimate = props.document.type === 'estimate';
-const post = (name, message = null) => {
-    if (message && !confirm(message)) return;
-    router.post(route(name, props.document.id), {}, { preserveScroll: true });
+// Every status change asks first; afterwards the page starts at the top, where the result message is.
+const post = (name, message) => {
+    if (!confirm(message)) return;
+    router.post(route(name, props.document.id));
 };
 
 const methods = { cash: 'Cash', check: 'Check', zelle: 'Zelle', card: 'Card', other: 'Other' };
@@ -25,16 +26,14 @@ const payment = useForm({
     paid_on: `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`,
     note: '',
 });
-const addPayment = () => payment.post(route('crm.payments.store', props.document.id), {
-    preserveScroll: true,
-    onSuccess: () => payment.reset('note'),
-});
+const addPayment = () => {
+    if (!confirm(`Record a ${methods[payment.method]} payment of $${Number(payment.amount || 0).toFixed(2)}?`)) return;
+    payment.post(route('crm.payments.store', props.document.id), { onSuccess: () => payment.reset('note') });
+};
 const removePayment = id => {
-    if (confirm('Remove this payment?')) router.delete(route('crm.payments.destroy', id), { preserveScroll: true });
+    if (confirm('Remove this payment? The job status will be updated.')) router.delete(route('crm.payments.destroy', id));
 };
-const email = () => {
-    if (confirm(`Email ${props.document.number} to ${props.document.job.customer_email}?`)) post('crm.documents.email');
-};
+const email = () => post('crm.documents.email', `Email ${props.document.number} to ${props.document.job.customer_email}?`);
 </script>
 
 <template>
@@ -69,6 +68,7 @@ const email = () => {
             <div v-for="signature in document.signatures" :key="signature.id" class="mb-2">
                 <img :src="signature.url" alt="Customer signature" class="h-20 w-auto">
                 <p class="text-sm text-gray-600">{{ signature.signed_name }} · {{ signature.signed_at }}</p>
+                <p v-if="!isEstimate" class="text-sm text-gray-600">{{ document.parts_returned ? 'Confirmed: repairs completed, replaced parts returned.' : 'Parts return not confirmed.' }}</p>
             </div>
             <div v-if="document.consent" class="text-sm text-gray-700">
                 <p class="font-semibold">{{ document.consent.method === 'oral' ? 'Oral consent' : 'Written consent' }}: {{ document.consent.authorized_by }}<template v-if="document.consent.phone">, {{ document.consent.phone }}</template></p>
@@ -117,9 +117,10 @@ const email = () => {
             <template v-if="isEstimate && ['draft', 'issued'].includes(document.status) && !document.expired">
                 <Link :href="route('crm.estimates.present', document.id)" class="flex h-12 items-center justify-center rounded-lg bg-[#c8000a] font-bold text-white">Present to customer &amp; sign</Link>
             </template>
-            <Button v-if="!isEstimate && document.status === 'draft'" :disabled="document.missing.length > 0" @click="post('crm.invoices.issue')">Issue invoice</Button>
-            <Button v-if="isEstimate && document.status === 'draft'" variant="secondary" @click="post('crm.estimates.issue')">Issue without signature (send later)</Button>
-            <Button v-if="isEstimate && document.status === 'approved'" variant="secondary" @click="post('crm.estimates.revise')">Revised estimate (needs consent)</Button>
+            <Button v-if="!isEstimate && document.status === 'draft'" :disabled="document.missing.length > 0" @click="post('crm.invoices.issue', `Issue this invoice for ${money(document.totals.total)}? It gets a number and can no longer be edited.`)">Issue invoice</Button>
+            <Link v-if="!isEstimate && document.status === 'issued' && !document.customer_signed" :href="route('crm.invoices.present', document.id)" class="flex h-12 items-center justify-center rounded-lg bg-[#c8000a] font-bold text-white">Customer signs invoice</Link>
+            <Button v-if="isEstimate && document.status === 'draft'" variant="secondary" @click="post('crm.estimates.issue', 'Issue this estimate without a signature? It gets a number and can no longer be edited.')">Issue without signature (send later)</Button>
+            <Button v-if="isEstimate && document.status === 'approved'" variant="secondary" @click="post('crm.estimates.revise', 'Start a revised estimate? The customer must consent to the new total before extra work.')">Revised estimate (needs consent)</Button>
             <a :href="route('crm.documents.pdf', document.id)" target="_blank" class="flex h-12 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white font-bold">
                 <FileDown class="size-5" /> PDF
             </a>

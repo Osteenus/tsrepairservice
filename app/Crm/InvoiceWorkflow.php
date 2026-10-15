@@ -5,6 +5,7 @@ namespace App\Crm;
 use App\Models\Document;
 use App\Models\Payment;
 use App\Models\WorkOrder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -129,6 +130,27 @@ class InvoiceWorkflow
             ])->save();
 
             $this->syncJobStatus($invoice);
+
+            return $invoice;
+        });
+    }
+
+    /**
+     * Optional customer signature on an issued invoice: accepts the work and, when ticked,
+     * confirms the replaced parts were returned. Not required by BHGS, but useful in disputes.
+     */
+    public function sign(Document $invoice, array $data, SignatureStore $signatures, Request $request): Document
+    {
+        if ($invoice->isEstimate() || $invoice->status !== 'issued') {
+            throw ValidationException::withMessages(['document' => 'Only an issued invoice can be signed.']);
+        }
+        if ($invoice->signatures()->where('role', 'customer')->exists()) {
+            throw ValidationException::withMessages(['document' => 'The customer has already signed this invoice.']);
+        }
+
+        return DB::transaction(function () use ($invoice, $data, $signatures, $request) {
+            $signatures->store($invoice, 'customer', $data['signature'], $data['signed_name'], $request);
+            $invoice->forceFill(['parts_returned' => (bool) ($data['parts_returned'] ?? false)])->save();
 
             return $invoice;
         });

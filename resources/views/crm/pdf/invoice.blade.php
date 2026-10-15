@@ -76,7 +76,7 @@
     <div>@if ($completed_by)<span class="val">{{ $completed_by }}</span>@endif Invoice completed by (signature or employee no.)</div>
     <div>@if ($performed_by)<span class="val">{{ $performed_by }}</span>@endif Repair performed by (signature or employee no.)</div>
   </div>
-  <p class="return">&#9744; Repairs satisfactorily completed and replaced parts returned to customer. Customer initials: ______</p>
+  <p class="return">{!! $parts_returned ? '&#9745;' : '&#9744;' !!} Repairs satisfactorily completed and replaced parts returned to customer. Customer initials: @if ($parts_returned && $customer_initials)<b>{{ $customer_initials }}</b>@else{{ '______' }}@endif</p>
 
   <div class="legal">
     @include('crm.pdf._legal')

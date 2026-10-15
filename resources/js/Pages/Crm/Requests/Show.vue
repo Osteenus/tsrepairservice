@@ -9,8 +9,13 @@ const props = defineProps({
 });
 
 const tel = (props.request.phone || '').replace(/[^\d+]/g, '');
-const convert = () => router.post(route('crm.requests.convert', props.request.id));
-const archive = () => router.post(route('crm.requests.archive', props.request.id));
+const convert = () => {
+    if (confirm('Create a customer and a job from this request?')) router.post(route('crm.requests.convert', props.request.id));
+};
+const archive = () => {
+    const message = props.request.archived ? 'Move this request back to New?' : 'Archive this request without creating a job?';
+    if (confirm(message)) router.post(route('crm.requests.archive', props.request.id));
+};
 </script>
 
 <template>

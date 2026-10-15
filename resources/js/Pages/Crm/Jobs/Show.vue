@@ -17,7 +17,10 @@ const props = defineProps({
 });
 
 const tel = (props.job.customer.phone || '').replace(/[^\d+]/g, '');
-const setStatus = status => router.patch(route('crm.jobs.status', props.job.id), { status }, { preserveScroll: true });
+const setStatus = status => {
+    if (!confirm(`Change job #${props.job.id} status from "${props.job.status_label}" to "${props.statuses[status]}"?`)) return;
+    router.patch(route('crm.jobs.status', props.job.id), { status }, { preserveScroll: true });
+};
 const createEstimate = () => router.post(route('crm.estimates.store', props.job.id));
 const createInvoice = () => router.post(route('crm.invoices.store', props.job.id));
 const hasEstimate = props.documents.some(d => d.type === 'estimate' && ['issued', 'approved'].includes(d.status));

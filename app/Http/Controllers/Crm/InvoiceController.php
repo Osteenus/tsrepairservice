@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Crm;
 
+use App\Crm\DocumentData;
 use App\Crm\InvoiceWorkflow;
 use App\Crm\Money;
+use App\Crm\SignatureStore;
 use App\Http\Controllers\Controller;
 use App\Models\Document;
 use App\Models\Payment;
@@ -11,6 +13,8 @@ use App\Models\WorkOrder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class InvoiceController extends Controller
 {
@@ -27,6 +31,32 @@ class InvoiceController extends Controller
         $workflow->issue($document);
 
         return to_route('crm.documents.show', $document)->with('flash.banner', 'Invoice issued.');
+    }
+
+    public function present(Document $document): Response|RedirectResponse
+    {
+        abort_if($document->isEstimate(), 404);
+
+        if ($document->status !== 'issued' || $document->signatures()->where('role', 'customer')->exists()) {
+            return to_route('crm.documents.show', $document);
+        }
+
+        return Inertia::render('Crm/Documents/Present', ['document' => DocumentData::make($document)]);
+    }
+
+    public function sign(Request $request, Document $document, InvoiceWorkflow $workflow, SignatureStore $signatures): RedirectResponse
+    {
+        abort_if($document->isEstimate(), 404);
+
+        $data = $request->validate([
+            'signature' => ['required', 'string', 'max:800000'],
+            'signed_name' => ['required', 'string', 'max:120'],
+            'parts_returned' => ['boolean'],
+        ]);
+
+        $workflow->sign($document, $data, $signatures, $request);
+
+        return to_route('crm.documents.show', $document)->with('flash.banner', 'Invoice signed by the customer.');
     }
 
     public function storePayment(Request $request, Document $document, InvoiceWorkflow $workflow): RedirectResponse

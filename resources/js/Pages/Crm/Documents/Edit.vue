@@ -40,9 +40,10 @@ const add = kind => form.items.push({
 
 const remove = index => form.items.splice(index, 1);
 
+// Keep the scroll position only when staying on this page.
 const save = then => form
     .transform(data => ({ ...data, then }))
-    .put(route('crm.documents.update', props.document.id), { preserveScroll: true });
+    .put(route('crm.documents.update', props.document.id), { preserveScroll: !then });
 const deleteDraft = () => {
     if (confirm('Delete this draft?')) router.post(route('crm.documents.void', props.document.id));
 };

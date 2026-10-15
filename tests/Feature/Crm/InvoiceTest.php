@@ -255,6 +255,45 @@ class InvoiceTest extends CrmTestCase
         Mail::assertNothingQueued();
     }
 
+    public function test_customer_can_sign_an_issued_invoice_and_confirm_parts_returned(): void
+    {
+        $invoice = $this->invoiceFor($this->approvedJob());
+
+        $this->get(route('crm.invoices.present', $invoice))->assertRedirect(route('crm.documents.show', $invoice)); // draft
+        $this->post(route('crm.invoices.sign', $invoice), ['signature' => $this->signature(), 'signed_name' => 'Jane Doe'])
+            ->assertSessionHasErrors('document');
+
+        $this->post(route('crm.invoices.issue', $invoice));
+        $this->get(route('crm.invoices.present', $invoice))->assertInertia(fn ($page) => $page->component('Crm/Documents/Present'));
+        $this->post(route('crm.invoices.sign', $invoice), [
+            'signature' => $this->signature(), 'signed_name' => 'Jane Q Doe', 'parts_returned' => true,
+        ])->assertRedirect(route('crm.documents.show', $invoice));
+
+        $invoice->refresh();
+        $this->assertTrue($invoice->parts_returned);
+        $this->assertSame('issued', $invoice->status); // signing does not change the status
+        Storage::disk('local')->assertExists($invoice->signatures()->sole()->path);
+
+        $html = app(PdfRenderer::class)->html($invoice);
+        $this->assertStringContainsString('&#9745; Repairs satisfactorily completed', $html);
+        $this->assertStringContainsString('Customer initials: <b>J.Q.D.</b>', $html);
+        $this->assertStringContainsString('data:image/png;base64,', substr($html, strpos($html, 'class="sign')));
+
+        // Only once.
+        $this->post(route('crm.invoices.sign', $invoice), ['signature' => $this->signature(), 'signed_name' => 'Jane'])
+            ->assertSessionHasErrors('document');
+        $this->get(route('crm.invoices.present', $invoice))->assertRedirect(route('crm.documents.show', $invoice));
+    }
+
+    public function test_unsigned_invoice_keeps_blank_initials(): void
+    {
+        $invoice = $this->invoiceFor($this->approvedJob());
+        $this->post(route('crm.invoices.issue', $invoice));
+
+        $html = app(PdfRenderer::class)->html($invoice->fresh());
+        $this->assertStringContainsString('&#9744; Repairs satisfactorily completed and replaced parts returned to customer. Customer initials: ______', $html);
+    }
+
     public function test_invoice_screens_render(): void
     {
         $invoice = $this->invoiceFor($this->approvedJob());
