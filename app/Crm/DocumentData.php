@@ -43,7 +43,7 @@ class DocumentData
             'limit_cents' => $document->isEstimate() ? null : $invoices->limitCents($document),
             'missing' => $document->isEstimate() || ! $document->isDraft() ? [] : $invoices->missingBhgsFields($document),
             'paid' => $paid,
-            'parts_returned' => $document->parts_returned,
+            'work_accepted' => $document->work_accepted,
             'customer_signed' => $document->signatures->contains('role', 'customer'),
             'balance' => $document->isEstimate() ? null : $totals->total - $paid,
             'payments' => $document->payments->map(fn (Payment $payment) => [

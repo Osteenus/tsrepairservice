@@ -179,7 +179,7 @@ class InvoiceTest extends CrmTestCase
             'Written estimate no. TS-E-2026-0001 dated Oct 14, 2026, authorized by customer: $267.00 (excludes tax).',
             'Section 9844 of the California Business and Professions Code',
             'Labor is guaranteed for 30 days and parts installed for 90 days',
-            'replaced parts returned to customer', '$267.00', 'BALANCE DUE',
+            '$267.00', 'BALANCE DUE',
         ] as $text) {
             $this->assertStringContainsString(e($text), $html, $text);
         }
@@ -255,7 +255,7 @@ class InvoiceTest extends CrmTestCase
         Mail::assertNothingQueued();
     }
 
-    public function test_customer_can_sign_an_issued_invoice_and_confirm_parts_returned(): void
+    public function test_customer_can_sign_an_issued_invoice_and_accept_the_repair(): void
     {
         $invoice = $this->invoiceFor($this->approvedJob());
 
@@ -266,16 +266,17 @@ class InvoiceTest extends CrmTestCase
         $this->post(route('crm.invoices.issue', $invoice));
         $this->get(route('crm.invoices.present', $invoice))->assertInertia(fn ($page) => $page->component('Crm/Documents/Present'));
         $this->post(route('crm.invoices.sign', $invoice), [
-            'signature' => $this->signature(), 'signed_name' => 'Jane Q Doe', 'parts_returned' => true,
+            'signature' => $this->signature(), 'signed_name' => 'Jane Q Doe', 'work_accepted' => true,
         ])->assertRedirect(route('crm.documents.show', $invoice));
 
         $invoice->refresh();
-        $this->assertTrue($invoice->parts_returned);
+        $this->assertTrue($invoice->work_accepted);
         $this->assertSame('issued', $invoice->status); // signing does not change the status
         Storage::disk('local')->assertExists($invoice->signatures()->sole()->path);
 
         $html = app(PdfRenderer::class)->html($invoice);
-        $this->assertStringContainsString('&#9745; Repairs satisfactorily completed', $html);
+        $this->assertStringContainsString('&#9745; Repairs satisfactorily completed. Customer initials: <b>J.Q.D.</b>', $html);
+        $this->assertStringNotContainsString('parts returned', $html);
         $this->assertStringContainsString('Customer initials: <b>J.Q.D.</b>', $html);
         $this->assertStringContainsString('data:image/png;base64,', substr($html, strpos($html, 'class="sign')));
 
@@ -291,7 +292,7 @@ class InvoiceTest extends CrmTestCase
         $this->post(route('crm.invoices.issue', $invoice));
 
         $html = app(PdfRenderer::class)->html($invoice->fresh());
-        $this->assertStringContainsString('&#9744; Repairs satisfactorily completed and replaced parts returned to customer. Customer initials: ______', $html);
+        $this->assertStringContainsString('&#9744; Repairs satisfactorily completed. Customer initials: ______', $html);
     }
 
     public function test_invoice_screens_render(): void

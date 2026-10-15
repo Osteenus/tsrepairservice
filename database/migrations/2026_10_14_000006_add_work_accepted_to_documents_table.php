@@ -9,15 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('documents', function (Blueprint $table) {
-            // Customer confirmed on the signed invoice that repairs were completed and replaced parts returned.
-            $table->boolean('parts_returned')->default(false);
+            // Customer confirmed on the signed invoice that the repairs were satisfactorily completed.
+            $table->boolean('work_accepted')->default(false);
         });
     }
 
     public function down(): void
     {
         Schema::table('documents', function (Blueprint $table) {
-            $table->dropColumn('parts_returned');
+            $table->dropColumn('work_accepted');
         });
     }
 };

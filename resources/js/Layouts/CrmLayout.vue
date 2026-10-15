@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, ref } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { House, Inbox, Users, Wrench, ShieldCheck, LogOut } from 'lucide-vue-next';
 import Banner from '@/Components/Banner.vue';
@@ -21,6 +21,15 @@ const tabs = [
 
 const active = tab => tab.exact ? path.value === tab.href : path.value.startsWith(tab.href);
 const logout = () => router.post(route('logout'));
+
+// Immediate feedback on every tap that loads a page; on a slow connection it otherwise looks like nothing happened.
+const loading = ref(false);
+const stopStart = router.on('start', () => (loading.value = true));
+const stopFinish = router.on('finish', () => (loading.value = false));
+onBeforeUnmount(() => {
+    stopStart();
+    stopFinish();
+});
 </script>
 
 <template>
@@ -43,6 +52,7 @@ const logout = () => router.post(route('logout'));
                     <LogOut class="size-5" />
                 </button>
             </div>
+            <div v-if="loading" class="crm-loading absolute inset-x-0 -bottom-1 h-1 overflow-hidden" role="progressbar" aria-label="Loading" />
         </header>
 
         <main class="mx-auto max-w-3xl px-3 py-4">
@@ -65,3 +75,19 @@ const logout = () => router.post(route('logout'));
         </nav>
     </div>
 </template>
+
+<style scoped>
+.crm-loading::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 40%;
+    background: #fff;
+    animation: crm-loading 0.9s ease-in-out infinite;
+}
+
+@keyframes crm-loading {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(250%); }
+}
+</style>

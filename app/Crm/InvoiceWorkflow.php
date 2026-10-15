@@ -136,8 +136,8 @@ class InvoiceWorkflow
     }
 
     /**
-     * Optional customer signature on an issued invoice: accepts the work and, when ticked,
-     * confirms the replaced parts were returned. Not required by BHGS, but useful in disputes.
+     * Optional customer signature on an issued invoice; when ticked, the customer confirms the repairs
+     * were satisfactorily completed. Not required by BHGS, but useful in disputes.
      */
     public function sign(Document $invoice, array $data, SignatureStore $signatures, Request $request): Document
     {
@@ -150,7 +150,7 @@ class InvoiceWorkflow
 
         return DB::transaction(function () use ($invoice, $data, $signatures, $request) {
             $signatures->store($invoice, 'customer', $data['signature'], $data['signed_name'], $request);
-            $invoice->forceFill(['parts_returned' => (bool) ($data['parts_returned'] ?? false)])->save();
+            $invoice->forceFill(['work_accepted' => (bool) ($data['work_accepted'] ?? false)])->save();
 
             return $invoice;
         });

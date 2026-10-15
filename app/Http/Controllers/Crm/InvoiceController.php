@@ -51,7 +51,7 @@ class InvoiceController extends Controller
         $data = $request->validate([
             'signature' => ['required', 'string', 'max:800000'],
             'signed_name' => ['required', 'string', 'max:120'],
-            'parts_returned' => ['boolean'],
+            'work_accepted' => ['boolean'],
         ]);
 
         $workflow->sign($document, $data, $signatures, $request);

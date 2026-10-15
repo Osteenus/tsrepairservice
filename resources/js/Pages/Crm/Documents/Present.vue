@@ -18,7 +18,7 @@ const now = new Date();
 
 const form = useForm({
     signature: null,
-    parts_returned: false,
+    work_accepted: false,
     signed_name: props.document.job.customer_name,
     consent: {
         method: 'written',
@@ -38,7 +38,7 @@ const submit = () => {
     if (!confirm(message)) return;
 
     form
-        .transform(data => (isInvoice ? { signature: data.signature, signed_name: data.signed_name, parts_returned: data.parts_returned } : data))
+        .transform(data => (isInvoice ? { signature: data.signature, signed_name: data.signed_name, work_accepted: data.work_accepted } : data))
         .post(route(isInvoice ? 'crm.invoices.sign' : 'crm.estimates.approve', props.document.id));
 };
 </script>
@@ -85,8 +85,8 @@ const submit = () => {
 
                 <template v-if="isInvoice">
                     <label class="flex items-start gap-3">
-                        <input v-model="form.parts_returned" type="checkbox" class="mt-0.5 size-6 shrink-0 rounded text-[#c8000a]">
-                        <span class="text-sm font-semibold">Repairs satisfactorily completed and replaced parts returned to customer.</span>
+                        <input v-model="form.work_accepted" type="checkbox" class="mt-0.5 size-6 shrink-0 rounded text-[#c8000a]">
+                        <span class="text-sm font-semibold">Repairs satisfactorily completed.</span>
                     </label>
                     <SignaturePad v-model="form.signature" />
                     <p v-if="form.errors.signature" class="-mt-3 text-sm text-red-600">{{ form.errors.signature }}</p>

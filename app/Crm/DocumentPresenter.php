@@ -81,7 +81,7 @@ class DocumentPresenter
             'estimate_ref' => self::estimateReference($document),
             'payment_method_used' => $document->payments->pluck('method')->unique()
                 ->map(fn ($method) => \App\Models\Payment::METHODS[$method] ?? $method)->implode(', '),
-            'parts_returned' => $document->parts_returned,
+            'work_accepted' => $document->work_accepted,
             'customer_initials' => $customerSignature ? self::initials($customerSignature->signed_name) : null,
             'show_tax' => $document->charge_tax,
             'tax_rate_label' => rtrim(rtrim(number_format($taxRate * 100, 3), '0'), '.').'%',

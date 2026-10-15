@@ -26,7 +26,7 @@ class Document extends Model
         'status' => 'draft',
         'discount_cents' => 0,
         'charge_tax' => false,
-        'parts_returned' => false,
+        'work_accepted' => false,
         'labor_cents' => 0,
         'parts_cents' => 0,
         'tax_cents' => 0,
@@ -47,7 +47,7 @@ class Document extends Model
             'approved_at' => 'datetime',
             'emailed_at' => 'datetime',
             'charge_tax' => 'boolean',
-            'parts_returned' => 'boolean',
+            'work_accepted' => 'boolean',
             'tax_rate' => 'float',
             'snapshot' => 'array',
         ];
