@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { Link, useForm } from '@inertiajs/vue3';
 import { MapPin, MessageSquare, Pencil, Phone } from 'lucide-vue-next';
 import CrmLayout from '@/Layouts/CrmLayout.vue';
-import Field from '@/Components/Crm/Field.vue';
+import ApplianceFields from '@/Components/Crm/ApplianceFields.vue';
 import Button from '@/Components/Crm/Button.vue';
 import StatusBadge from '@/Components/Crm/StatusBadge.vue';
 
@@ -11,6 +11,8 @@ const props = defineProps({
     customer: Object,
     appliances: Array,
     jobs: Array,
+    applianceTypes: Array,
+    applianceBrands: Array,
 });
 
 const address = [props.customer.address_line1, props.customer.city, [props.customer.state, props.customer.zip].filter(Boolean).join(' ')]
@@ -84,11 +86,7 @@ const save = () => {
                         <p v-if="appliance.notes" class="mt-1 text-sm text-gray-500">{{ appliance.notes }}</p>
                     </button>
                     <form v-else class="grid gap-3" @submit.prevent="save">
-                        <Field v-model="form.type" label="Type" :error="form.errors.type" required />
-                        <Field v-model="form.brand" label="Brand" :error="form.errors.brand" />
-                        <Field v-model="form.model" label="Model" :error="form.errors.model" autocapitalize="characters" />
-                        <Field v-model="form.serial" label="Serial" :error="form.errors.serial" autocapitalize="characters" />
-                        <Field v-model="form.notes" as="textarea" label="Notes" :error="form.errors.notes" />
+                        <ApplianceFields :form="form" :types="applianceTypes" :brands="applianceBrands" />
                         <div class="grid grid-cols-2 gap-2">
                             <Button type="button" variant="secondary" @click="editing = null">Cancel</Button>
                             <Button type="submit" :disabled="form.processing">Save</Button>
@@ -97,11 +95,7 @@ const save = () => {
                 </li>
                 <li v-if="editing === 'new'" class="rounded-xl bg-white p-4 shadow-sm">
                     <form class="grid gap-3" @submit.prevent="save">
-                        <Field v-model="form.type" label="Type" placeholder="Refrigerator, washer…" :error="form.errors.type" required />
-                        <Field v-model="form.brand" label="Brand" :error="form.errors.brand" />
-                        <Field v-model="form.model" label="Model" :error="form.errors.model" autocapitalize="characters" />
-                        <Field v-model="form.serial" label="Serial" :error="form.errors.serial" autocapitalize="characters" />
-                        <Field v-model="form.notes" as="textarea" label="Notes" :error="form.errors.notes" />
+                        <ApplianceFields :form="form" :types="applianceTypes" :brands="applianceBrands" />
                         <div class="grid grid-cols-2 gap-2">
                             <Button type="button" variant="secondary" @click="editing = null">Cancel</Button>
                             <Button type="submit" :disabled="form.processing">Add</Button>

@@ -54,6 +54,29 @@ class CustomerTest extends CrmTestCase
             ->assertInertia(fn ($page) => $page->component('Crm/Customers/Show')->has('appliances', 1));
     }
 
+    public function test_appliance_form_offers_types_and_known_brands(): void
+    {
+        $this->signIn();
+        $customer = Customer::factory()->create();
+        Appliance::factory()->create(['brand' => 'Fisher & Paykel']);
+        Appliance::factory()->create(['brand' => 'samsung']);
+
+        $this->get(route('crm.customers.show', $customer))->assertInertia(fn ($page) => $page
+            ->where('applianceTypes', config('crm.appliance_types'))
+            ->where('applianceBrands', fn ($brands) => collect($brands)->contains('Fisher & Paykel')
+                && collect($brands)->filter(fn ($brand) => strtolower($brand) === 'samsung')->count() === 1));
+
+        // "Other…" types are free text.
+        $this->post(route('crm.appliances.store', $customer), ['type' => 'Washer/dryer combo'])->assertSessionHasNoErrors();
+    }
+
+    public function test_website_request_types_are_in_the_appliance_list(): void
+    {
+        foreach (config('repair.services') as $service) {
+            $this->assertContains(trim(str_replace('Repair', '', $service['name'])), config('crm.appliance_types'));
+        }
+    }
+
     public function test_customers_are_soft_deleted(): void
     {
         $customer = Customer::factory()->has(Appliance::factory())->create();

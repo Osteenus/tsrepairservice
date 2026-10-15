@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Crm;
 
 use App\Crm\LocalTime;
 use App\Http\Controllers\Controller;
+use App\Models\Appliance;
 use App\Models\Customer;
 use App\Models\WorkOrder;
 use Illuminate\Http\RedirectResponse;
@@ -49,6 +50,12 @@ class CustomerController extends Controller
         return Inertia::render('Crm/Customers/Show', [
             'customer' => $customer->only('id', 'name', 'phone', 'email', 'address_line1', 'city', 'state', 'zip', 'notes'),
             'appliances' => $customer->appliances()->latest()->get(['id', 'type', 'brand', 'model', 'serial', 'notes']),
+            'applianceTypes' => config('crm.appliance_types'),
+            'applianceBrands' => collect(config('crm.appliance_brands'))
+                ->merge(Appliance::query()->whereNotNull('brand')->distinct()->pluck('brand'))
+                ->unique(fn ($brand) => mb_strtolower($brand))
+                ->sort(SORT_NATURAL | SORT_FLAG_CASE)
+                ->values(),
             'jobs' => $customer->workOrders()->with('appliance')->latest()->get()->map(fn (WorkOrder $job) => [
                 'id' => $job->id,
                 'status' => $job->status,

@@ -19,6 +19,20 @@ return [
     // Default name for "invoice completed by" / "repair performed by".
     'technician_name' => 'Oleg Ustinov',
 
+    // Appliance picker in the CRM ("Other…" allows any text). The first names match the website
+    // service list, so appliances created from web requests use the same names.
+    'appliance_types' => [
+        'Refrigerator', 'Freezer', 'Ice Maker', 'Wine Cooler', 'Washer', 'Dryer', 'Dishwasher',
+        'Oven & Stove', 'Cooktop', 'Microwave', 'Range Hood', 'Trash Compactor', 'Electronic',
+    ],
+
+    // Brand suggestions; brands already typed in the CRM are suggested too.
+    'appliance_brands' => [
+        'Admiral', 'Amana', 'Bosch', 'Electrolux', 'Frigidaire', 'GE', 'GE Profile', 'Haier', 'Hotpoint',
+        'JennAir', 'Kenmore', 'KitchenAid', 'LG', 'Magic Chef', 'Maytag', 'Roper', 'Samsung', 'Sub-Zero',
+        'Thermador', 'U-Line', 'Viking', 'Whirlpool', 'Wolf',
+    ],
+
     'service_call_cents' => 9500,
     'service_call_description' => 'Service call / diagnostic fee',
     'estimate_valid_business_days' => 5,
