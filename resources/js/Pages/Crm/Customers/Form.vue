@@ -30,14 +30,14 @@ const submit = () => props.customer
         :back="customer ? route('crm.customers.show', customer.id) : route('crm.customers.index')"
     >
         <form class="grid gap-4 rounded-xl bg-white p-4 shadow-sm" @submit.prevent="submit">
-            <Field v-model="form.name" label="Name" :error="form.errors.name" required autocomplete="off" />
-            <Field v-model="form.phone" label="Phone" type="tel" inputmode="tel" :error="form.errors.phone" autocomplete="off" />
-            <Field v-model="form.email" label="Email" type="email" inputmode="email" :error="form.errors.email" autocomplete="off" />
-            <Field v-model="form.address_line1" label="Street address" :error="form.errors.address_line1" autocomplete="off" />
-            <Field v-model="form.city" label="City" :error="form.errors.city" autocomplete="off" />
+            <Field v-model="form.name" label="Name" format="words" :error="form.errors.name" required autocomplete="off" />
+            <Field v-model="form.phone" label="Phone" format="phone" placeholder="(805) 555-0100" :error="form.errors.phone" autocomplete="off" />
+            <Field v-model="form.email" label="Email" type="email" format="email" :error="form.errors.email" autocomplete="off" />
+            <Field v-model="form.address_line1" label="Street address" format="words" :error="form.errors.address_line1" autocomplete="off" />
+            <Field v-model="form.city" label="City" format="words" :error="form.errors.city" autocomplete="off" />
             <div class="grid grid-cols-[5rem_1fr] gap-3">
-                <Field v-model="form.state" label="State" maxlength="2" :error="form.errors.state" />
-                <Field v-model="form.zip" label="ZIP" inputmode="numeric" :error="form.errors.zip" />
+                <Field v-model="form.state" label="State" format="state" :error="form.errors.state" />
+                <Field v-model="form.zip" label="ZIP" format="zip" :error="form.errors.zip" />
             </div>
             <Field v-model="form.notes" as="textarea" label="Notes" :error="form.errors.notes" />
             <Button type="submit" :disabled="form.processing">Save customer</Button>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Crm\DocumentTotals;
+use App\Support\Normalize;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -22,6 +23,14 @@ class DocumentItem extends Model
             'is_warranty' => 'boolean',
             'is_used_or_exchanged' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (DocumentItem $item) {
+            $item->description = Normalize::text($item->description) ?? '';
+            $item->part_number = Normalize::upper($item->part_number);
+        });
     }
 
     public function document(): BelongsTo

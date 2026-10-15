@@ -90,7 +90,7 @@ const submit = () => {
                     </label>
                     <SignaturePad v-model="form.signature" />
                     <p v-if="form.errors.signature" class="-mt-3 text-sm text-red-600">{{ form.errors.signature }}</p>
-                    <Field v-model="form.signed_name" label="Printed name" :error="form.errors.signed_name" required />
+                    <Field v-model="form.signed_name" label="Printed name" format="words" :error="form.errors.signed_name" required />
                 </template>
 
                 <template v-else-if="!oral">
@@ -99,12 +99,12 @@ const submit = () => {
                     </p>
                     <SignaturePad v-model="form.signature" />
                     <p v-if="form.errors.signature" class="-mt-3 text-sm text-red-600">{{ form.errors.signature }}</p>
-                    <Field v-model="form.signed_name" label="Printed name" :error="form.errors.signed_name" required />
+                    <Field v-model="form.signed_name" label="Printed name" format="words" :error="form.errors.signed_name" required />
                 </template>
 
                 <template v-else>
-                    <Field v-model="form.consent.authorized_by" label="Who authorized" :error="form.errors['consent.authorized_by']" required />
-                    <Field v-model="form.consent.phone" label="Phone number" type="tel" :error="form.errors['consent.phone']" required />
+                    <Field v-model="form.consent.authorized_by" label="Who authorized" format="words" :error="form.errors['consent.authorized_by']" required />
+                    <Field v-model="form.consent.phone" label="Phone number" format="phone" :error="form.errors['consent.phone']" required />
                     <Field v-model="form.consent.consented_at" label="Date and time of consent" type="datetime-local" :error="form.errors['consent.consented_at']" required />
                 </template>
 

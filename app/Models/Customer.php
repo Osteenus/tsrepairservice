@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Normalize;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,13 @@ class Customer extends Model
     protected static function booted(): void
     {
         static::saving(function (Customer $customer) {
+            $customer->name = Normalize::text($customer->name) ?? '';
+            $customer->phone = Normalize::phone($customer->phone);
+            $customer->email = Normalize::email($customer->email);
+            $customer->address_line1 = Normalize::text($customer->address_line1);
+            $customer->city = Normalize::text($customer->city);
+            $customer->state = Normalize::upper($customer->state) ?? 'CA';
+            $customer->zip = Normalize::text($customer->zip);
             $customer->phone_digits = self::digits($customer->phone);
         });
     }

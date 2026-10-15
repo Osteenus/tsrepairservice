@@ -1,4 +1,6 @@
 <script setup>
+import { vFormat } from '@/forms/format.js';
+
 defineOptions({ inheritAttrs: false });
 
 const model = defineModel();
@@ -8,6 +10,8 @@ defineProps({
     error: { type: String, default: null },
     as: { type: String, default: 'input' },
     hint: { type: String, default: null },
+    // phone, email, upper, state, zip, money, trim or words (see forms/format.js)
+    format: { type: String, default: null },
 });
 </script>
 
@@ -32,6 +36,7 @@ defineProps({
         <input
             v-else
             v-model="model"
+            v-format="format"
             v-bind="$attrs"
             class="block h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-[#c8000a] focus:ring-[#c8000a]"
         >

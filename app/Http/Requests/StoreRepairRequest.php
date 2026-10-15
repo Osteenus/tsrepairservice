@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Normalize;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -19,6 +20,16 @@ class StoreRepairRequest extends FormRequest
             if (is_string($this->input($field))) {
                 $normalized[$field] = trim($this->input($field));
             }
+        }
+        // Same formatting as the form shows while typing (see resources/js/forms/format.js).
+        if (isset($normalized['phone'])) {
+            $normalized['phone'] = Normalize::phone($normalized['phone']) ?? '';
+        }
+        if (isset($normalized['email'])) {
+            $normalized['email'] = Normalize::email($normalized['email']);
+        }
+        if (isset($normalized['model'])) {
+            $normalized['model'] = Normalize::upper($normalized['model']);
         }
         $this->merge($normalized);
     }

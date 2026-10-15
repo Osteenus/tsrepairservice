@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3';
+import { vFormat } from '@/forms/format.js';
 
 const props = defineProps({
   embedded: { type: Boolean, default: false },
@@ -18,13 +19,13 @@ const form = useForm({
 });
 watch(() => props.selectedServiceId, value => { form.serviceId = value ?? ''; });
 const fields = [
-  { key: 'name', label: 'Name', type: 'text', autocomplete: 'name', required: true, max: 255 },
-  { key: 'phone', label: 'Phone Number', type: 'tel', autocomplete: 'tel', required: true, max: 50 },
-  { key: 'email', label: 'Email', type: 'email', autocomplete: 'email', max: 255 },
-  { key: 'location', label: 'City or ZIP Code', type: 'text', required: true, max: 120 },
+  { key: 'name', label: 'Name', type: 'text', autocomplete: 'name', required: true, max: 255, format: 'words' },
+  { key: 'phone', label: 'Phone Number', type: 'tel', autocomplete: 'tel', required: true, max: 50, format: 'phone', placeholder: '(805) 555-0100' },
+  { key: 'email', label: 'Email', type: 'email', autocomplete: 'email', max: 255, format: 'email' },
+  { key: 'location', label: 'City or ZIP Code', type: 'text', autocomplete: 'address-level2', required: true, max: 120, format: 'words' },
   { key: 'serviceId', label: 'Appliance Type', type: 'select', required: true },
-  { key: 'brand', label: 'Brand (optional)', type: 'text', placeholder: 'Example: Whirlpool, GE, Samsung', max: 120 },
-  { key: 'model', label: 'Model Number (optional)', type: 'text', placeholder: 'Usually found on the appliance label', max: 120 },
+  { key: 'brand', label: 'Brand (optional)', type: 'text', placeholder: 'Example: Whirlpool, GE, Samsung', max: 120, format: 'words' },
+  { key: 'model', label: 'Model Number (optional)', type: 'text', placeholder: 'Usually found on the appliance label', max: 120, format: 'upper' },
   { key: 'description', label: 'Describe the Problem', type: 'textarea', required: true, max: 5000,
     placeholder: 'Describe the symptoms, error code, unusual sound, leak, or when the problem started' },
 ];
@@ -72,7 +73,7 @@ const submit = () => {
             </select>
             <textarea v-else-if="field.type === 'textarea'" :id="`request-${field.key}`" v-model="form[field.key]" :name="field.key" required aria-required="true" rows="5" :maxlength="field.max"
               :placeholder="field.placeholder" :aria-invalid="!!form.errors[field.key]" :aria-describedby="form.errors[field.key] ? `error-${field.key}` : undefined" class="request-field resize-y" />
-            <input v-else :id="`request-${field.key}`" v-model="form[field.key]" :name="field.key" :type="field.type" :autocomplete="field.autocomplete"
+            <input v-else :id="`request-${field.key}`" v-model="form[field.key]" v-format="field.format" :name="field.key" :type="field.type" :autocomplete="field.autocomplete"
               :required="field.required" :aria-required="!!field.required" :maxlength="field.max" :placeholder="field.placeholder"
               :aria-invalid="!!form.errors[field.key]" :aria-describedby="form.errors[field.key] ? `error-${field.key}` : undefined" class="request-field">
             <p v-if="form.errors[field.key]" :id="`error-${field.key}`" class="text-sm text-red-800 mt-2">{{ form.errors[field.key] }}</p>

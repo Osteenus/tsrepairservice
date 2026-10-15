@@ -99,7 +99,7 @@ const email = () => post('crm.documents.email', `Email ${props.document.number} 
             </ul>
             <form v-if="document.balance > 0 && document.status !== 'void'" class="mt-3 grid gap-3 border-t border-gray-200 pt-3" @submit.prevent="addPayment">
                 <div class="grid grid-cols-2 gap-3">
-                    <Field v-model="payment.amount" label="Amount, $" type="number" inputmode="decimal" step="0.01" min="0.01" :error="payment.errors.amount" />
+                    <Field v-model="payment.amount" label="Amount, $" format="money" :error="payment.errors.amount" />
                     <Field v-model="payment.paid_on" label="Date" type="date" :error="payment.errors.paid_on" />
                 </div>
                 <div class="grid grid-cols-5 gap-1 rounded-lg bg-gray-100 p-1 text-center text-sm font-semibold">

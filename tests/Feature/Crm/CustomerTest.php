@@ -77,6 +77,21 @@ class CustomerTest extends CrmTestCase
         }
     }
 
+    public function test_contact_fields_are_normalized_on_save(): void
+    {
+        $this->signIn();
+
+        $this->post(route('crm.customers.store'), [
+            'name' => '  Jane   Doe ', 'phone' => '805.555.0100', 'email' => ' Jane@Example.COM ', 'state' => 'ca', 'city' => ' Moorpark ',
+        ]);
+        $customer = Customer::sole();
+        $this->assertSame(['Jane Doe', '(805) 555-0100', 'jane@example.com', 'CA', 'Moorpark'],
+            [$customer->name, $customer->phone, $customer->email, $customer->state, $customer->city]);
+
+        $this->post(route('crm.appliances.store', $customer), ['type' => 'Washer', 'model' => ' wtw4950xw2 ', 'serial' => 'c12345']);
+        $this->assertSame(['WTW4950XW2', 'C12345'], [$customer->appliances()->sole()->model, $customer->appliances()->sole()->serial]);
+    }
+
     public function test_customers_are_soft_deleted(): void
     {
         $customer = Customer::factory()->has(Appliance::factory())->create();

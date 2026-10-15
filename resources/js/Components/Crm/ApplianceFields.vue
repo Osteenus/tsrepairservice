@@ -25,13 +25,13 @@ watch([choice, otherType], () => {
             <option v-for="type in types" :key="type" :value="type">{{ type }}</option>
             <option :value="OTHER">Other…</option>
         </Field>
-        <Field v-if="choice === OTHER" v-model="otherType" label="Other type" placeholder="e.g. Washer/dryer combo" :error="form.errors.type" required />
-        <Field v-model="form.brand" label="Brand" list="crm-appliance-brands" autocomplete="off" :error="form.errors.brand" />
+        <Field v-if="choice === OTHER" v-model="otherType" label="Other type" format="words" placeholder="e.g. Washer/dryer combo" :error="form.errors.type" required />
+        <Field v-model="form.brand" label="Brand" format="words" list="crm-appliance-brands" autocomplete="off" :error="form.errors.brand" />
         <datalist id="crm-appliance-brands">
             <option v-for="brand in brands" :key="brand" :value="brand" />
         </datalist>
-        <Field v-model="form.model" label="Model" autocapitalize="characters" :error="form.errors.model" />
-        <Field v-model="form.serial" label="Serial" autocapitalize="characters" :error="form.errors.serial" />
+        <Field v-model="form.model" label="Model" format="upper" :error="form.errors.model" />
+        <Field v-model="form.serial" label="Serial" format="upper" :error="form.errors.serial" />
         <Field v-model="form.notes" as="textarea" label="Notes" :error="form.errors.notes" />
     </div>
 </template>

@@ -74,10 +74,14 @@ class RepairRequestTest extends CrmTestCase
     public function test_the_public_form_still_creates_requests(): void
     {
         $this->post('/contact', [
-            'name' => 'Jane Doe', 'phone' => '(805) 555-0100', 'location' => 'Moorpark',
-            'serviceId' => 1, 'description' => 'Not cooling.',
+            'name' => 'Jane Doe', 'phone' => '805.555.0100', 'email' => ' Jane@Example.COM', 'location' => 'Moorpark',
+            'serviceId' => 1, 'model' => 'lrfvs3006s', 'description' => 'Not cooling.',
         ])->assertRedirect('/contact');
 
-        $this->assertNull(RepairRequest::sole()->archived_at);
+        $request = RepairRequest::sole();
+        $this->assertNull($request->archived_at);
+        $this->assertSame('LRFVS3006S', $request->model);
+        $this->assertSame('(805) 555-0100', $request->contact->phone);
+        $this->assertSame('jane@example.com', $request->contact->email);
     }
 }

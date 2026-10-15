@@ -82,10 +82,10 @@ const deleteDraft = () => {
                 </div>
                 <div class="grid gap-3">
                     <Field v-model="item.description" label="Description" :error="form.errors[`items.${index}.description`]" required />
-                    <Field v-if="item.kind === 'part'" v-model="item.part_number" label="Part number" autocapitalize="characters" :error="form.errors[`items.${index}.part_number`]" />
+                    <Field v-if="item.kind === 'part'" v-model="item.part_number" label="Part number" format="upper" :error="form.errors[`items.${index}.part_number`]" />
                     <div class="grid grid-cols-2 gap-3">
                         <Field v-model="item.qty" label="Qty" type="number" inputmode="decimal" step="0.01" min="0.01" :error="form.errors[`items.${index}.qty`]" />
-                        <Field v-model="item.unit" label="Unit price, $" type="number" inputmode="decimal" step="0.01" min="0" :disabled="item.is_warranty" :error="form.errors[`items.${index}.unit`]" />
+                        <Field v-model="item.unit" label="Unit price, $" format="money" :disabled="item.is_warranty" :error="form.errors[`items.${index}.unit`]" />
                     </div>
                     <label v-if="isInvoice" class="flex min-h-11 items-center gap-3">
                         <input v-model="item.is_warranty" type="checkbox" class="size-6 rounded text-[#c8000a]">
@@ -107,12 +107,12 @@ const deleteDraft = () => {
             <div v-if="isInvoice" class="grid gap-3 rounded-xl bg-white p-4 shadow-sm">
                 <Field v-model="form.work_performed" as="textarea" label="Work performed" :error="form.errors.work_performed" />
                 <Field v-model="form.service_date" type="date" label="Service date" :error="form.errors.service_date" />
-                <Field v-model="form.completed_by" label="Invoice completed by (name or employee no.)" :error="form.errors.completed_by" />
-                <Field v-model="form.performed_by" label="Repair performed by (name or employee no.)" :error="form.errors.performed_by" />
+                <Field v-model="form.completed_by" label="Invoice completed by (name or employee no.)" format="words" :error="form.errors.completed_by" />
+                <Field v-model="form.performed_by" label="Repair performed by (name or employee no.)" format="words" :error="form.errors.performed_by" />
             </div>
 
             <div class="grid gap-3 rounded-xl bg-white p-4 shadow-sm">
-                <Field v-model="form.discount" label="Discount, $" type="number" inputmode="decimal" step="0.01" min="0" :error="form.errors.discount" />
+                <Field v-model="form.discount" label="Discount, $" format="money" placeholder="0.00" :error="form.errors.discount" />
                 <Field v-model="form.notes" as="textarea" label="Notes printed on the document" :error="form.errors.notes" />
             </div>
 
