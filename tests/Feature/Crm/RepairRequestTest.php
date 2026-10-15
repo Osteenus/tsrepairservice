@@ -116,7 +116,7 @@ class RepairRequestTest extends CrmTestCase
             Storage::disk('local')->assertExists($photo->path);
         }
 
-        Mail::assertSent(WebFormRequestReceivedEmail::class, fn ($mail) => str_contains($mail->render(), '2 attached'));
+        Mail::assertQueued(WebFormRequestReceivedEmail::class, fn ($mail) => str_contains($mail->render(), '2 attached'));
     }
 
     public function test_request_photos_are_limited_to_five_images(): void

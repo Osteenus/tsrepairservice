@@ -31,8 +31,10 @@ class RepairRequestController extends Controller
         $data = $request->validated();
         $stored = [];
 
+        // Save first: the request (and its photos) must not be lost when email is down, because
+        // it is also in the CRM inbox. The notification email is queued and retried.
         try {
-            DB::transaction(function () use ($data, &$stored) {
+            [$repairRequest, $contact] = DB::transaction(function () use ($data, &$stored) {
                 $contact = Contact::create([
                     'name' => $data['name'],
                     'phone' => $data['phone'],
@@ -52,7 +54,8 @@ class RepairRequestController extends Controller
                     $stored[] = $photo['path'];
                     $repairRequest->photos()->create([...$photo, 'kind' => 'other', 'source' => 'customer']);
                 }
-                Mail::to(config('repair.request_recipient'))->send(new WebFormRequestReceivedEmail($repairRequest, $contact));
+
+                return [$repairRequest, $contact];
             });
         } catch (Throwable $exception) {
             report($exception);
@@ -60,6 +63,13 @@ class RepairRequestController extends Controller
             throw ValidationException::withMessages([
                 'submission' => 'We could not send your request. Your details are still here. Please try again or call us.',
             ]);
+        }
+
+        try {
+            Mail::to(config('repair.request_recipient'))->queue(new WebFormRequestReceivedEmail($repairRequest, $contact));
+        } catch (Throwable $exception) {
+            // The request is saved and visible in the CRM; only the notification is missing.
+            report($exception);
         }
 
         return to_route('contact')->with('requestReceived', true);

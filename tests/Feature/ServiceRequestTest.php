@@ -50,7 +50,7 @@ class ServiceRequestTest extends TestCase
             ->assertSessionHasErrors(['name', 'phone', 'location', 'serviceId', 'description']);
         $this->get('/contact')->assertInertia(fn (Assert $page) => $page
             ->has('errors.name')->has('errors.phone')->has('errors.location')->has('errors.serviceId')->has('errors.description'));
-        Mail::assertNothingSent();
+        Mail::assertNothingOutgoing();
         $this->assertDatabaseCount('repair_requests', 0);
     }
 
@@ -61,7 +61,7 @@ class ServiceRequestTest extends TestCase
         $this->post('/contact', $this->payload(['serviceId' => 6]))->assertSessionHasErrors('serviceId');
         $this->post('/contact', $this->payload(['phone' => 'abc']))->assertSessionHasErrors('phone');
         $this->post('/contact', $this->payload(['name' => ['invalid'], 'location' => ['invalid']]))->assertSessionHasErrors(['name', 'location']);
-        Mail::assertNothingSent();
+        Mail::assertNothingOutgoing();
     }
 
     public function test_city_and_zip_requests_are_stored_with_all_details_and_fake_mail(): void
@@ -72,8 +72,8 @@ class ServiceRequestTest extends TestCase
             $this->assertDatabaseHas('repair_requests', ['location' => $location, 'brand' => 'GE', 'model' => 'TEST-123', 'service_id' => 2]);
         }
         $this->assertDatabaseHas('contacts', ['name' => 'Test Customer', 'email' => '']);
-        Mail::assertSent(WebFormRequestReceivedEmail::class, 3);
-        Mail::assertSent(WebFormRequestReceivedEmail::class, function ($mail) {
+        Mail::assertQueued(WebFormRequestReceivedEmail::class, 3);
+        Mail::assertQueued(WebFormRequestReceivedEmail::class, function ($mail) {
             $html = $mail->render();
 
             return $mail->hasTo(config('repair.request_recipient')) && str_contains($html, 'Washer Repair')
@@ -95,7 +95,7 @@ class ServiceRequestTest extends TestCase
     public function test_honeypot_blocks_mail_and_storage(): void
     {
         $this->post('/contact', $this->payload(['website' => 'https://spam.example']))->assertSessionHasErrors('website');
-        Mail::assertNothingSent();
+        Mail::assertNothingOutgoing();
         $this->assertDatabaseCount('contacts', 0);
         $this->assertDatabaseCount('repair_requests', 0);
     }
@@ -107,17 +107,35 @@ class ServiceRequestTest extends TestCase
         }
         $this->from('/contact')->post('/contact', $this->payload())->assertRedirect('/contact')
             ->assertSessionHasErrors('submission')->assertHeader('Retry-After');
-        Mail::assertNothingSent();
+        Mail::assertNothingOutgoing();
         $this->assertDatabaseCount('repair_requests', 0);
     }
 
-    public function test_mail_failure_does_not_confirm_or_leave_partial_records(): void
+    public function test_mail_failure_keeps_the_request_for_the_crm(): void
     {
         Mail::shouldReceive('to')->once()->andThrow(new \RuntimeException('Simulated transport failure'));
+        $this->from('/contact')->post('/contact', $this->payload())->assertRedirect('/contact')
+            ->assertSessionHasNoErrors()->assertSessionHas('requestReceived', true);
+        $this->assertDatabaseCount('contacts', 1);
+        $this->assertDatabaseCount('repair_requests', 1);
+    }
+
+    public function test_database_failure_does_not_confirm_or_leave_partial_records(): void
+    {
+        \Illuminate\Support\Facades\Event::listen('eloquent.creating: '.RepairRequest::class, fn () => throw new \RuntimeException('Simulated database failure'));
         $this->from('/contact')->post('/contact', $this->payload())->assertRedirect('/contact')
             ->assertSessionHasErrors('submission')->assertSessionMissing('requestReceived');
         $this->assertDatabaseCount('contacts', 0);
         $this->assertDatabaseCount('repair_requests', 0);
+        Mail::assertNothingQueued();
+    }
+
+    public function test_notification_is_retried_when_mail_is_down(): void
+    {
+        $mail = new WebFormRequestReceivedEmail(new RepairRequest, new Contact);
+
+        $this->assertInstanceOf(\Illuminate\Contracts\Queue\ShouldQueue::class, $mail);
+        $this->assertSame(3, $mail->tries);
     }
 
     public function test_email_template_escapes_user_content(): void
@@ -137,7 +155,7 @@ class ServiceRequestTest extends TestCase
         // Laravel bypasses CSRF in testing; switch only this check to its real middleware path.
         $this->app['env'] = 'local';
         $this->post('/contact', $this->payload())->assertStatus(419);
-        Mail::assertNothingSent();
+        Mail::assertNothingOutgoing();
     }
 
     public function test_legacy_routes_and_service_ctas(): void
@@ -154,6 +172,6 @@ class ServiceRequestTest extends TestCase
             $this->assertStringNotContainsString('Book Service', file_get_contents($file));
             $this->assertStringContainsString('/contact?service=', file_get_contents($file));
         }
-        Mail::assertNothingSent();
+        Mail::assertNothingOutgoing();
     }
 }

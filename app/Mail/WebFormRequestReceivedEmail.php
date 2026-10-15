@@ -5,15 +5,21 @@ namespace App\Mail;
 use App\Models\Contact;
 use App\Models\RepairRequest;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class WebFormRequestReceivedEmail extends Mailable
+class WebFormRequestReceivedEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
+    /** Retried when the mail server is briefly unavailable; the request itself is already saved. */
+    public int $tries = 3;
+
+    public array $backoff = [60, 300, 900];
 
     public $repairRequest;
 
