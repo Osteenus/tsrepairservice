@@ -13,6 +13,7 @@ return [
         ['name' => 'Facebook', 'url' => 'https://www.facebook.com/profile.php?id=61594227033622'],
         ['name' => 'LinkedIn', 'url' => 'https://www.linkedin.com/company/tsrepairservice/'],
         ['name' => 'YouTube', 'url' => 'https://www.youtube.com/channel/UCqgiIZSOqEhuWbgAu7hNNnA'],
+        ['name' => 'TikTok', 'url' => 'https://www.tiktok.com/@tsrepair'],
     ],
     'service_areas' => ['Moorpark', 'Simi Valley', 'Camarillo', 'Thousand Oaks', 'Oxnard', 'Ventura', 'Ventura County'],
     'services' => [
