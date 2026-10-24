@@ -4,7 +4,7 @@ use App\Http\Controllers\RepairRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', function () {
-    $paths = array_merge(['/', '/about', '/services', '/contact'], array_column(config('repair.services'), 'url'));
+    $paths = array_merge(['/', '/about', '/services', '/contact', '/privacy', '/terms'], array_column(config('repair.services'), 'url'));
 
     return response()->view('sitemap', ['paths' => array_unique($paths)])
         ->header('Content-Type', 'application/xml; charset=UTF-8');
@@ -14,6 +14,8 @@ Route::inertia('/', 'Home');
 Route::inertia('/about', 'About');
 Route::inertia('/services', 'Services');
 Route::get('/contact', [RepairRequestController::class, 'create'])->name('contact');
+Route::inertia('/privacy', 'Privacy');
+Route::inertia('/terms', 'Terms');
 Route::inertia('/extra', 'Extra');
 
 Route::inertia('/services/refrigerator-repair-moorpark', 'Services/RefrigeratorRepairService');

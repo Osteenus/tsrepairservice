@@ -83,7 +83,8 @@ class TwilioVoiceController extends Controller
 
         return $this->twiml(
             $this->say($saved
-                ? 'Thank you. We received your request and will call you back shortly at this number. Goodbye.'
+                ? 'Thank you. We received your request and will call you back shortly at this number. '
+                .'We may also text you updates about this request. Reply STOP to opt out. Goodbye.'
                 : 'Sorry, we could not hear you. Please call again, or send a request on our website, T.S. repair service dot com. Goodbye.')
             .'<Hangup/>'
         );

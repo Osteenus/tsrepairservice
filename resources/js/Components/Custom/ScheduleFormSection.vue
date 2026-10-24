@@ -127,6 +127,7 @@ const submit = () => {
           <input id="request-website" v-model="form.website" name="website" tabindex="-1" autocomplete="off">
         </div>
         <p class="mt-6 text-sm leading-6 text-gray-600">This is a service request, not a confirmed appointment. Availability depends on your appliance, location, and our schedule.</p>
+        <p class="mt-3 text-sm leading-6 text-gray-600">By submitting, you agree that Tech Solutions Repair Service may call or text you at the number provided about this request, including appointment scheduling and service updates. Message frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help. See our <a href="/privacy" class="underline">Privacy Policy</a> and <a href="/terms" class="underline">Terms</a>.</p>
         <button type="submit" :disabled="form.processing || preparingPhotos" class="request-button mt-5 disabled:opacity-60 disabled:cursor-wait">{{ form.processing ? (form.photos.length ? `Sending… ${form.progress?.percentage ?? 0}%` : 'Sending…') : 'Request Service' }}</button>
       </form>
     </div>

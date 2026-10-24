@@ -13,7 +13,7 @@ class SitemapTest extends TestCase
         $xml = simplexml_load_string($response->getContent());
         $this->assertNotFalse($xml);
         $urls = array_map('strval', $xml->xpath('//*[local-name()="loc"]'));
-        $this->assertCount(13, $urls);
+        $this->assertCount(15, $urls);
         $this->assertSame($urls, array_values(array_unique($urls)));
         foreach (config('repair.services') as $service) {
             $this->assertContains('https://tsrepairservice.com'.$service['url'], $urls);
@@ -23,5 +23,12 @@ class SitemapTest extends TestCase
         foreach ($urls as $url) {
             $this->assertNull(parse_url($url, PHP_URL_QUERY));
         }
+    }
+
+    public function test_privacy_and_terms_pages_render(): void
+    {
+        $this->withoutVite();
+        $this->get('/privacy')->assertOk()->assertInertia(fn ($page) => $page->component('Privacy'));
+        $this->get('/terms')->assertOk()->assertInertia(fn ($page) => $page->component('Terms'));
     }
 }

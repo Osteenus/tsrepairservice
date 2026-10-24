@@ -110,6 +110,8 @@
                     <ul class="pt-3 text-sm text-white">
                         <li class="py-2"><a href="/about">About Us</a></li>
                         <li class="py-2"><a href="/contact">Contact</a></li>
+                        <li class="py-2"><a href="/privacy">Privacy Policy</a></li>
+                        <li class="py-2"><a href="/terms">Terms of Service</a></li>
                     </ul>
                 </div>
                 <div class="footer-meta">
