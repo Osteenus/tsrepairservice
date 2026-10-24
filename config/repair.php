@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'phone' => '(805) 991-2874',
+    'phone' => '(805) 334-8375',
     'request_recipient' => env('SERVICE_REQUEST_EMAIL', 'ilmetal44@gmail.com'),
     'registration' => [
         'business_name' => 'TECH SOLUTIONS REPAIR SERVICE, INC',

@@ -10,7 +10,7 @@ return [
         'legal_name' => 'Tech Solutions Repair Service Inc.',
         'address' => '51 Majestic Ct, Apt 904, Moorpark, CA 93021',
         'service_area' => 'Serving Moorpark & Ventura County',
-        'phone' => '(805) 991-2874',
+        'phone' => '(805) 334-8375',
         'email' => 'service@tsrepairservice.com',
         'website' => 'tsrepairservice.com',
         'registration' => 'State Registration No. A 50537 (BHGS)',

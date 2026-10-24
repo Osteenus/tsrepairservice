@@ -47,7 +47,7 @@ Context: Tech Solutions Repair Service Inc. (Moorpark, CA), one-man appliance re
 - Guarantee (standard): labor 30 days, parts 90 days, from the service date (text in the templates).
 - Replaced parts are returned to the customer (the invoice has a line for initials).
 - **Sales tax is OFF** until the business gets a CDTFA seller's permit. Build it as a setting: when enabled, tax applies to parts only (not repair labor); the rate is configurable per job; show tax lines on documents only when enabled. Do not add tax calculation to the UI until the setting is on.
-- Company address on documents: `51 Majestic Ct, Apt 904, Moorpark, CA 93021` (matches BHGS registration; it is home address, so it appears only on customer documents and never on public pages). Phone: (805) 991-2874 (`config/repair.php`).
+- Company address on documents: `51 Majestic Ct, Apt 904, Moorpark, CA 93021` (matches BHGS registration; it is home address, so it appears only on customer documents and never on public pages). Phone: (805) 334-8375 (`config/repair.php`).
 
 ## PDF templates
 - Reference templates (Jinja2 + Chromium via Playwright, already tested): `docs/crm/pdf-templates/invoice.html`, `estimate.html`, `logo.png`, the generator scripts `generate_invoice.py` / `generate_estimate.py`, sample JSON and sample PDFs. Note: the python script loads `template.html`; in the repo the invoice template was renamed to `invoice.html`.

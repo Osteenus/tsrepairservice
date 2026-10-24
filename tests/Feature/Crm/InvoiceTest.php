@@ -168,7 +168,7 @@ class InvoiceTest extends CrmTestCase
         $appliance = $job->appliance;
 
         foreach ([
-            'Tech Solutions Repair Service Inc.', '51 Majestic Ct, Apt 904, Moorpark, CA 93021', '(805) 991-2874',
+            'Tech Solutions Repair Service Inc.', '51 Majestic Ct, Apt 904, Moorpark, CA 93021', '(805) 334-8375',
             'State Registration No. A 50537 (BHGS)', 'TS-2026-0001', 'Oct 14, 2026',
             $job->customer->name, '123 Sample Street',
             $appliance->brand, $appliance->model, 'S/N '.$appliance->serial,

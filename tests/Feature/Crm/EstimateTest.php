@@ -245,7 +245,7 @@ class EstimateTest extends CrmTestCase
 
         foreach ([
             'TS-E-2026-0001', 'Valid until', 'Oct 21, 2026', 'State Registration No. A 50537 (BHGS)',
-            '51 Majestic Ct, Apt 904, Moorpark, CA 93021', '(805) 991-2874',
+            '51 Majestic Ct, Apt 904, Moorpark, CA 93021', '(805) 334-8375',
             'The $95.00 service call / diagnostic fee is included in the estimate total',
             'Sales tax and other applicable taxes are not included in this estimate.',
             'Section 9844 of the California Business and Professions Code', '$267.00', 'W10780051',
