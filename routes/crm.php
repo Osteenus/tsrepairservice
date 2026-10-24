@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Crm\ApplianceController;
+use App\Http\Controllers\Crm\CallController;
 use App\Http\Controllers\Crm\CustomerController;
 use App\Http\Controllers\Crm\DashboardController;
 use App\Http\Controllers\Crm\DocumentController;
@@ -21,6 +22,8 @@ Route::prefix('crm')
             Route::resource('customers', CustomerController::class)->except('destroy');
             Route::post('customers/{customer}/appliances', [ApplianceController::class, 'store'])->name('appliances.store');
             Route::put('appliances/{appliance}', [ApplianceController::class, 'update'])->name('appliances.update');
+
+            Route::post('call', CallController::class)->middleware('throttle:10,1')->name('call');
 
             Route::get('requests', [RepairRequestController::class, 'index'])->name('requests.index');
             Route::get('requests/{repairRequest}', [RepairRequestController::class, 'show'])->name('requests.show');

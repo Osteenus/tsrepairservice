@@ -1,6 +1,6 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3';
-import { MessageSquare, Phone } from 'lucide-vue-next';
+import { MessageSquare, Phone, PhoneForwarded } from 'lucide-vue-next';
 import CrmLayout from '@/Layouts/CrmLayout.vue';
 import Button from '@/Components/Crm/Button.vue';
 
@@ -9,6 +9,9 @@ const props = defineProps({
 });
 
 const tel = (props.request.phone || '').replace(/[^\d+]/g, '');
+const callFromBusinessLine = () => {
+    if (confirm('Twilio will ring your phone first. Answer and press 1 to connect.')) router.post(route('crm.call'), { phone: props.request.phone, name: props.request.name }, { preserveScroll: true });
+};
 const convert = () => {
     if (confirm('Create a customer and a job from this request?')) router.post(route('crm.requests.convert', props.request.id));
 };
@@ -29,6 +32,7 @@ const archive = () => {
                 <a :href="`tel:${tel}`" class="flex h-12 items-center justify-center gap-1 rounded-lg bg-[#c8000a] font-bold text-white"><Phone class="size-5" />Call</a>
                 <a :href="`sms:${tel}`" class="flex h-12 items-center justify-center gap-1 rounded-lg bg-[#151515] font-bold text-white"><MessageSquare class="size-5" />Text</a>
             </div>
+            <button v-if="tel" type="button" class="mt-2 flex h-12 w-full items-center justify-center gap-1 rounded-lg border border-[#c8000a] font-bold text-[#c8000a]" @click="callFromBusinessLine"><PhoneForwarded class="size-5" />Call from business line</button>
         </section>
 
         <section class="mt-3 rounded-xl bg-white p-4 shadow-sm">

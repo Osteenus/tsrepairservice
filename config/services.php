@@ -29,7 +29,11 @@ return [
     ],
 
     'twilio' => [
+        'account_sid' => env('TWILIO_ACCOUNT_SID'),
         'auth_token' => env('TWILIO_AUTH_TOKEN'),
+        // Business line (caller ID for CRM call-backs) and the owner's mobile that Twilio rings first, both E.164.
+        'number' => env('TWILIO_NUMBER', '+18053348375'),
+        'owner_phone' => env('TWILIO_OWNER_PHONE'),
         'voice' => env('TWILIO_VOICE', 'Polly.Joanna-Neural'),
     ],
 

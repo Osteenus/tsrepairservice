@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import { Link, useForm } from '@inertiajs/vue3';
-import { MapPin, MessageSquare, Pencil, Phone } from 'lucide-vue-next';
+import { Link, router, useForm } from '@inertiajs/vue3';
+import { MapPin, MessageSquare, Pencil, Phone, PhoneForwarded } from 'lucide-vue-next';
 import CrmLayout from '@/Layouts/CrmLayout.vue';
 import ApplianceFields from '@/Components/Crm/ApplianceFields.vue';
 import Button from '@/Components/Crm/Button.vue';
@@ -18,6 +18,9 @@ const props = defineProps({
 const address = [props.customer.address_line1, props.customer.city, [props.customer.state, props.customer.zip].filter(Boolean).join(' ')]
     .filter(Boolean).join(', ');
 const tel = (props.customer.phone || '').replace(/[^\d+]/g, '');
+const callFromBusinessLine = () => {
+    if (confirm('Twilio will ring your phone first. Answer and press 1 to connect.')) router.post(route('crm.call'), { phone: props.customer.phone, name: props.customer.name }, { preserveScroll: true });
+};
 
 const editing = ref(null);
 const blank = { type: '', brand: '', model: '', serial: '', notes: '' };
@@ -62,6 +65,7 @@ const save = () => {
                 <a v-if="tel" :href="`sms:${tel}`" class="flex h-12 items-center justify-center gap-1 rounded-lg bg-[#151515] font-bold text-white"><MessageSquare class="size-5" />Text</a>
                 <a v-if="address" :href="`https://maps.google.com/?q=${encodeURIComponent(address)}`" target="_blank" rel="noopener" class="flex h-12 items-center justify-center gap-1 rounded-lg border border-gray-300 font-bold"><MapPin class="size-5" />Map</a>
             </div>
+            <button v-if="tel" type="button" class="mt-2 flex h-12 w-full items-center justify-center gap-1 rounded-lg border border-[#c8000a] font-bold text-[#c8000a]" @click="callFromBusinessLine"><PhoneForwarded class="size-5" />Call from business line</button>
             <p v-if="customer.notes" class="mt-3 whitespace-pre-line text-sm text-gray-700">{{ customer.notes }}</p>
         </section>
 

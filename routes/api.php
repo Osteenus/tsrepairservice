@@ -13,4 +13,5 @@ Route::middleware('twilio')->prefix('twilio/voice')->controller(TwilioVoiceContr
     Route::post('/', 'incoming');
     Route::post('/answer/{step}', 'answer')->whereIn('step', ['name', 'problem', 'location']);
     Route::post('/status', 'status');
+    Route::post('/connect', 'connect');
 });

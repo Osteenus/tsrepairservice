@@ -103,6 +103,17 @@ class TwilioVoiceController extends Controller
         return response()->noContent();
     }
 
+    /** Owner pressed a key on a CRM call-back (Crm\CallController): 1 dials the customer from the business line. */
+    public function connect(Request $request): Response
+    {
+        $customer = Cache::pull('twilio-outbound:'.$request->input('CallSid'));
+        if ($request->input('Digits') !== '1' || ! $customer) {
+            return $this->twiml($this->say('Call cancelled.').'<Hangup/>');
+        }
+
+        return $this->twiml('<Dial callerId="'.e(config('services.twilio.number')).'" timeout="30">'.e($customer).'</Dial>');
+    }
+
     /** Creates the CRM request once per call; returns false when the caller said nothing. */
     private function save(string $callSid, array $state): bool
     {

@@ -28,6 +28,24 @@ class Normalize
             : $value;
     }
 
+    /** "+18055550100" for Twilio; null when the number cannot be dialed as is (extensions, too short). */
+    public static function e164(?string $value): ?string
+    {
+        $value = trim((string) $value);
+        if ($value === '' || preg_match('/[a-z#]/i', $value)) {
+            return null;
+        }
+        $digits = preg_replace('/\D/', '', $value);
+        if (str_starts_with($value, '+')) {
+            return strlen($digits) >= 8 ? '+'.$digits : null;
+        }
+        if (strlen($digits) === 10) {
+            return '+1'.$digits;
+        }
+
+        return strlen($digits) === 11 && str_starts_with($digits, '1') ? '+'.$digits : null;
+    }
+
     public static function email(?string $value): ?string
     {
         $value = mb_strtolower(trim((string) $value));
