@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class RepairRequest extends Model
 {
     protected $fillable = [
-        'contact_id', 'service_id', 'location', 'brand', 'model', 'description',
+        'contact_id', 'service_id', 'location', 'brand', 'model', 'description', 'source', 'call_sid',
     ];
 
     protected function casts(): array

@@ -40,7 +40,7 @@ class WebFormRequestReceivedEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Web Form Request Received Email',
+            subject: $this->repairRequest->source === 'phone' ? 'Phone Request Received' : 'Web Form Request Received Email',
         );
     }
 
@@ -62,6 +62,7 @@ class WebFormRequestReceivedEmail extends Mailable implements ShouldQueue
                 'brand' => $this->repairRequest->brand,
                 'model' => $this->repairRequest->model,
                 'photoCount' => $this->repairRequest->photos()->count(),
+                'byPhone' => $this->repairRequest->source === 'phone',
 
             ],
         );

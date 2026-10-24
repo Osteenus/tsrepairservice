@@ -22,7 +22,7 @@ defineProps({
                         <p class="font-semibold">{{ request.name }}</p>
                         <p class="shrink-0 text-xs text-gray-500">{{ request.received }}</p>
                     </div>
-                    <p class="text-sm text-gray-600">{{ request.appliance }} · {{ request.location }}</p>
+                    <p class="text-sm text-gray-600"><span v-if="request.by_phone" class="mr-1 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold text-gray-700">Phone</span>{{ [request.appliance, request.location].filter(Boolean).join(' · ') }}</p>
                 </Link>
             </li>
             <li v-if="!requests.data.length" class="px-4 py-6 text-center text-gray-500">No requests.</li>

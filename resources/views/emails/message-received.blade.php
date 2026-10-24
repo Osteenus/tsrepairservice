@@ -1,4 +1,7 @@
-<h1>New website repair request</h1>
+<h1>New {{ $byPhone ? 'phone' : 'website' }} repair request</h1>
+@if ($byPhone)
+<p>Taken by the voice bot; answers are speech-to-text, check them when you call back.</p>
+@endif
 <p><strong>Name:</strong> {{ $name }}<br>
 <strong>Phone:</strong> {{ $phone }}<br>
 <strong>Email:</strong> {{ $email ?: 'Not provided' }}</p>

@@ -21,7 +21,7 @@ const archive = () => {
 <template>
     <CrmLayout :title="request.name || 'Request'" :back="route('crm.requests.index')">
         <section class="rounded-xl bg-white p-4 shadow-sm">
-            <p class="text-xs text-gray-500">Received {{ request.received }}</p>
+            <p class="text-xs text-gray-500">Received {{ request.received }}<template v-if="request.by_phone"> by phone (voice bot, speech-to-text)</template></p>
             <p class="mt-1 text-lg font-semibold">{{ request.phone }}</p>
             <p v-if="request.email" class="text-gray-600">{{ request.email }}</p>
             <p class="text-gray-600">{{ request.location }}</p>
