@@ -7,6 +7,7 @@ use App\Http\Controllers\Crm\DashboardController;
 use App\Http\Controllers\Crm\DocumentController;
 use App\Http\Controllers\Crm\EstimateController;
 use App\Http\Controllers\Crm\InvoiceController;
+use App\Http\Controllers\Crm\PhoneLineController;
 use App\Http\Controllers\Crm\PhotoController;
 use App\Http\Controllers\Crm\RepairRequestController;
 use App\Http\Controllers\Crm\WorkOrderController;
@@ -23,6 +24,8 @@ Route::prefix('crm')
             Route::post('customers/{customer}/appliances', [ApplianceController::class, 'store'])->name('appliances.store');
             Route::put('appliances/{appliance}', [ApplianceController::class, 'update'])->name('appliances.update');
 
+            Route::get('phone', [PhoneLineController::class, 'show'])->name('phone.show');
+            Route::put('phone', [PhoneLineController::class, 'update'])->name('phone.update');
             Route::post('call', CallController::class)->middleware('throttle:10,1')->name('call');
 
             Route::get('requests', [RepairRequestController::class, 'index'])->name('requests.index');

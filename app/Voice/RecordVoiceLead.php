@@ -6,6 +6,7 @@ use App\Mail\VoiceLeadMail;
 use App\Models\Contact;
 use App\Models\Customer;
 use App\Models\RepairRequest;
+use App\Models\VoiceCall;
 use App\Models\VoiceLead;
 use App\Support\Normalize;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -60,6 +61,8 @@ class RecordVoiceLead
         } catch (UniqueConstraintViolationException) {
             return [VoiceLead::where('call_sid', $data['call_sid'])->firstOrFail(), false];
         }
+
+        VoiceCall::record($lead->call_sid, ['lead_created' => true]);
 
         try {
             Mail::to(config('repair.request_recipient'))->queue(new VoiceLeadMail($lead, 'new'));

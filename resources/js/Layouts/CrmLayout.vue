@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { House, Inbox, Users, Wrench, ShieldCheck, LogOut } from 'lucide-vue-next';
+import { House, Inbox, Users, Wrench, ShieldCheck, LogOut, PhoneCall } from 'lucide-vue-next';
 import Banner from '@/Components/Banner.vue';
 
 defineProps({
@@ -17,6 +17,7 @@ const tabs = [
     { label: 'Requests', href: '/crm/requests', icon: Inbox },
     { label: 'Jobs', href: '/crm/jobs', icon: Wrench },
     { label: 'Customers', href: '/crm/customers', icon: Users },
+    { label: 'Phone', href: '/crm/phone', icon: PhoneCall },
 ];
 
 const active = tab => tab.exact ? path.value === tab.href : path.value.startsWith(tab.href);
@@ -60,7 +61,7 @@ onBeforeUnmount(() => {
         </main>
 
         <nav class="fixed inset-x-0 bottom-0 z-20 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)]">
-            <div class="mx-auto grid max-w-3xl grid-cols-4">
+            <div class="mx-auto grid max-w-3xl grid-cols-5">
                 <Link
                     v-for="tab in tabs"
                     :key="tab.href"

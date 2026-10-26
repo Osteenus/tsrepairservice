@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\WebFormRequestReceivedEmail;
 use App\Models\Contact;
 use App\Models\RepairRequest;
+use App\Models\VoiceCall;
 use App\Support\Normalize;
 use App\Voice\ApplianceType;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -81,6 +82,14 @@ class TwilioVoiceController extends Controller
     /** Call status callback: a caller who hangs up halfway still leaves a request with what they said. */
     public function status(Request $request): Response
     {
+        // Duration of every call on the number (also the AI ones), for the A/B statistics.
+        if ($request->input('CallStatus') === 'completed' || $request->filled('CallDuration')) {
+            VoiceCall::record((string) $request->input('CallSid'), [
+                'call_status' => $request->input('CallStatus'),
+                'duration_seconds' => $request->filled('CallDuration') ? (int) $request->input('CallDuration') : null,
+            ]);
+        }
+
         if (in_array($request->input('CallStatus'), ['completed', 'busy', 'no-answer', 'failed', 'canceled'], true)) {
             $state = Cache::pull($this->cacheKey($request));
             if ($state) {

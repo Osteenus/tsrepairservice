@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\VoiceCall;
 use App\Models\VoiceLead;
 use App\Support\Normalize;
 use App\Voice\BusinessHours;
+use App\Voice\PhoneLineSettings;
 use App\Voice\RecordVoiceLead;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -75,6 +77,34 @@ class VoiceApiController extends Controller
             'address' => $customer->fullAddress() ?: null,
             'appliances' => $customer->appliances->map(fn ($appliance) => trim(($appliance->brand ?? '').' '.($appliance->type ?? '')))->filter()->values(),
         ]);
+    }
+
+    /** How to answer the next call (voice-service caches this for a few seconds). */
+    public function settings(): JsonResponse
+    {
+        $settings = PhoneLineSettings::all();
+
+        return response()->json(['mode' => $settings['mode'], 'ai_percent' => $settings['ai_percent']]);
+    }
+
+    /** Pieces of the call statistics: variant at the start, AI usage at the end, transfer result. */
+    public function recordCall(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'call_sid' => ['required', 'string', 'max:64'],
+            'caller_phone' => ['nullable', 'string', 'max:50'],
+            'variant' => ['nullable', Rule::in(['ai', 'transfer'])],
+            'rate_limited' => ['nullable', 'boolean'],
+            'reached_ai' => ['nullable', 'boolean'],
+            'transfer_status' => ['nullable', Rule::in(['answered', 'missed'])],
+            'timed_out' => ['nullable', 'boolean'],
+            'ai_turns' => ['nullable', 'integer', 'min:0', 'max:1000'],
+            'input_tokens' => ['nullable', 'integer', 'min:0'],
+            'output_tokens' => ['nullable', 'integer', 'min:0'],
+        ]);
+        VoiceCall::record($data['call_sid'], $data);
+
+        return response()->json(['ok' => true]);
     }
 
     public function availability(): JsonResponse

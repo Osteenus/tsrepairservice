@@ -24,4 +24,6 @@ Route::middleware('voice-api')->prefix('voice')->controller(VoiceApiController::
     Route::post('/leads/{lead}/followup', 'followupResult')->whereNumber('lead');
     Route::get('/customers', 'customer');
     Route::get('/availability', 'availability');
+    Route::get('/settings', 'settings');
+    Route::post('/calls', 'recordCall');
 });
