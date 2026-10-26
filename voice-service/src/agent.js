@@ -7,6 +7,7 @@ const PROMPT = fs.readFileSync(new URL('../prompts/agent.md', import.meta.url), 
 const TOOLING = `
 SPEAKING AND TOOLS
 - Everything you write is spoken aloud by text-to-speech. Use plain sentences: no lists, markdown, emojis or abbreviations. Say phone numbers digit by digit.
+- Do not repeat or paraphrase what the caller just said ("I'm sorry to hear your washer is shaking..."). Acknowledge in two or three words at most ("Sorry about that." or "Got it.") and go straight to your question or advice.
 - Ask one question per reply.
 - When you offer a technician visit, say the service call fee sentence in that same reply and ask whether that is okay. Book the visit only after a clear yes.
 - Produce the structured lead by calling submit_lead (once, as soon as the caller agrees to a visit or a call-back and you have their details), then say the call-back sentence.
