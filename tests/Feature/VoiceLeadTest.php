@@ -136,6 +136,19 @@ class VoiceLeadTest extends TestCase
         $this->assertSame(['callback_done'], VoiceLead::pluck('status')->unique()->values()->all());
     }
 
+    public function test_timed_out_call_is_due_for_the_owner_but_gets_no_ai_follow_up(): void
+    {
+        Http::fake();
+        $this->lead(['consent_to_callback' => false, 'outcome' => 'timeout'])->assertCreated()->assertJson(['status' => 'callback_due']);
+
+        $this->travel(21)->minutes();
+        $this->artisan('voice:follow-up');
+        Http::assertNothingSent();
+        $this->travel(30)->minutes();
+        $this->artisan('voice:follow-up');
+        $this->assertSame('overdue', VoiceLead::sole()->status);
+    }
+
     public function test_follow_up_result_is_saved(): void
     {
         $this->lead()->assertCreated();

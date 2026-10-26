@@ -28,9 +28,11 @@ class RecordVoiceLead
 
         $phone = Normalize::phone(preg_replace('/^\+1(?=\d{10}$)/', '', $data['caller_phone'])) ?? $data['caller_phone'];
         $consent = (bool) ($data['consent_to_callback'] ?? false);
+        // The owner must call back whoever agreed to it, ran out of call time or could not be transferred.
+        $due = $consent || in_array($data['outcome'] ?? null, ['timeout', 'transfer'], true);
 
         try {
-            $lead = DB::transaction(function () use ($data, $phone, $consent) {
+            $lead = DB::transaction(function () use ($data, $phone, $consent, $due) {
                 $contact = Contact::create(['name' => $data['caller_name'] ?? 'Phone caller', 'phone' => $phone, 'email' => '']);
                 $repairRequest = RepairRequest::create([
                     'contact_id' => $contact->id,
@@ -46,9 +48,9 @@ class RecordVoiceLead
                     ...$data,
                     'caller_phone' => $phone,
                     'consent_to_callback' => $consent,
-                    // Only a caller who asked for a visit or call-back is chased by the scheduler.
-                    'status' => $consent ? 'callback_due' : 'new',
-                    'callback_due_at' => $consent
+                    // The scheduler's follow-up call additionally needs consent_to_callback.
+                    'status' => $due ? 'callback_due' : 'new',
+                    'callback_due_at' => $due
                         ? BusinessHours::nextOpening()->addMinutes(config('voice.callback_minutes'))
                         : null,
                     'repair_request_id' => $repairRequest->id,
