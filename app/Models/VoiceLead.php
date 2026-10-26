@@ -15,7 +15,7 @@ class VoiceLead extends Model
 
     protected $fillable = [
         'call_sid', 'caller_phone', 'caller_name', 'service_address', 'appliance_type', 'appliance_brand',
-        'reported_problem', 'agent_summary', 'consent_to_callback', 'preferred_callback_time',
+        'reported_problem', 'agent_summary', 'consent_to_callback', 'fee_accepted', 'preferred_callback_time',
         'recording_notice_played', 'outcome', 'transferred', 'status', 'callback_due_at',
         'repair_request_id', 'customer_id', 'started_at', 'ended_at',
     ];
@@ -24,6 +24,7 @@ class VoiceLead extends Model
     {
         return [
             'consent_to_callback' => 'boolean',
+            'fee_accepted' => 'boolean',
             'recording_notice_played' => 'boolean',
             'transferred' => 'boolean',
             'callback_due_at' => 'datetime',

@@ -123,6 +123,9 @@ export class CallSession {
   async runTool(name, input) {
     switch (name) {
       case 'submit_lead':
+        if (input.outcome !== 'callback' && input.fee_accepted !== true) {
+          return { saved: false, error: 'A visit needs the caller\'s clear agreement to the $95 service call fee. Ask them first, or save a call-back instead.' };
+        }
         await this.sendLead({ ...input, outcome: input.outcome === 'callback' ? 'callback' : 'visit' });
         return { saved: true, technician_available: this.technicianAvailable };
       case 'transfer_to_technician':
@@ -158,6 +161,7 @@ export class CallSession {
       reported_problem: fields.reported_problem || this.callerTexts.join(' ').slice(0, 4000) || null,
       agent_summary: fields.agent_summary || null,
       consent_to_callback: Boolean(fields.consent_to_callback),
+      fee_accepted: fields.fee_accepted === true,
       preferred_callback_time: fields.preferred_callback_time || null,
       outcome: fields.outcome,
       transferred: fields.outcome === 'transfer',

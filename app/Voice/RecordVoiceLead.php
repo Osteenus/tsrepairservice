@@ -91,6 +91,7 @@ class RecordVoiceLead
         $parts = array_filter([
             $data['reported_problem'] ?? null,
             isset($data['agent_summary']) ? 'Agent summary: '.$data['agent_summary'] : null,
+            ($data['outcome'] ?? null) === 'visit' ? 'Agreed to the $95 service call fee: '.(! empty($data['fee_accepted']) ? 'yes' : 'NO').'.' : null,
             isset($data['preferred_callback_time']) ? 'Preferred call-back time: '.$data['preferred_callback_time'] : null,
         ]);
 

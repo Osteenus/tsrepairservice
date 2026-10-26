@@ -7,7 +7,8 @@ const PROMPT = fs.readFileSync(new URL('../prompts/agent.md', import.meta.url), 
 const TOOLING = `
 SPEAKING AND TOOLS
 - Everything you write is spoken aloud by text-to-speech. Use plain sentences: no lists, markdown, emojis or abbreviations. Say phone numbers digit by digit.
-- When you offer a technician visit, say the service call fee sentence in that same reply, before the caller answers.
+- Ask one question per reply.
+- When you offer a technician visit, say the service call fee sentence in that same reply and ask whether that is okay. Book the visit only after a clear yes.
 - Produce the structured lead by calling submit_lead (once, as soon as the caller agrees to a visit or a call-back and you have their details), then say the call-back sentence.
 - To transfer, say one short sentence that you are connecting them, then call transfer_to_technician.
 - When the conversation is finished, say goodbye and call end_call in the same reply. Nothing you write after end_call or transfer_to_technician is spoken.`;
@@ -27,10 +28,11 @@ export const TOOLS = {
         reported_problem: { type: 'string', description: 'The problem in the caller\'s own words.' },
         agent_summary: { type: 'string', description: 'One or two sentences for the technician: symptoms, what was tried, your first recommendation.' },
         consent_to_callback: { type: 'boolean', description: 'True when the caller agreed to be called back.' },
+        fee_accepted: { type: 'boolean', description: 'True only when the caller clearly agreed to the $95 service call fee. Required for a visit.' },
         preferred_callback_time: { type: 'string' },
         outcome: { type: 'string', enum: ['visit', 'callback'] },
       },
-      required: ['reported_problem', 'agent_summary', 'consent_to_callback', 'outcome'],
+      required: ['reported_problem', 'agent_summary', 'consent_to_callback', 'fee_accepted', 'outcome'],
     },
   },
   transfer_to_technician: {

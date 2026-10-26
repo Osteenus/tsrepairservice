@@ -149,6 +149,19 @@ describe('transfer and follow-up', () => {
 });
 
 describe('call session (end)', () => {
+  test('a visit without agreement to the service call fee is refused', async () => {
+    const leads = new FakeLaravel();
+    const session = new CallSession({ readyState: 1, send() {} }, config, { laravel: leads, claude: {} });
+    await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAfee', from: '+18055550123', customParameters: {} }));
+    const refused = await session.runTool('submit_lead', { reported_problem: 'Leaks', consent_to_callback: true, fee_accepted: false, outcome: 'visit' });
+    assert.equal(refused.saved, false);
+    assert.equal(leads.leads.length, 0);
+    // A call-back does not need the fee agreement.
+    assert.equal((await session.runTool('submit_lead', { reported_problem: 'Leaks', consent_to_callback: true, outcome: 'callback' })).saved, true);
+    assert.equal(leads.leads[0].fee_accepted, false);
+    clearTimeout(session.timer);
+  });
+
   test('after end_call the assistant is not asked for another reply', async () => {
     const ws = { readyState: 1, sent: [], send(data) { this.sent.push(JSON.parse(data)); } };
     let requests = 0;
@@ -204,7 +217,7 @@ describe('call session', () => {
     const ws = fakeWs();
     const leads = new FakeLaravel();
     const replies = [
-      { content: [{ type: 'tool_use', id: 't1', name: 'submit_lead', input: { caller_name: 'Jane', reported_problem: 'Leaks', agent_summary: 'Washer leaks.', consent_to_callback: true, outcome: 'visit' } }], stop_reason: 'tool_use', usage: { input_tokens: 10, output_tokens: 5 } },
+      { content: [{ type: 'tool_use', id: 't1', name: 'submit_lead', input: { caller_name: 'Jane', reported_problem: 'Leaks', agent_summary: 'Washer leaks.', consent_to_callback: true, fee_accepted: true, outcome: 'visit' } }], stop_reason: 'tool_use', usage: { input_tokens: 10, output_tokens: 5 } },
       { content: [{ type: 'text', text: 'Our closest technician will call you back in 20 minutes.' }], stop_reason: 'end_turn', usage: { input_tokens: 12, output_tokens: 9 } },
     ];
     const session = new CallSession(ws, config, {
@@ -218,6 +231,7 @@ describe('call session', () => {
     assert.equal(leads.leads.length, 1);
     assert.equal(leads.leads[0].caller_phone, '+18055550123');
     assert.equal(leads.leads[0].recording_notice_played, true);
+    assert.equal(leads.leads[0].fee_accepted, true);
     assert.ok(ws.sent.some((m) => m.token === 'Our closest technician will call you back in 20 minutes.'));
     assert.deepEqual(leads.calls, [
       { call_sid: 'CAok', reached_ai: true },

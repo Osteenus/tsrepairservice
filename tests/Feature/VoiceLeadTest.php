@@ -34,7 +34,7 @@ class VoiceLeadTest extends TestCase
             'call_sid' => 'CA100', 'caller_phone' => '+18055550123', 'caller_name' => 'Jane Doe',
             'service_address' => '123 Main St, Moorpark', 'appliance_type' => 'dishwasher', 'appliance_brand' => 'Bosch',
             'reported_problem' => 'Not draining', 'agent_summary' => 'Bosch dishwasher, water left at the bottom.',
-            'consent_to_callback' => true, 'outcome' => 'visit', 'recording_notice_played' => true,
+            'consent_to_callback' => true, 'fee_accepted' => true, 'outcome' => 'visit', 'recording_notice_played' => true,
         ], $overrides));
     }
 
@@ -56,6 +56,8 @@ class VoiceLeadTest extends TestCase
         $this->assertSame('Jane Doe', $lead->caller_name);
         $this->assertSame('(805) 555-0123', $lead->caller_phone);
         $this->assertTrue($lead->recording_notice_played);
+        $this->assertTrue($lead->fee_accepted);
+        $this->assertStringContainsString('Agreed to the $95 service call fee: yes.', RepairRequest::sole()->description);
         $this->assertTrue($lead->callback_due_at->equalTo(now()->addMinutes(20)));
 
         // It is also in the CRM inbox as a phone request.

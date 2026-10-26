@@ -40,6 +40,7 @@ const archive = () => {
         <section v-if="request.voice" class="mt-3 rounded-xl p-4 shadow-sm" :class="request.voice.status === 'overdue' ? 'bg-red-50' : 'bg-white'">
             <h2 class="text-xs font-bold uppercase tracking-wider text-[#c8000a]">AI phone assistant</h2>
             <p class="font-semibold">{{ voiceStatus[request.voice.status] }}<template v-if="request.voice.status === 'callback_due' && request.voice.due"> {{ request.voice.due }}</template></p>
+            <p class="text-sm text-gray-600">$95 service call fee: {{ request.voice.fee_accepted ? 'agreed on the call' : 'not agreed' }}</p>
             <p v-if="request.voice.followup_notes" class="text-sm text-gray-600">Follow-up call: {{ request.voice.followup_notes }}</p>
             <button v-if="['callback_due', 'overdue', 'new'].includes(request.voice.status)" type="button" class="mt-2 flex h-12 w-full items-center justify-center rounded-lg bg-[#151515] font-bold text-white" @click="calledBack">I called back</button>
         </section>

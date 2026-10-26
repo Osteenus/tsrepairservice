@@ -10,6 +10,7 @@
 <strong>Address:</strong> {{ $lead->service_address ?: 'Not given' }}</p>
 <p><strong>Appliance:</strong> {{ trim(($lead->appliance_brand ?? '').' '.($lead->appliance_type ?? '')) ?: 'Not given' }}<br>
 <strong>Outcome:</strong> {{ $lead->outcome ?: 'Unknown' }}{{ $lead->consent_to_callback ? ', agreed to a call-back' : '' }}<br>
+<strong>$95 service call fee:</strong> {{ $lead->fee_accepted ? 'agreed' : 'not agreed' }}<br>
 @if ($lead->preferred_callback_time)<strong>Preferred time:</strong> {{ $lead->preferred_callback_time }}<br>@endif
 @if ($due)<strong>Call back by:</strong> {{ $due }}@endif</p>
 @if ($lead->reported_problem)

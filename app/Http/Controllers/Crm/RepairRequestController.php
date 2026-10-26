@@ -60,6 +60,7 @@ class RepairRequestController extends Controller
                     'status' => $lead->status,
                     'due' => LocalTime::display($lead->callback_due_at),
                     'consent' => $lead->consent_to_callback,
+                    'fee_accepted' => $lead->fee_accepted,
                     'followup_notes' => $lead->followup_notes,
                 ] : null,
                 'photos' => $repairRequest->photos->map(fn (Photo $photo) => ['id' => $photo->id, 'url' => route('crm.photos.show', $photo)]),

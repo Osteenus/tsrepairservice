@@ -28,6 +28,7 @@ class VoiceApiController extends Controller
             'reported_problem' => ['nullable', 'string', 'max:5000'],
             'agent_summary' => ['nullable', 'string', 'max:5000'],
             'consent_to_callback' => ['boolean'],
+            'fee_accepted' => ['boolean'],
             'preferred_callback_time' => ['nullable', 'string', 'max:255'],
             'recording_notice_played' => ['boolean'],
             'outcome' => ['nullable', Rule::in(['visit', 'callback', 'transfer', 'timeout', 'hangup'])],
