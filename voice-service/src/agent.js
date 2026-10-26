@@ -7,9 +7,10 @@ const PROMPT = fs.readFileSync(new URL('../prompts/agent.md', import.meta.url), 
 const TOOLING = `
 SPEAKING AND TOOLS
 - Everything you write is spoken aloud by text-to-speech. Use plain sentences: no lists, markdown, emojis or abbreviations. Say phone numbers digit by digit.
+- When you offer a technician visit, say the service call fee sentence in that same reply, before the caller answers.
 - Produce the structured lead by calling submit_lead (once, as soon as the caller agrees to a visit or a call-back and you have their details), then say the call-back sentence.
 - To transfer, say one short sentence that you are connecting them, then call transfer_to_technician.
-- When the conversation is finished, say goodbye and call end_call.`;
+- When the conversation is finished, say goodbye and call end_call in the same reply. Nothing you write after end_call or transfer_to_technician is spoken.`;
 
 export const TOOLS = {
   submit_lead: {

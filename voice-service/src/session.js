@@ -113,6 +113,8 @@ export class CallSession {
         results.push({ type: 'tool_result', tool_use_id: call.id, content: JSON.stringify(await this.runTool(call.name, call.input || {})) });
       }
       this.messages.push({ role: 'user', content: results });
+      // Goodbye or transfer sentence was already spoken: no further reply.
+      if (this.pendingEnd) break;
     }
 
     if (this.pendingEnd) this.finish(this.pendingEnd);

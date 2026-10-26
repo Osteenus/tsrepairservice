@@ -148,6 +148,27 @@ describe('transfer and follow-up', () => {
   });
 });
 
+describe('call session (end)', () => {
+  test('after end_call the assistant is not asked for another reply', async () => {
+    const ws = { readyState: 1, sent: [], send(data) { this.sent.push(JSON.parse(data)); } };
+    let requests = 0;
+    const session = new CallSession(ws, config, {
+      laravel: new FakeLaravel(),
+      claude: { respond: async ({ onText }) => {
+        requests++;
+        onText('Thank you for calling, goodbye.');
+        return { content: [{ type: 'text', text: 'Thank you for calling, goodbye.' }, { type: 'tool_use', id: 'e1', name: 'end_call', input: {} }], stop_reason: 'tool_use', usage: {} };
+      } },
+    });
+    await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAbye', from: '+18055550123', customParameters: {} }));
+    await session.onMessage(JSON.stringify({ type: 'prompt', voicePrompt: 'No, thank you', last: true }));
+    clearTimeout(session.endTimer);
+    clearTimeout(session.timer);
+    assert.equal(requests, 1);
+    assert.equal(ws.sent.filter((m) => m.token === 'Thank you for calling, goodbye.').length, 1);
+  });
+});
+
 describe('call session', () => {
   const fakeWs = () => ({ readyState: 1, sent: [], send(data) { this.sent.push(JSON.parse(data)); } });
 
