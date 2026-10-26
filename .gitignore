@@ -1,6 +1,7 @@
 /node_modules
 /vendor
 .env
+/voice-service/.env
 public/build
 public/storage
 vite.config.js
