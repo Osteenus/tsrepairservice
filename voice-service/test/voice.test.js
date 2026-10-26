@@ -155,6 +155,12 @@ describe('call session (end)', () => {
     await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAfee', from: '+18055550123', customParameters: {} }));
     const refused = await session.runTool('submit_lead', { reported_problem: 'Leaks', consent_to_callback: true, fee_accepted: false, outcome: 'visit' });
     assert.equal(refused.saved, false);
+    session.technicianAvailable = false;
+    const saved = await session.runTool('submit_lead', { reported_problem: 'Leaks', consent_to_callback: true, fee_accepted: true, outcome: 'visit' });
+    assert.match(saved.say_exactly, /as soon as possible/);
+    assert.doesNotMatch(saved.say_exactly, /20 minutes/);
+    session.leadSent = false;
+    leads.leads.length = 0;
     assert.equal(leads.leads.length, 0);
     // A call-back does not need the fee agreement.
     assert.equal((await session.runTool('submit_lead', { reported_problem: 'Leaks', consent_to_callback: true, outcome: 'callback' })).saved, true);

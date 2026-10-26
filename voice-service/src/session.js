@@ -127,7 +127,14 @@ export class CallSession {
           return { saved: false, error: 'A visit needs the caller\'s clear agreement to the $95 service call fee. Ask them first, or save a call-back instead.' };
         }
         await this.sendLead({ ...input, outcome: input.outcome === 'callback' ? 'callback' : 'visit' });
-        return { saved: true, technician_available: this.technicianAvailable };
+        // The promise depends on technician hours; give the model the exact sentence.
+        return {
+          saved: true,
+          technician_available: this.technicianAvailable,
+          say_exactly: this.technicianAvailable
+            ? 'Our closest technician will call you back in 20 minutes.'
+            : 'Our technicians are not working right now. A technician will call you back as soon as possible.',
+        };
       case 'transfer_to_technician':
         if (!this.config.twilio.ownerPhone) return { transferred: false, note: 'No technician line is configured. Offer a call-back instead.' };
         this.pendingEnd = 'transfer';
