@@ -5,6 +5,7 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\PrivateArea;
 use App\Http\Middleware\RedirectWwwToApex;
 use App\Http\Middleware\VerifyTwilioSignature;
+use App\Http\Middleware\VerifyVoiceApiKey;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -29,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'private' => PrivateArea::class,
             'two-factor' => EnsureTwoFactorConfirmed::class,
             'twilio' => VerifyTwilioSignature::class,
+            'voice-api' => VerifyVoiceApiKey::class,
         ]);
 
     })

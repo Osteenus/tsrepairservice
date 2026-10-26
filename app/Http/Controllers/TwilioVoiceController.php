@@ -6,6 +6,7 @@ use App\Mail\WebFormRequestReceivedEmail;
 use App\Models\Contact;
 use App\Models\RepairRequest;
 use App\Support\Normalize;
+use App\Voice\ApplianceType;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,19 +26,6 @@ class TwilioVoiceController extends Controller
         'name' => 'Please say your first and last name.',
         'problem' => 'What appliance needs repair, and what is wrong with it?',
         'location' => 'What city are you in?',
-    ];
-
-    /** Spoken words that pick the appliance type (config repair.services ids); checked in this order. */
-    private const APPLIANCE_WORDS = [
-        5 => ['dishwasher', 'dish washer'],
-        9 => ['compactor'],
-        8 => ['hood'],
-        7 => ['microwave'],
-        1 => ['refrigerator', 'fridge', 'freezer', 'ice maker'],
-        3 => ['dryer'],
-        2 => ['washer', 'washing machine'],
-        4 => ['oven', 'stove', 'range', 'cooktop', 'burner'],
-        10 => ['electronic'],
     ];
 
     private const HINTS = 'refrigerator, fridge, freezer, washer, dryer, oven, stove, range, dishwasher, microwave, range hood, '
@@ -135,7 +123,7 @@ class TwilioVoiceController extends Controller
                 ]);
                 $repairRequest = RepairRequest::create([
                     'contact_id' => $contact->id,
-                    'service_id' => $this->applianceId($answers['problem'] ?? ''),
+                    'service_id' => ApplianceType::serviceId($answers['problem'] ?? ''),
                     'location' => isset($answers['location']) ? mb_substr($answers['location'], 0, 120) : null,
                     'description' => $answers['problem'] ?? 'The caller did not describe the problem.',
                     'source' => 'phone',
@@ -155,21 +143,6 @@ class TwilioVoiceController extends Controller
         }
 
         return true;
-    }
-
-    /** Appliance id from what the caller said, 0 ("Appliance") when no known word was heard. */
-    private function applianceId(string $speech): int
-    {
-        $speech = mb_strtolower($speech);
-        foreach (self::APPLIANCE_WORDS as $id => $words) {
-            foreach ($words as $word) {
-                if (preg_match('/\b'.preg_quote($word, '/').'/u', $speech)) {
-                    return $id;
-                }
-            }
-        }
-
-        return 0;
     }
 
     private function ask(string $step): string

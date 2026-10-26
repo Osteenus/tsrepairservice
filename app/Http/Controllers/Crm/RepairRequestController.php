@@ -56,6 +56,12 @@ class RepairRequestController extends Controller
                 'received' => LocalTime::display($repairRequest->created_at),
                 'archived' => (bool) $repairRequest->archived_at,
                 'work_order_id' => $repairRequest->workOrder?->id,
+                'voice' => ($lead = $repairRequest->voiceLead) ? [
+                    'status' => $lead->status,
+                    'due' => LocalTime::display($lead->callback_due_at),
+                    'consent' => $lead->consent_to_callback,
+                    'followup_notes' => $lead->followup_notes,
+                ] : null,
                 'photos' => $repairRequest->photos->map(fn (Photo $photo) => ['id' => $photo->id, 'url' => route('crm.photos.show', $photo)]),
             ],
         ]);
@@ -66,6 +72,14 @@ class RepairRequestController extends Controller
         $workOrder = $convert($repairRequest);
 
         return to_route('crm.jobs.show', $workOrder)->with('flash.banner', 'Customer and job created. Check the address before the visit.');
+    }
+
+    /** Owner called the voice-agent lead back: stops the follow-up call and the overdue alert. */
+    public function calledBack(RepairRequest $repairRequest): RedirectResponse
+    {
+        $repairRequest->voiceLead?->forceFill(['status' => 'callback_done'])->save();
+
+        return back()->with('flash.banner', 'Marked as called back.');
     }
 
     public function archive(RepairRequest $repairRequest): RedirectResponse

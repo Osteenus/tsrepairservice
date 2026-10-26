@@ -28,6 +28,11 @@ class RepairRequest extends Model
         return $this->hasMany(Photo::class);
     }
 
+    public function voiceLead(): HasOne
+    {
+        return $this->hasOne(VoiceLead::class);
+    }
+
     public function workOrder(): HasOne
     {
         return $this->hasOne(WorkOrder::class);

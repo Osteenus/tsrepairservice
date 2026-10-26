@@ -9,6 +9,8 @@ const props = defineProps({
 });
 
 const tel = (props.request.phone || '').replace(/[^\d+]/g, '');
+const calledBack = () => router.post(route('crm.requests.called-back', props.request.id), {}, { preserveScroll: true });
+const voiceStatus = { new: 'No call-back requested', callback_due: 'Call back by', callback_done: 'Called back', overdue: 'Call-back overdue' };
 const callFromBusinessLine = () => {
     if (confirm('Twilio will ring your phone first. Answer and press 1 to connect.')) router.post(route('crm.call'), { phone: props.request.phone, name: props.request.name }, { preserveScroll: true });
 };
@@ -33,6 +35,13 @@ const archive = () => {
                 <a :href="`sms:${tel}`" class="flex h-12 items-center justify-center gap-1 rounded-lg bg-[#151515] font-bold text-white"><MessageSquare class="size-5" />Text</a>
             </div>
             <button v-if="tel" type="button" class="mt-2 flex h-12 w-full items-center justify-center gap-1 rounded-lg border border-[#c8000a] font-bold text-[#c8000a]" @click="callFromBusinessLine"><PhoneForwarded class="size-5" />Call from business line</button>
+        </section>
+
+        <section v-if="request.voice" class="mt-3 rounded-xl p-4 shadow-sm" :class="request.voice.status === 'overdue' ? 'bg-red-50' : 'bg-white'">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-[#c8000a]">AI phone assistant</h2>
+            <p class="font-semibold">{{ voiceStatus[request.voice.status] }}<template v-if="request.voice.status === 'callback_due' && request.voice.due"> {{ request.voice.due }}</template></p>
+            <p v-if="request.voice.followup_notes" class="text-sm text-gray-600">Follow-up call: {{ request.voice.followup_notes }}</p>
+            <button v-if="['callback_due', 'overdue', 'new'].includes(request.voice.status)" type="button" class="mt-2 flex h-12 w-full items-center justify-center rounded-lg bg-[#151515] font-bold text-white" @click="calledBack">I called back</button>
         </section>
 
         <section class="mt-3 rounded-xl bg-white p-4 shadow-sm">

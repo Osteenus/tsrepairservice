@@ -28,6 +28,7 @@ Route::prefix('crm')
             Route::get('requests', [RepairRequestController::class, 'index'])->name('requests.index');
             Route::get('requests/{repairRequest}', [RepairRequestController::class, 'show'])->name('requests.show');
             Route::post('requests/{repairRequest}/convert', [RepairRequestController::class, 'convert'])->name('requests.convert');
+            Route::post('requests/{repairRequest}/called-back', [RepairRequestController::class, 'calledBack'])->name('requests.called-back');
             Route::post('requests/{repairRequest}/archive', [RepairRequestController::class, 'archive'])->name('requests.archive');
 
             Route::resource('jobs', WorkOrderController::class)->except('destroy');
