@@ -16,8 +16,9 @@ Laravel scheduler (voice:follow-up) ──POST /followup/{id}──> voice-servi
 
 | Path | Caller | Purpose |
 |---|---|---|
-| `POST /voice` | Twilio (signed) | Incoming call. Max 3 calls per number per hour. |
+| `POST /voice` | Twilio (signed) | Incoming call. Max 3 calls per number per hour. Asks Laravel which mode is on (CRM → Phone: AI, simple transfer, or A/B split; cached 30 s) and records the variant. |
 | `WS /relay` | Twilio (signed handshake) | Conversation. 5-minute limit per call. |
+| `POST /voice/direct-dial` | Twilio (signed) | Variant B (simple transfer): no answer → the AI assistant takes the request. |
 | `POST /voice/after` | Twilio (signed) | Session ended: transfer to `OWNER_PHONE`, or hang up. If the assistant fails, the caller is transferred. |
 | `POST /voice/after-dial` | Twilio (signed) | Transfer result, reported to Laravel. |
 | `POST /followup/:leadId` | Laravel (Bearer `VOICE_API_KEY`) | One follow-up call per lead. |
@@ -98,6 +99,7 @@ npm start
    - Phone number (805) 334-8375 → Voice configuration:
      - A call comes in: Webhook `https://voice.tsrepairservice.com/voice`, HTTP POST
      - Primary handler fails: `https://tsrepairservice.com/api/twilio/voice` (the simple Laravel bot keeps taking requests if this service is down)
+     - Call status changes: `https://tsrepairservice.com/api/twilio/voice/status` (call length for the CRM statistics)
    - Recordings appear under Monitor → Call recordings.
 
 ## Release

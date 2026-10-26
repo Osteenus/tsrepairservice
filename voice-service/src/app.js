@@ -6,8 +6,16 @@ import { WebSocketServer } from 'ws';
 import { log } from './log.js';
 import { CallSession } from './session.js';
 import {
-  followupTwiml, hangupTwiml, intakeTwiml, rateLimitedTwiml, technicianBusyTwiml, transferTwiml,
+  directTransferTwiml, followupTwiml, hangupTwiml, intakeTwiml, missedTransferTwiml, rateLimitedTwiml,
+  technicianBusyTwiml, transferTwiml,
 } from './twiml.js';
+
+/** A/B: which variant answers this call. Without a technician number everything goes to the AI. */
+export function pickVariant(settings, ownerPhone, random = Math.random) {
+  if (!ownerPhone || settings.mode === 'ai') return 'ai';
+  if (settings.mode === 'transfer') return 'transfer';
+  return random() * 100 < Number(settings.ai_percent ?? 50) ? 'ai' : 'transfer';
+}
 
 /** Calls per caller number in the last hour (in memory; resets on restart). */
 export class RateLimiter {
@@ -67,12 +75,24 @@ export function createApp(config, deps) {
 
   app.get('/health', (req, res) => res.json({ ok: true }));
 
-  app.post('/voice', form, twilioOnly, (req, res) => {
-    if (!limiter.allow(req.body.From)) {
-      log('rate_limited', { callSid: req.body.CallSid });
+  app.post('/voice', form, twilioOnly, async (req, res) => {
+    const { CallSid: callSid, From: from } = req.body;
+    if (!limiter.allow(from)) {
+      log('rate_limited', { callSid });
+      laravel.recordCall({ call_sid: callSid, caller_phone: from, rate_limited: true });
       return xml(res, rateLimitedTwiml(config));
     }
-    return xml(res, intakeTwiml(config));
+    const variant = pickVariant(await laravel.settings(), config.twilio.ownerPhone, deps.random);
+    laravel.recordCall({ call_sid: callSid, caller_phone: from, variant });
+    return xml(res, variant === 'transfer' ? directTransferTwiml(config) : intakeTwiml(config));
+  });
+
+  // Variant B: did the technician pick up? If not, the AI assistant takes over.
+  app.post('/voice/direct-dial', form, twilioOnly, (req, res) => {
+    const answered = req.body.DialCallStatus === 'completed';
+    laravel.recordCall({ call_sid: req.body.CallSid, transfer_status: answered ? 'answered' : 'missed' });
+    if (answered || req.body.CallStatus === 'completed') return xml(res, hangupTwiml());
+    return xml(res, missedTransferTwiml(config));
   });
 
   // <Connect action>: the AI session ended. Transfer on request, or when the assistant failed.
@@ -93,6 +113,7 @@ export function createApp(config, deps) {
     const answered = req.body.DialCallStatus === 'completed';
     // The parent call is the caller's call, whose lead was saved under its CallSid.
     laravel.report(`/api/voice/leads/${encodeURIComponent(req.body.CallSid)}/transfer`, { answered });
+    laravel.recordCall({ call_sid: req.body.CallSid, transfer_status: answered ? 'answered' : 'missed' });
     return xml(res, answered ? hangupTwiml() : technicianBusyTwiml(config));
   });
 

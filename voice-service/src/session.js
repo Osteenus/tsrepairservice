@@ -43,6 +43,8 @@ export class CallSession {
     // Outbound follow-up: the customer is "to"; incoming call: "from".
     this.callerPhone = this.mode === 'followup' ? message.to : message.from;
     this.lead = this.mode === 'followup' ? { id: params.leadId, name: params.name, applianceType: params.applianceType } : null;
+    this.missedTransfer = params.missedTransfer === 'yes';
+    if (this.mode === 'intake') this.laravel.recordCall?.({ call_sid: this.callSid, reached_ai: true });
     this.startedAt = this.now();
     this.timer = setTimeout(() => this.timeUp(), this.config.callLimitMs);
 
@@ -57,7 +59,9 @@ export class CallSession {
       this.mode === 'intake' && known ? this.laravel.customer(this.callerPhone) : null,
     ]).then(([technicianAvailable, customer]) => {
       this.technicianAvailable = technicianAvailable;
-      this.system = systemPrompt({ mode: this.mode, technicianAvailable, callerPhoneKnown: known, customer, lead: this.lead });
+      this.system = systemPrompt({
+        mode: this.mode, technicianAvailable, callerPhoneKnown: known, customer, lead: this.lead, missedTransfer: this.missedTransfer,
+      });
     });
     // The welcome greeting is spoken by Twilio; keep it in the history so the model knows it was said.
     this.messages.push({ role: 'user', content: '(The call has connected; the greeting was played.)' });
@@ -206,6 +210,12 @@ export class CallSession {
     // Caller hung up mid-conversation: keep what they said (the owner gets an email, no follow-up call).
     if (this.mode === 'intake' && !this.leadSent && this.callerTexts.length) {
       await this.sendLead({ outcome: 'hangup' });
+    }
+    if (this.mode === 'intake' && this.callSid) {
+      this.laravel.recordCall?.({
+        call_sid: this.callSid, ai_turns: this.turns, input_tokens: this.usage.input, output_tokens: this.usage.output,
+        timed_out: Boolean(this.timedOut),
+      });
     }
     log('call_end', {
       callSid: this.callSid,

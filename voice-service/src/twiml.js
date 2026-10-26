@@ -29,6 +29,24 @@ export function intakeTwiml(config) {
   );
 }
 
+/** Variant B: greeting and notice, then straight to the technician; /voice/direct-dial handles no answer. */
+export function directTransferTwiml(config) {
+  const record = config.twilio.recordCalls ? ' record="record-from-answer-dual"' : '';
+  return response(
+    say(config, 'Hello, you have reached Tech Solutions Repair Service.')
+    + say(config, RECORDING_NOTICE)
+    + `<Dial callerId="${esc(config.twilio.number)}" timeout="20"${record} action="${esc(config.publicUrl)}/voice/direct-dial">`
+    + `<Number>${esc(config.twilio.ownerPhone)}</Number></Dial>`,
+  );
+}
+
+/** The technician did not pick up in variant B: the AI assistant takes the request. */
+export function missedTransferTwiml(config) {
+  return response(relay(config,
+    'Sorry, our technician cannot pick up right now. I can help you and arrange a call-back. What is going on with your appliance?',
+    { mode: 'intake', missedTransfer: 'yes' }));
+}
+
 export function followupTwiml(config, lead) {
   const appliance = lead.applianceType ? `your ${lead.applianceType}` : 'your appliance';
   return response(

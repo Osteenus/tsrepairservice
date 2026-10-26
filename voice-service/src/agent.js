@@ -60,6 +60,7 @@ export function systemPrompt(context) {
     `A technician is available now: ${context.technicianAvailable ? 'yes' : 'no'}.`,
     `The caller's phone number is known: ${context.callerPhoneKnown ? 'yes, you do not need to ask for it unless they want another number' : 'no'}.`,
     context.customer ? `Returning customer on file: ${context.customer.name}${context.customer.address ? `, ${context.customer.address}` : ''}. Confirm rather than ask again.` : null,
+    context.missedTransfer ? 'The caller was just transferred to a technician who did not pick up, and has heard a short apology. Do not offer another transfer unless they insist; take the request for a call-back.' : null,
     context.mode === 'followup' && context.lead ? `This follow-up is about: ${[context.lead.name, context.lead.applianceType].filter(Boolean).join(', ')}. The greeting with the apology was already spoken.` : null,
   ].filter(Boolean).join('\n');
   return [

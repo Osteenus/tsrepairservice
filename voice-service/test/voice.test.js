@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { after, before, describe, test } from 'node:test';
 import twilio from 'twilio';
 import WebSocket from 'ws';
-import { createApp, RateLimiter } from '../src/app.js';
+import { createApp, pickVariant, RateLimiter } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
 import { CallSession } from '../src/session.js';
 import { RECORDING_NOTICE } from '../src/twiml.js';
@@ -15,7 +15,9 @@ const config = loadConfig({
 });
 
 class FakeLaravel {
-  constructor() { this.leads = []; this.reports = []; }
+  constructor() { this.leads = []; this.reports = []; this.calls = []; this.mode = { mode: 'ai', ai_percent: 50 }; }
+  async settings() { return this.mode; }
+  recordCall(fields) { this.calls.push(fields); }
   async availability() { return true; }
   async customer() { return null; }
   async submitLead(lead) { this.leads.push(lead); return true; }
@@ -92,6 +94,37 @@ describe('POST /voice', () => {
   });
 });
 
+describe('phone line modes (A/B)', () => {
+  test('transfer mode greets, plays the notice and rings the technician; the variant is recorded', async () => {
+    laravel.mode = { mode: 'transfer', ai_percent: 50 };
+    const body = await (await twilioPost('/voice', { CallSid: 'CAb1', From: '+18055550301' })).text();
+    laravel.mode = { mode: 'ai', ai_percent: 50 };
+    assert.ok(body.includes(`>${RECORDING_NOTICE}</Say>`));
+    assert.match(body, /<Dial callerId="\+18053348375" timeout="20"[^>]*action="https:\/\/voice\.example\.test\/voice\/direct-dial"><Number>\+18055550199<\/Number><\/Dial>/);
+    assert.doesNotMatch(body, /ConversationRelay/);
+    assert.deepEqual(laravel.calls.at(-1), { call_sid: 'CAb1', caller_phone: '+18055550301', variant: 'transfer' });
+  });
+
+  test('a missed transfer hands the caller to the AI; an answered one just ends', async () => {
+    const missed = await (await twilioPost('/voice/direct-dial', { CallSid: 'CAb1', CallStatus: 'in-progress', DialCallStatus: 'no-answer' })).text();
+    assert.match(missed, /<ConversationRelay [^>]*welcomeGreeting="Sorry, our technician cannot pick up/);
+    assert.match(missed, /<Parameter name="missedTransfer" value="yes"\/>/);
+    assert.deepEqual(laravel.calls.at(-1), { call_sid: 'CAb1', transfer_status: 'missed' });
+
+    const answered = await (await twilioPost('/voice/direct-dial', { CallSid: 'CAb2', CallStatus: 'completed', DialCallStatus: 'completed' })).text();
+    assert.match(answered, /<Hangup\/>/);
+    assert.deepEqual(laravel.calls.at(-1), { call_sid: 'CAb2', transfer_status: 'answered' });
+  });
+
+  test('A/B split follows the AI share; no technician number means AI only', () => {
+    const ab = { mode: 'ab', ai_percent: 30 };
+    assert.equal(pickVariant(ab, '+1805', () => 0.29), 'ai');
+    assert.equal(pickVariant(ab, '+1805', () => 0.30), 'transfer');
+    assert.equal(pickVariant({ mode: 'transfer' }, '', () => 0.9), 'ai');
+    assert.equal(pickVariant({ mode: 'ai' }, '+1805', () => 0.9), 'ai');
+  });
+});
+
 describe('transfer and follow-up', () => {
   test('a transfer handoff dials the technician from the business number', async () => {
     const body = await (await twilioPost('/voice/after', {
@@ -165,6 +198,10 @@ describe('call session', () => {
     assert.equal(leads.leads[0].caller_phone, '+18055550123');
     assert.equal(leads.leads[0].recording_notice_played, true);
     assert.ok(ws.sent.some((m) => m.token === 'Our closest technician will call you back in 20 minutes.'));
+    assert.deepEqual(leads.calls, [
+      { call_sid: 'CAok', reached_ai: true },
+      { call_sid: 'CAok', ai_turns: 2, input_tokens: 22, output_tokens: 14, timed_out: false },
+    ]);
   });
 });
 

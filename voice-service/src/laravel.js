@@ -24,6 +24,25 @@ export class Laravel {
     return { status: response.status, json: response.status < 300 ? await response.json() : null };
   }
 
+  /** Phone line mode from the CRM, cached briefly; the AI assistant when Laravel is unreachable. */
+  async settings() {
+    if (this.cachedSettings && Date.now() - this.cachedAt < 30_000) return this.cachedSettings;
+    try {
+      const { json } = await this.request('GET', '/api/voice/settings', null, 1500);
+      if (json?.mode) {
+        this.cachedSettings = json;
+        this.cachedAt = Date.now();
+        return json;
+      }
+    } catch { /* fall through */ }
+    return this.cachedSettings || { mode: 'ai', ai_percent: 100 };
+  }
+
+  /** A piece of the call statistics (fire and forget). */
+  recordCall(fields) {
+    return this.report('/api/voice/calls', fields);
+  }
+
   async availability() {
     try {
       const { json } = await this.request('GET', '/api/voice/availability', null, 2000);
