@@ -15,9 +15,10 @@ export function loadConfig(env = process.env) {
       recordCalls: env.RECORD_CALLS === 'true',
     },
     tts: {
-      provider: env.TTS_PROVIDER || 'Amazon',
-      voice: env.TTS_VOICE || 'Joanna-Neural',
-      sayVoice: env.SAY_VOICE || 'Polly.Joanna-Neural',
+      // Google Chirp3-HD generative voices; female en-US options: Aoede, Kore, Leda, Zephyr.
+      provider: env.TTS_PROVIDER || 'Google',
+      voice: env.TTS_VOICE || 'en-US-Chirp3-HD-Aoede',
+      sayVoice: env.SAY_VOICE || 'Google.en-US-Chirp3-HD-Aoede',
     },
     laravel: {
       url: (env.LARAVEL_URL || 'https://tsrepairservice.com').replace(/\/$/, ''),
