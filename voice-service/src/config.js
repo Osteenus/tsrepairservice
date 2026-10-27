@@ -11,7 +11,8 @@ export function loadConfig(env = process.env) {
       authToken: env.TWILIO_AUTH_TOKEN || '',
       number: env.TWILIO_NUMBER || env.TWILIO_PHONE_NUMBER || '+18053348375',
       ownerPhone: env.OWNER_PHONE || '',
-      recordCalls: env.RECORD_CALLS !== 'false',
+      // Off unless RECORD_CALLS=true. The recording notice is played either way (AI transcription).
+      recordCalls: env.RECORD_CALLS === 'true',
     },
     tts: {
       provider: env.TTS_PROVIDER || 'Amazon',

@@ -100,7 +100,7 @@ npm start
      - A call comes in: Webhook `https://voice.tsrepairservice.com/voice`, HTTP POST
      - Primary handler fails: `https://tsrepairservice.com/api/twilio/voice` (the simple Laravel bot keeps taking requests if this service is down)
      - Call status changes: `https://tsrepairservice.com/api/twilio/voice/status` (call length for the CRM statistics)
-   - Recordings appear under Monitor → Call recordings.
+   - Call recording is off (`RECORD_CALLS=false`). With `true`, recordings appear under Monitor → Call recordings.
 
 ## Release
 
