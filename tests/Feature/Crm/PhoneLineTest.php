@@ -21,6 +21,8 @@ class PhoneLineTest extends CrmTestCase
         $this->withToken('voice-key')->getJson('/api/voice/settings')->assertExactJson(['mode' => 'ai', 'ai_percent' => 50]);
 
         $this->signIn();
+        $this->put('/crm/phone', ['mode' => 'menu', 'ai_percent' => 50, 'short_call_seconds' => 10])->assertRedirect();
+        $this->withToken('voice-key')->getJson('/api/voice/settings')->assertJson(['mode' => 'menu']);
         $this->put('/crm/phone', ['mode' => 'ab', 'ai_percent' => 70, 'short_call_seconds' => 15])->assertRedirect();
         $this->put('/crm/phone', ['mode' => 'robot', 'ai_percent' => 170, 'short_call_seconds' => 0])
             ->assertSessionHasErrors(['mode', 'ai_percent', 'short_call_seconds']);
@@ -56,24 +58,31 @@ class PhoneLineTest extends CrmTestCase
         $report(['call_sid' => 'CA4', 'variant' => 'transfer', 'transfer_status' => 'missed', 'reached_ai' => true]);
         $report(['call_sid' => 'CA5', 'rate_limited' => true]);
 
-        $this->assertSame(5, VoiceCall::count());
+        // Menu: one caller pressed 2.
+        $report(['call_sid' => 'CA6', 'variant' => 'menu']);
+        $report(['call_sid' => 'CA6', 'menu_choice' => 'technician', 'transfer_status' => 'answered']);
+
+        $this->assertSame(6, VoiceCall::count());
         $this->assertTrue(VoiceCall::firstWhere('call_sid', 'CA2')->lead_created);
 
         $this->get('/crm/phone?days=7')->assertOk()->assertInertia(fn (Assert $page) => $page
             ->component('Crm/PhoneLine')
             ->where('settings.short_call_seconds', 10)
             ->where('rateLimited', 1)
-            ->has('variants', 2)
-            ->where('variants.0.calls', 2)
-            ->where('variants.0.short', 1)
-            ->where('variants.0.short_percent', 50)
-            ->where('variants.0.avg_seconds', 50)
-            ->where('variants.0.leads', 1)
-            ->where('variants.0.ai_cost', 0.2)
+            ->has('variants', 3)
+            ->where('variants.0.label', 'Caller chooses (menu)')
+            ->where('variants.0.menu.technician', 1)
+            ->where('variants.0.transfer_answered', 1)
             ->where('variants.1.calls', 2)
-            ->where('variants.1.transfer_answered', 1)
-            ->where('variants.1.transfer_missed', 1)
-            ->where('variants.1.reached_ai', 1)
-            ->where('variants.1.with_duration', 1));
+            ->where('variants.1.short', 1)
+            ->where('variants.1.short_percent', 50)
+            ->where('variants.1.avg_seconds', 50)
+            ->where('variants.1.leads', 1)
+            ->where('variants.1.ai_cost', 0.2)
+            ->where('variants.2.calls', 2)
+            ->where('variants.2.transfer_answered', 1)
+            ->where('variants.2.transfer_missed', 1)
+            ->where('variants.2.reached_ai', 1)
+            ->where('variants.2.with_duration', 1));
     }
 }

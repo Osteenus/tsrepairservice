@@ -29,13 +29,16 @@ class PhoneLineController extends Controller
             'days' => $days,
             'periods' => self::PERIODS,
             'rateLimited' => $calls->where('rate_limited', true)->count(),
-            'variants' => collect(['ai' => 'A: AI assistant', 'transfer' => 'B: Transfer to me', 'other' => 'Backup bot / unknown'])
+            'variants' => collect([
+                'menu' => 'Caller chooses (menu)', 'ai' => 'A: AI assistant', 'transfer' => 'B: Transfer to me', 'other' => 'Backup bot / unknown',
+            ])
                 ->map(fn ($label, $variant) => $this->stats(
                     $label,
                     $calls->where('rate_limited', false)->filter(fn (VoiceCall $call) => ($call->variant ?? 'other') === $variant),
                     $settings['short_call_seconds'],
                 ))
-                ->filter(fn ($stats, $variant) => $variant !== 'other' || $stats['calls'] > 0)
+                // Each variant card only once it has calls, A and B always (the A/B comparison).
+                ->filter(fn ($stats, $variant) => in_array($variant, ['ai', 'transfer'], true) || $stats['calls'] > 0)
                 ->values(),
         ]);
     }
@@ -72,6 +75,11 @@ class PhoneLineController extends Controller
             'reached_ai' => $calls->where('reached_ai', true)->count(),
             'timed_out' => $calls->where('timed_out', true)->count(),
             'ai_cost' => round($cost, 2),
+            'menu' => [
+                'request' => $calls->where('menu_choice', 'request')->count(),
+                'technician' => $calls->where('menu_choice', 'technician')->count(),
+                'none' => $calls->where('menu_choice', 'none')->count(),
+            ],
         ];
     }
 }

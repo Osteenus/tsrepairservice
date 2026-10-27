@@ -8,6 +8,7 @@ use App\Models\Setting;
 class PhoneLineSettings
 {
     public const MODES = [
+        'menu' => 'Caller chooses: 1 request, 2 technician',
         'ai' => 'AI assistant',
         'transfer' => 'Simple transfer to me',
         'ab' => 'A/B test',

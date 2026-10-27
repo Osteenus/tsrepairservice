@@ -6,14 +6,25 @@ import { WebSocketServer } from 'ws';
 import { log } from './log.js';
 import { CallSession } from './session.js';
 import {
-  directTransferTwiml, followupTwiml, hangupTwiml, intakeTwiml, missedTransferTwiml, rateLimitedTwiml,
-  technicianBusyTwiml, transferTwiml,
+  assistantTwiml, directTransferTwiml, followupTwiml, hangupTwiml, intakeTwiml, menuTransferTwiml, menuTwiml,
+  missedTransferTwiml, rateLimitedTwiml, technicianBusyTwiml, transferTwiml,
 } from './twiml.js';
+
+/** Menu answer from a key press or speech: 'request', 'technician' or null. */
+export function menuChoice(digits, speech) {
+  if (digits === '1') return 'request';
+  if (digits === '2') return 'technician';
+  const said = String(speech || '').toLowerCase();
+  if (/\b(two|2|technician|person|human|someone)\b/.test(said)) return 'technician';
+  if (/\b(one|1|request|repair)\b/.test(said)) return 'request';
+  return null;
+}
 
 /** A/B: which variant answers this call. Without a technician number everything goes to the AI. */
 export function pickVariant(settings, ownerPhone, random = Math.random) {
   if (!ownerPhone || settings.mode === 'ai') return 'ai';
   if (settings.mode === 'transfer') return 'transfer';
+  if (settings.mode === 'menu') return 'menu';
   return random() * 100 < Number(settings.ai_percent ?? 50) ? 'ai' : 'transfer';
 }
 
@@ -84,7 +95,16 @@ export function createApp(config, deps) {
     }
     const variant = pickVariant(await laravel.settings(), config.twilio.ownerPhone, deps.random);
     laravel.recordCall({ call_sid: callSid, caller_phone: from, variant });
+    if (variant === 'menu') return xml(res, menuTwiml(config));
     return xml(res, variant === 'transfer' ? directTransferTwiml(config) : intakeTwiml(config));
+  });
+
+  // "Caller chooses" mode. No answer: ask once more, then the AI assistant.
+  app.post('/voice/menu/:attempt', form, twilioOnly, (req, res) => {
+    const choice = menuChoice(req.body.Digits, req.body.SpeechResult);
+    if (!choice && req.params.attempt === '1') return xml(res, menuTwiml(config, 2));
+    laravel.recordCall({ call_sid: req.body.CallSid, menu_choice: choice || 'none' });
+    return xml(res, choice === 'technician' ? menuTransferTwiml(config) : assistantTwiml(config));
   });
 
   // Variant B: did the technician pick up? If not, the AI assistant takes over.

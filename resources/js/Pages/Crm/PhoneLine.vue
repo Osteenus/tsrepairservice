@@ -33,6 +33,7 @@ const seconds = (value) => (value === null ? '—' : value >= 60 ? `${Math.floor
             <p class="mt-2 text-sm text-gray-600">
                 <template v-if="form.mode === 'ai'">The AI assistant talks to every caller and can transfer to you.</template>
                 <template v-else-if="form.mode === 'transfer'">Greeting and recording notice, then the call rings your phone. If you do not answer, the AI assistant takes the request.</template>
+                <template v-else-if="form.mode === 'menu'">After the greeting the caller presses 1 to leave a repair request with the AI assistant, or 2 to talk to you. If you do not answer (or decline the call), the AI assistant takes the request.</template>
                 <template v-else>Each call is randomly answered by the AI (A) or transferred to you (B).</template>
             </p>
             <div class="mt-3 grid grid-cols-2 gap-3">
@@ -57,6 +58,10 @@ const seconds = (value) => (value === null ? '—' : value >= 60 ? `${Math.floor
                     <h3 class="font-bold">{{ variant.label }}</h3>
                     <p class="text-3xl font-bold">{{ variant.calls }} <span class="text-sm font-semibold text-gray-500">calls</span></p>
                     <dl class="mt-2 grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 text-sm">
+                        <template v-if="variant.menu.request + variant.menu.technician + variant.menu.none">
+                            <dt class="text-gray-600">Pressed 1 / 2 / nothing</dt>
+                            <dd class="text-right font-semibold">{{ variant.menu.request }} / {{ variant.menu.technician }} / {{ variant.menu.none }}</dd>
+                        </template>
                         <dt class="text-gray-600">Hung up under {{ settings.short_call_seconds }}s</dt>
                         <dd class="text-right font-semibold">{{ variant.short }} · {{ pct(variant.short_percent) }}</dd>
                         <dt class="text-gray-600">Average length</dt>

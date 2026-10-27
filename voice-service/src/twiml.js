@@ -21,23 +21,48 @@ function relay(config, greeting, params = {}) {
     + ` interruptible="any" hints="${esc(HINTS)}">${parameters}</ConversationRelay></Connect>`;
 }
 
+const GREETING = 'Hello, you have reached Tech Solutions Repair Service.';
+const INTAKE_GREETING = 'How can I help you with your appliance today?';
+
 export function intakeTwiml(config) {
+  return response(say(config, GREETING) + say(config, RECORDING_NOTICE) + relay(config, INTAKE_GREETING, { mode: 'intake' }));
+}
+
+/** Caller pressed 1 in the menu: straight to the AI assistant (greeting and notice were played). */
+export function assistantTwiml(config) {
+  return response(relay(config, INTAKE_GREETING, { mode: 'intake' }));
+}
+
+const dialOwner = (config, action) => {
+  const record = config.twilio.recordCalls ? ' record="record-from-answer-dual"' : '';
+  return `<Dial callerId="${esc(config.twilio.number)}" timeout="20"${record} action="${esc(config.publicUrl)}${action}">`
+    + `<Number>${esc(config.twilio.ownerPhone)}</Number></Dial>`;
+};
+
+/**
+ * "Caller chooses" mode: 1 = repair request with the AI assistant, 2 = technician.
+ * Attempt 1 plays the greeting and notice; attempt 2 only repeats the choice. Silence ends up at
+ * /voice/menu/<attempt> without Digits.
+ */
+export function menuTwiml(config, attempt = 1) {
+  const action = `${esc(config.publicUrl)}/voice/menu/${attempt}`;
   return response(
-    say(config, 'Hello, you have reached Tech Solutions Repair Service.')
-    + say(config, RECORDING_NOTICE)
-    + relay(config, 'How can I help you with your appliance today?', { mode: 'intake' }),
+    (attempt === 1 ? say(config, GREETING) + say(config, RECORDING_NOTICE) : '')
+    + `<Gather input="dtmf speech" numDigits="1" timeout="5" speechTimeout="auto" language="en-US"`
+    + ` hints="one, two, request, technician" action="${action}" method="POST">`
+    + say(config, 'To leave a repair request, press 1. To talk with a technician, press 2.')
+    + `</Gather><Redirect method="POST">${action}</Redirect>`,
   );
+}
+
+/** Menu choice 2: ring the technician; /voice/direct-dial hands a missed call to the AI. */
+export function menuTransferTwiml(config) {
+  return response(dialOwner(config, '/voice/direct-dial'));
 }
 
 /** Variant B: greeting and notice, then straight to the technician; /voice/direct-dial handles no answer. */
 export function directTransferTwiml(config) {
-  const record = config.twilio.recordCalls ? ' record="record-from-answer-dual"' : '';
-  return response(
-    say(config, 'Hello, you have reached Tech Solutions Repair Service.')
-    + say(config, RECORDING_NOTICE)
-    + `<Dial callerId="${esc(config.twilio.number)}" timeout="20"${record} action="${esc(config.publicUrl)}/voice/direct-dial">`
-    + `<Number>${esc(config.twilio.ownerPhone)}</Number></Dial>`,
-  );
+  return response(say(config, GREETING) + say(config, RECORDING_NOTICE) + dialOwner(config, '/voice/direct-dial'));
 }
 
 /** The technician did not pick up in variant B: the AI assistant takes the request. */

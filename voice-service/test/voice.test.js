@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { after, before, describe, test } from 'node:test';
 import twilio from 'twilio';
 import WebSocket from 'ws';
-import { createApp, pickVariant, RateLimiter } from '../src/app.js';
+import { createApp, menuChoice, pickVariant, RateLimiter } from '../src/app.js';
 import { loadConfig } from '../src/config.js';
 import { CallSession } from '../src/session.js';
 import { RECORDING_NOTICE } from '../src/twiml.js';
@@ -114,6 +114,41 @@ describe('phone line modes (A/B)', () => {
     const answered = await (await twilioPost('/voice/direct-dial', { CallSid: 'CAb2', CallStatus: 'completed', DialCallStatus: 'completed' })).text();
     assert.match(answered, /<Hangup\/>/);
     assert.deepEqual(laravel.calls.at(-1), { call_sid: 'CAb2', transfer_status: 'answered' });
+  });
+
+  test('menu mode: greeting, notice, then press 1 or 2', async () => {
+    laravel.mode = { mode: 'menu', ai_percent: 50 };
+    const body = await (await twilioPost('/voice', { CallSid: 'CAm1', From: '+18055550401' })).text();
+    laravel.mode = { mode: 'ai', ai_percent: 50 };
+    assert.ok(body.indexOf(RECORDING_NOTICE) < body.indexOf('<Gather'));
+    assert.match(body, /<Gather input="dtmf speech" numDigits="1"[^>]*action="https:\/\/voice\.example\.test\/voice\/menu\/1"/);
+    assert.match(body, /press 1\. To talk with a technician, press 2\./);
+    assert.deepEqual(laravel.calls.at(-1), { call_sid: 'CAm1', caller_phone: '+18055550401', variant: 'menu' });
+  });
+
+  test('menu choice 1 goes to the AI, 2 rings the technician, silence asks once more then the AI', async () => {
+    const one = await (await twilioPost('/voice/menu/1', { CallSid: 'CAm1', Digits: '1' })).text();
+    assert.match(one, /<ConversationRelay [^>]*welcomeGreeting="How can I help you/);
+    assert.doesNotMatch(one, /<Say/);
+    assert.deepEqual(laravel.calls.at(-1), { call_sid: 'CAm1', menu_choice: 'request' });
+
+    const two = await (await twilioPost('/voice/menu/1', { CallSid: 'CAm2', Digits: '2' })).text();
+    assert.match(two, /<Dial [^>]*action="https:\/\/voice\.example\.test\/voice\/direct-dial"><Number>\+18055550199<\/Number><\/Dial>/);
+    assert.deepEqual(laravel.calls.at(-1), { call_sid: 'CAm2', menu_choice: 'technician' });
+
+    const again = await (await twilioPost('/voice/menu/1', { CallSid: 'CAm3' })).text();
+    assert.match(again, /action="https:\/\/voice\.example\.test\/voice\/menu\/2"/);
+    assert.doesNotMatch(again, /Hello, you have reached/);
+    const silent = await (await twilioPost('/voice/menu/2', { CallSid: 'CAm3' })).text();
+    assert.match(silent, /<ConversationRelay/);
+    assert.deepEqual(laravel.calls.at(-1), { call_sid: 'CAm3', menu_choice: 'none' });
+  });
+
+  test('spoken menu answers are understood', () => {
+    assert.equal(menuChoice(undefined, 'Two.'), 'technician');
+    assert.equal(menuChoice(undefined, 'I want to talk to a person'), 'technician');
+    assert.equal(menuChoice(undefined, 'One'), 'request');
+    assert.equal(menuChoice(undefined, 'hello?'), null);
   });
 
   test('A/B split follows the AI share; no technician number means AI only', () => {

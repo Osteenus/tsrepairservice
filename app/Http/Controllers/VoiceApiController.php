@@ -94,7 +94,8 @@ class VoiceApiController extends Controller
         $data = $request->validate([
             'call_sid' => ['required', 'string', 'max:64'],
             'caller_phone' => ['nullable', 'string', 'max:50'],
-            'variant' => ['nullable', Rule::in(['ai', 'transfer'])],
+            'variant' => ['nullable', Rule::in(['ai', 'transfer', 'menu'])],
+            'menu_choice' => ['nullable', Rule::in(['request', 'technician', 'none'])],
             'rate_limited' => ['nullable', 'boolean'],
             'reached_ai' => ['nullable', 'boolean'],
             'transfer_status' => ['nullable', Rule::in(['answered', 'missed'])],

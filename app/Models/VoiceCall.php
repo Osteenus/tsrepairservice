@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class VoiceCall extends Model
 {
     protected $fillable = [
-        'call_sid', 'caller_phone', 'variant', 'rate_limited', 'reached_ai', 'transfer_status', 'lead_created',
+        'call_sid', 'caller_phone', 'variant', 'menu_choice', 'rate_limited', 'reached_ai', 'transfer_status', 'lead_created',
         'timed_out', 'ai_turns', 'input_tokens', 'output_tokens', 'call_status', 'duration_seconds',
     ];
 

@@ -17,14 +17,27 @@ const callSid = `CAsim${Date.now()}`;
 const from = process.argv[2] || '+18055550123';
 const sign = (url, params = {}) => twilio.getExpectedTwilioSignature(config.twilio.authToken, url, params);
 
-const fields = { CallSid: callSid, From: from, To: config.twilio.number };
-const twiml = await (await fetch(`${local}/voice`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Twilio-Signature': sign(`${config.publicUrl}/voice`, fields) },
-  body: new URLSearchParams(fields),
-})).text();
+const post = async (path, extra = {}) => {
+  const fields = { CallSid: callSid, From: from, To: config.twilio.number, ...extra };
+  return (await fetch(`${local}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Twilio-Signature': sign(`${config.publicUrl}${path}`, fields) },
+    body: new URLSearchParams(fields),
+  })).text();
+};
+const speak = (xml) => { for (const [, text] of xml.matchAll(/<Say[^>]*>([^<]*)<\/Say>/g)) console.log(`🔊 ${text}`); };
 
-for (const [, text] of twiml.matchAll(/<Say[^>]*>([^<]*)<\/Say>/g)) console.log(`🔊 ${text}`);
+let twiml = await post('/voice');
+speak(twiml);
+// "Caller chooses" mode: answer the menu like a key press.
+while (twiml.includes('<Gather')) {
+  const menu = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const digit = (await menu.question('☎️  press (1 or 2, Enter = silence): ')).trim();
+  menu.close();
+  const action = twiml.match(/<Gather[^>]*action="[^"]*?(\/voice\/menu\/\d)"/)[1];
+  twiml = await post(action, digit ? { Digits: digit } : {});
+  speak(twiml);
+}
 if (!twiml.includes('<ConversationRelay')) {
   console.log(`\n(No AI on this call: ${twiml.includes('<Dial') ? 'the phone line mode transferred it to the technician' : twiml})`);
   process.exit(0);
