@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twilio\Security\RequestValidator;
 
 /**
  * Accepts only webhooks signed by Twilio with our auth token
@@ -17,20 +18,16 @@ class VerifyTwilioSignature
         $token = (string) config('services.twilio.auth_token');
         abort_if($token === '', 403, 'Twilio auth token is not configured.');
 
+        // Our routes take no query string: the signed URL is the URL Twilio called.
         $signature = (string) $request->header('X-Twilio-Signature');
-        abort_unless($signature !== '' && hash_equals(self::sign($token, $request->url(), $request->post()), $signature), 403);
+        abort_unless($signature !== '' && (new RequestValidator($token))->validate($signature, $request->url(), $request->post()), 403);
 
         return $next($request);
     }
 
-    /** URL Twilio called (our routes take no query string) plus the POST fields sorted by name. */
+    /** Signature Twilio would send for these fields (tests and local tools). */
     public static function sign(string $token, string $url, array $fields): string
     {
-        ksort($fields, SORT_STRING);
-        foreach ($fields as $name => $value) {
-            $url .= $name.$value;
-        }
-
-        return base64_encode(hash_hmac('sha1', $url, $token, true));
+        return (new RequestValidator($token))->computeSignature($url, $fields);
     }
 }
