@@ -193,7 +193,7 @@ describe('call session (end)', () => {
     session.technicianAvailable = false;
     const saved = await session.runTool('submit_lead', { reported_problem: 'Leaks', consent_to_callback: true, fee_accepted: true, outcome: 'visit' });
     assert.match(saved.say_exactly, /as soon as possible/);
-    assert.doesNotMatch(saved.say_exactly, /20 minutes/);
+    assert.doesNotMatch(saved.say_exactly, /10 minutes/);
     session.leadSent = false;
     leads.leads.length = 0;
     assert.equal(leads.leads.length, 0);
@@ -242,7 +242,7 @@ describe('call session (end)', () => {
     clearTimeout(session.endTimer);
     clearTimeout(session.timer);
     assert.equal(leads.leads.length, 1);
-    assert.ok(ws.sent.some((m) => m.token === 'Our closest technician will call you back in 20 minutes. Thank you for calling, goodbye.' && m.last));
+    assert.ok(ws.sent.some((m) => m.token === 'Our closest technician will call you back in 10 minutes. Thank you for calling, goodbye.' && m.last));
   });
 
   test('a lead saved and then silence: the promise is spoken and the call ends', async () => {
@@ -298,7 +298,7 @@ describe('call session', () => {
     const leads = new FakeLaravel();
     const replies = [
       { content: [{ type: 'tool_use', id: 't1', name: 'submit_lead', input: { caller_name: 'Jane', reported_problem: 'Leaks', agent_summary: 'Washer leaks.', consent_to_callback: true, fee_accepted: true, outcome: 'visit' } }], stop_reason: 'tool_use', usage: { input_tokens: 10, output_tokens: 5 } },
-      { content: [{ type: 'text', text: 'Our closest technician will call you back in 20 minutes.' }], stop_reason: 'end_turn', usage: { input_tokens: 12, output_tokens: 9 } },
+      { content: [{ type: 'text', text: 'Our closest technician will call you back in 10 minutes.' }], stop_reason: 'end_turn', usage: { input_tokens: 12, output_tokens: 9 } },
     ];
     const session = new CallSession(ws, config, {
       laravel: leads,
@@ -312,7 +312,7 @@ describe('call session', () => {
     assert.equal(leads.leads[0].caller_phone, '+18055550123');
     assert.equal(leads.leads[0].recording_notice_played, true);
     assert.equal(leads.leads[0].fee_accepted, true);
-    assert.ok(ws.sent.some((m) => m.token === 'Our closest technician will call you back in 20 minutes.'));
+    assert.ok(ws.sent.some((m) => m.token === 'Our closest technician will call you back in 10 minutes.'));
     assert.deepEqual(leads.calls, [
       { call_sid: 'CAok', reached_ai: true },
       { call_sid: 'CAok', ai_turns: 2, input_tokens: 22, output_tokens: 14, timed_out: false },

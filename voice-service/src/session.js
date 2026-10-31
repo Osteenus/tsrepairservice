@@ -141,7 +141,7 @@ export class CallSession {
         await this.sendLead({ ...input, outcome: input.outcome === 'callback' ? 'callback' : 'visit' });
         // The promise depends on technician hours; give the model the exact sentence.
         this.unsaidPromise = this.technicianAvailable
-          ? 'Our closest technician will call you back in 20 minutes.'
+          ? 'Our closest technician will call you back in 10 minutes.'
           : 'Our technicians are not working right now. A technician will call you back as soon as possible.';
         return { saved: true, technician_available: this.technicianAvailable, say_exactly: this.unsaidPromise };
       case 'transfer_to_technician':

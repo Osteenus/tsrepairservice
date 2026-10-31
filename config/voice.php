@@ -8,14 +8,14 @@ return [
     'public_url' => rtrim((string) env('VOICE_PUBLIC_URL', 'https://voice.tsrepairservice.com'), '/'),
 
     // Promised call-back time, and how long after it a lead counts as overdue.
-    'callback_minutes' => 20,
+    'callback_minutes' => 10,
     'overdue_minutes' => 30,
 
     // Claude price per million tokens (claude-haiku-5-5), for the cost column of the call statistics.
     'claude_price' => ['input' => 0.10, 'output' => 0.50],
 
     // Technician hours (Pacific time). Outside them the agent promises a call-back
-    // "as soon as possible", and the 20 minutes start at the next opening.
+    // "as soon as possible", and the 10 minutes start at the next opening.
     'timezone' => 'America/Los_Angeles',
     'hours' => [
         'mon' => ['08:00', '18:00'],

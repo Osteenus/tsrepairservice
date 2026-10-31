@@ -58,7 +58,7 @@ class VoiceLeadTest extends TestCase
         $this->assertTrue($lead->recording_notice_played);
         $this->assertTrue($lead->fee_accepted);
         $this->assertStringContainsString('Agreed to the $95 service call fee: yes.', RepairRequest::sole()->description);
-        $this->assertTrue($lead->callback_due_at->equalTo(now()->addMinutes(20)));
+        $this->assertTrue($lead->callback_due_at->equalTo(now()->addMinutes(10)));
 
         // It is also in the CRM inbox as a phone request.
         $request = RepairRequest::sole();
@@ -89,7 +89,7 @@ class VoiceLeadTest extends TestCase
         $this->lead()->assertCreated();
 
         // Sunday is closed, Monday opens at 8:00.
-        $this->assertTrue(VoiceLead::sole()->callback_due_at->equalTo(CarbonImmutable::parse('2026-10-26 08:20', 'America/Los_Angeles')));
+        $this->assertTrue(VoiceLead::sole()->callback_due_at->equalTo(CarbonImmutable::parse('2026-10-26 08:10', 'America/Los_Angeles')));
     }
 
     public function test_scheduler_makes_one_follow_up_then_marks_overdue(): void
@@ -101,7 +101,7 @@ class VoiceLeadTest extends TestCase
         $this->artisan('voice:follow-up');
         Http::assertNothingSent(); // Not due yet.
 
-        $this->travel(21)->minutes();
+        $this->travel(11)->minutes();
         $this->artisan('voice:follow-up');
         $this->artisan('voice:follow-up');
         Http::assertSentCount(1);
@@ -143,7 +143,7 @@ class VoiceLeadTest extends TestCase
         Http::fake();
         $this->lead(['consent_to_callback' => false, 'outcome' => 'timeout'])->assertCreated()->assertJson(['status' => 'callback_due']);
 
-        $this->travel(21)->minutes();
+        $this->travel(11)->minutes();
         $this->artisan('voice:follow-up');
         Http::assertNothingSent();
         $this->travel(30)->minutes();
