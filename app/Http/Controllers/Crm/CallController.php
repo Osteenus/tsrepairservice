@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Crm;
 
 use App\Http\Controllers\Controller;
+use App\Models\Call;
+use App\Models\Customer;
 use App\Support\Normalize;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,20 +19,32 @@ use Throwable;
  */
 class CallController extends Controller
 {
-    public function __invoke(Request $request): RedirectResponse
+    /** Any number, e.g. the caller of a repair request. */
+    public function store(Request $request): RedirectResponse
     {
         $data = $request->validate(['phone' => ['required', 'string', 'max:50'], 'name' => ['nullable', 'string', 'max:255']]);
+
+        return $this->place($data['phone'], $data['name'] ?? null, null);
+    }
+
+    public function customer(Customer $customer): RedirectResponse
+    {
+        return $this->place((string) $customer->phone, $customer->name, $customer->id);
+    }
+
+    private function place(string $phone, ?string $name, ?int $customerId): RedirectResponse
+    {
         $config = config('services.twilio');
 
         if (! $config['account_sid'] || ! $config['auth_token'] || ! $config['owner_phone']) {
             return $this->failed('Business line calls are not set up (TWILIO_ACCOUNT_SID, TWILIO_OWNER_PHONE).');
         }
-        $customer = Normalize::e164($data['phone']);
+        $customer = Normalize::e164($phone);
         if (! $customer) {
             return $this->failed('This phone number cannot be dialed from the business line. Use the regular Call button.');
         }
 
-        $who = Normalize::text($data['name'] ?? null) ?? 'the customer';
+        $who = Normalize::text($name) ?? 'the customer';
         $voice = e($config['voice']);
         $twiml = '<Response><Gather numDigits="1" timeout="8" method="POST" action="'.e(url('/api/twilio/voice/connect')).'">'
             .'<Say voice="'.$voice.'">'.e("Business line call to {$who}. Press 1 to connect.").'</Say></Gather>'
@@ -44,6 +58,7 @@ class CallController extends Controller
                     'From' => $config['number'],
                     'Twiml' => $twiml,
                     'Timeout' => 25,
+                    'StatusCallback' => url('/api/twilio/voice/status'),
                 ])->throw();
         } catch (Throwable $exception) {
             report($exception);
@@ -53,6 +68,7 @@ class CallController extends Controller
 
         // The "press 1" webhook looks up whom to dial by the call it belongs to.
         Cache::put('twilio-outbound:'.$response->json('sid'), $customer, now()->addMinutes(10));
+        Call::logOutgoing((string) $response->json('sid'), $customer, $customerId);
 
         return back()->with('flash.banner', 'Calling your phone now. Answer and press 1 to connect.');
     }
