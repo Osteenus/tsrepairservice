@@ -4,7 +4,9 @@ namespace Tests\Feature\Crm;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 use Laravel\Fortify\Features;
+use PragmaRX\Google2FA\Google2FA;
 
 class AccessTest extends CrmTestCase
 {
@@ -46,6 +48,26 @@ class AccessTest extends CrmTestCase
         $this->post('/login', ['email' => $user->email, 'password' => 'password'])
             ->assertRedirect('/two-factor-challenge');
         $this->assertGuest();
+    }
+
+    public function test_session_lasts_30_days_and_login_still_needs_the_two_factor_code(): void
+    {
+        $this->assertSame(60 * 24 * 30, config('session.lifetime'));
+        $provider = app(TwoFactorAuthenticationProvider::class);
+        $secret = $provider->generateSecretKey();
+        $user = $this->crmUser();
+        $user->forceFill(['two_factor_secret' => encrypt($secret)])->save();
+
+        $response = $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect('/two-factor-challenge');
+        $this->assertGuest();
+        $cookie = $response->getCookie(config('session.cookie'), false);
+        $this->assertEqualsWithDelta(now()->addDays(30)->getTimestamp(), $cookie->getExpiresTime(), 60);
+
+        // A wrong code does not sign in; the right one does.
+        $this->post('/two-factor-challenge', ['code' => '000000'])->assertSessionHasErrors('code');
+        $this->assertGuest();
+        $this->post('/two-factor-challenge', ['code' => app(Google2FA::class)->getCurrentOtp($secret)])->assertRedirect('/crm');
+        $this->assertAuthenticatedAs($user);
     }
 
     public function test_public_registration_is_disabled(): void
