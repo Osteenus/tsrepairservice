@@ -4,6 +4,8 @@ return [
     // Shared secret between Laravel and voice-service (Bearer token both ways).
     'api_key' => env('VOICE_API_KEY'),
     'service_url' => rtrim((string) env('VOICE_SERVICE_URL', 'http://127.0.0.1:3001'), '/'),
+    // Public address Twilio reaches voice-service at (incoming calls are passed on to /voice).
+    'public_url' => rtrim((string) env('VOICE_PUBLIC_URL', 'https://voice.tsrepairservice.com'), '/'),
 
     // Promised call-back time, and how long after it a lead counts as overdue.
     'callback_minutes' => 20,

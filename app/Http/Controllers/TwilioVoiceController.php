@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\WebFormRequestReceivedEmail;
+use App\Models\BlockedNumber;
+use App\Models\Call;
 use App\Models\Contact;
 use App\Models\RepairRequest;
 use App\Models\VoiceCall;
@@ -31,6 +33,20 @@ class TwilioVoiceController extends Controller
 
     private const HINTS = 'refrigerator, fridge, freezer, washer, dryer, oven, stove, range, dishwasher, microwave, range hood, '
         .'trash compactor, Moorpark, Simi Valley, Thousand Oaks, Camarillo, Newbury Park, Oxnard, Ventura, Agoura Hills';
+
+    /**
+     * Twilio's first stop for every incoming call: blocked numbers are rejected, the rest go
+     * into the call log and on to voice-service (menu / AI assistant / transfer).
+     */
+    public function receive(Request $request): Response
+    {
+        if (BlockedNumber::isBlocked($request->input('From'))) {
+            return $this->twiml('<Reject/>');
+        }
+        Call::logIncoming((string) $request->input('CallSid'), $request->input('From'), $request->input('To'));
+
+        return $this->twiml('<Redirect method="POST">'.e(config('voice.public_url').'/voice').'</Redirect>');
+    }
 
     /** Incoming call: greet and ask the first question. */
     public function incoming(Request $request): Response
@@ -82,6 +98,8 @@ class TwilioVoiceController extends Controller
     /** Call status callback: a caller who hangs up halfway still leaves a request with what they said. */
     public function status(Request $request): Response
     {
+        Call::logStatus($request->post());
+
         // Duration of every call on the number (also the AI ones), for the A/B statistics.
         if ($request->input('CallStatus') === 'completed' || $request->filled('CallDuration')) {
             VoiceCall::record((string) $request->input('CallSid'), [
@@ -108,7 +126,16 @@ class TwilioVoiceController extends Controller
             return $this->twiml($this->say('Call cancelled.').'<Hangup/>');
         }
 
-        return $this->twiml('<Dial callerId="'.e(config('services.twilio.number')).'" timeout="30">'.e($customer).'</Dial>');
+        return $this->twiml('<Dial callerId="'.e(config('services.twilio.number')).'" timeout="30" method="POST"'
+            .' action="'.e(url('/api/twilio/voice/dialed')).'">'.e($customer).'</Dial>');
+    }
+
+    /** The customer leg of a CRM call ended: keep whether they answered and how long you talked. */
+    public function dialed(Request $request): Response
+    {
+        Call::logDialResult((string) $request->input('CallSid'), $request->input('DialCallStatus'), $request->input('DialCallDuration'));
+
+        return $this->twiml('<Hangup/>');
     }
 
     /** Creates the CRM request once per call; returns false when the caller said nothing. */

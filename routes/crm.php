@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Crm\ApplianceController;
 use App\Http\Controllers\Crm\CallController;
+use App\Http\Controllers\Crm\CallLogController;
 use App\Http\Controllers\Crm\CustomerController;
 use App\Http\Controllers\Crm\DashboardController;
 use App\Http\Controllers\Crm\DocumentController;
@@ -26,7 +27,11 @@ Route::prefix('crm')
 
             Route::get('phone', [PhoneLineController::class, 'show'])->name('phone.show');
             Route::put('phone', [PhoneLineController::class, 'update'])->name('phone.update');
-            Route::post('call', CallController::class)->middleware('throttle:10,1')->name('call');
+            Route::get('calls', [CallLogController::class, 'index'])->name('calls.index');
+            Route::post('blocked-numbers', [CallLogController::class, 'block'])->name('blocked-numbers.store');
+            Route::delete('blocked-numbers/{blockedNumber}', [CallLogController::class, 'unblock'])->name('blocked-numbers.destroy');
+            Route::post('call', [CallController::class, 'store'])->middleware('throttle:business-line-calls')->name('call');
+            Route::post('customers/{customer}/call', [CallController::class, 'customer'])->middleware('throttle:business-line-calls')->name('customers.call');
 
             Route::get('requests', [RepairRequestController::class, 'index'])->name('requests.index');
             Route::get('requests/{repairRequest}', [RepairRequestController::class, 'show'])->name('requests.show');

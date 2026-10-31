@@ -25,7 +25,7 @@ class VoiceLeadTest extends TestCase
         config(['voice.api_key' => 'voice-key', 'voice.service_url' => 'http://voice.test']);
         Mail::fake();
         // Wednesday 10:00 Pacific: technicians are working.
-        $this->travelTo(CarbonImmutable::parse('2026-10-21 10:00', 'America/Los_Angeles'));
+        $this->travelTo(CarbonImmutable::parse('2026-10-21 10:00', 'America/Los_Angeles')->utc());
     }
 
     private function lead(array $overrides = []): TestResponse
@@ -84,7 +84,7 @@ class VoiceLeadTest extends TestCase
 
     public function test_after_hours_the_call_back_is_due_after_the_next_opening(): void
     {
-        $this->travelTo(CarbonImmutable::parse('2026-10-24 20:00', 'America/Los_Angeles')); // Saturday evening
+        $this->travelTo(CarbonImmutable::parse('2026-10-24 20:00', 'America/Los_Angeles')->utc()); // Saturday evening
         $this->withToken('voice-key')->getJson('/api/voice/availability')->assertJson(['technician_available' => false]);
         $this->lead()->assertCreated();
 

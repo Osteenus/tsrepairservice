@@ -11,10 +11,12 @@ Route::get('/user', function (Request $request) {
 
 // Phone line voice bot (Twilio number webhooks). Only Twilio-signed requests get through.
 Route::middleware('twilio')->prefix('twilio/voice')->controller(TwilioVoiceController::class)->group(function () {
+    Route::post('/incoming', 'receive');
     Route::post('/', 'incoming');
     Route::post('/answer/{step}', 'answer')->whereIn('step', ['name', 'problem', 'location']);
     Route::post('/status', 'status');
     Route::post('/connect', 'connect');
+    Route::post('/dialed', 'dialed');
 });
 
 // AI voice agent (voice-service). Bearer VOICE_API_KEY.

@@ -37,5 +37,13 @@ class AppServiceProvider extends ServiceProvider
                 ])->withHeaders($headers);
             });
         });
+
+        // Calls from the business line cost money: 20 per hour per CRM user.
+        RateLimiter::for('business-line-calls', function (Request $request) {
+            return Limit::perHour(20)->by('user:'.$request->user()?->id)->response(function (Request $request, array $headers) {
+                return back()->with('flash.banner', 'Too many calls in the last hour. Use the regular Call button.')
+                    ->with('flash.bannerStyle', 'danger')->withHeaders($headers);
+            });
+        });
     }
 }

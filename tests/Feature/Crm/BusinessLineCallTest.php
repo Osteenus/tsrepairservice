@@ -36,7 +36,7 @@ class BusinessLineCallTest extends CrmTestCase
             && str_contains($request['Twiml'], 'Business line call to Jane Doe. Press 1 to connect.'));
 
         $this->twilio('/api/twilio/voice/connect', ['CallSid' => 'CAout', 'Digits' => '1'])
-            ->assertOk()->assertSee('<Dial callerId="+18053348375" timeout="30">+18055550123</Dial>', false);
+            ->assertOk()->assertSee('<Dial callerId="+18053348375" timeout="30" method="POST" action="'.url('/api/twilio/voice/dialed').'">+18055550123</Dial>', false);
         // Used once: a replayed key press does not dial again.
         $this->twilio('/api/twilio/voice/connect', ['CallSid' => 'CAout', 'Digits' => '1'])->assertSee('Call cancelled.');
     }

@@ -22,8 +22,13 @@ CRM_PDF_NO_SANDBOX=true
 - PHP runs as `www-data`, which cannot read `/home/osteen/.nvm`, so PDFs use the system Node (step 3).
 - Ubuntu 24.04 blocks the Chromium sandbox for unprivileged users through AppArmor. The CRM renders
   only its own HTML (no outside URLs), so running without the sandbox is acceptable here.
-- `SESSION_LIFETIME=120` is already set: a CRM session ends after 2 idle hours ("remember me" is
-  removed from the login form). Session cookies are `Secure` in production by default.
+- `SESSION_LIFETIME=43200` (30 days, since 2026-10-30; it was 120): a CRM session ends after 30 days
+  without opening the CRM on that device, then login asks for the password and the 2FA code again.
+  Every visit restarts the 30 days. 2FA itself is unchanged (Fortify TOTP, recovery codes, forced
+  setup on first login); it is asked at each login, not on every visit. "Remember me" stays removed
+  from the login form. Session cookies are `Secure` in production by default. After changing the
+  value run `php artisan config:cache`. To log everyone out (e.g. a lost phone), delete the rows of the
+  `sessions` table: `php artisan tinker --execute="DB::table('sessions')->delete();"`.
 
 Security follow-up: the production `.env` (APP_KEY, database and mail passwords) was pasted into a
 chat on 2026-10-14. Change the mail password in Hostinger and the database password (and use a
@@ -149,6 +154,24 @@ from the internet (2026-10-15). ufw closes the port; also set `listen_addresses 
 stays private even if the firewall is ever disabled. Add the same three rules in the Hostinger
 panel firewall as a second layer.
 
+### 8. Phone line (Twilio)
+
+Calls to (805) 334-8375 reach Laravel first: blocked numbers (CRM → Phone → Calls) get `<Reject/>`,
+every other call is logged in `calls` and redirected to voice-service (`VOICE_PUBLIC_URL`, default
+`https://voice.tsrepairservice.com`; see `voice-service/README.md`). Webhooks are checked with the
+Twilio SDK against `TWILIO_AUTH_TOKEN`.
+
+Twilio Console → Phone Numbers → (805) 334-8375 → Voice configuration:
+
+- A call comes in: `https://tsrepairservice.com/api/twilio/voice/incoming`, HTTP POST
+- Primary handler fails: `https://voice.tsrepairservice.com/voice` (if Laravel is down, calls still
+  reach the AI assistant, without the block list and the call log)
+- Call status changes: `https://tsrepairservice.com/api/twilio/voice/status`
+
+"Call from business line" in the CRM rings `TWILIO_OWNER_PHONE` first and dials the customer with the
+business number as caller ID after you press 1. It is limited to 20 calls per hour per CRM user.
+Calls are never deleted; unblocking a number soft-deletes its `blocked_numbers` row.
+
 ### Database user (recommended)
 
 The app connects as `postgres` (superuser). Use a dedicated owner instead. Do this right after a
@@ -194,6 +217,8 @@ Then open `/crm`, open a job and download any estimate PDF.
 | Job photos | `storage/app/private/photos/{job}/` | File kept when a photo is removed |
 | Customer photos from website requests | `storage/app/private/requests/{request}/` | Linked to the job when the request becomes one |
 | Issued document details | `documents.snapshot` (JSON) | Frozen at issue; PDFs are re-rendered from it |
+| Call log of the business line | `calls` | Never |
+| Blocked numbers | `blocked_numbers` | Soft delete only (unblock) |
 
 Private files are served only through signed-in routes (`/crm/photos/{id}`, `/crm/signatures/{id}`),
 never from `public/`. `/crm`, `/login` and `/user/*` send `X-Robots-Tag: noindex, nofollow` and
