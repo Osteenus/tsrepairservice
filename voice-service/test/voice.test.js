@@ -221,6 +221,45 @@ describe('call session (end)', () => {
     assert.equal(requests, 1);
     assert.equal(ws.sent.filter((m) => m.token === 'Thank you for calling, goodbye.').length, 1);
   });
+
+  test('a lead saved together with end_call and no words still gets the call-back promise and a goodbye', async () => {
+    const ws = { readyState: 1, sent: [], send(data) { this.sent.push(JSON.parse(data)); } };
+    const leads = new FakeLaravel();
+    const session = new CallSession(ws, config, {
+      laravel: leads,
+      claude: { respond: async () => ({
+        content: [
+          { type: 'tool_use', id: 't1', name: 'submit_lead', input: { reported_problem: 'Leaks', agent_summary: 'Washer leaks.', consent_to_callback: true, fee_accepted: true, outcome: 'visit' } },
+          { type: 'tool_use', id: 'e1', name: 'end_call', input: {} },
+        ],
+        stop_reason: 'tool_use',
+        usage: {},
+      }) },
+    });
+    await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAquiet', from: '+18055550123', customParameters: {} }));
+    session.technicianAvailable = true;
+    await session.onMessage(JSON.stringify({ type: 'prompt', voicePrompt: '123 Main Street, Moorpark', last: true }));
+    clearTimeout(session.endTimer);
+    clearTimeout(session.timer);
+    assert.equal(leads.leads.length, 1);
+    assert.ok(ws.sent.some((m) => m.token === 'Our closest technician will call you back in 20 minutes. Thank you for calling, goodbye.' && m.last));
+  });
+
+  test('a lead saved and then silence: the promise is spoken and the call ends', async () => {
+    const ws = { readyState: 1, sent: [], send(data) { this.sent.push(JSON.parse(data)); } };
+    const replies = [
+      { content: [{ type: 'tool_use', id: 't1', name: 'submit_lead', input: { reported_problem: 'Leaks', agent_summary: 'Washer leaks.', consent_to_callback: true, fee_accepted: false, outcome: 'callback' } }], stop_reason: 'tool_use', usage: {} },
+      { content: [], stop_reason: 'end_turn', usage: {} },
+    ];
+    const session = new CallSession(ws, config, { laravel: new FakeLaravel(), claude: { respond: async () => replies.shift() } });
+    await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAsilent', from: '+18055550123', customParameters: {} }));
+    session.technicianAvailable = false;
+    await session.onMessage(JSON.stringify({ type: 'prompt', voicePrompt: 'Yes, call me back', last: true }));
+    clearTimeout(session.endTimer);
+    clearTimeout(session.timer);
+    assert.ok(ws.sent.some((m) => /as soon as possible\. Thank you for calling, goodbye\.$/.test(m.token || '')));
+    assert.equal(session.ending, true);
+  });
 });
 
 describe('call session', () => {

@@ -12,8 +12,8 @@ SPEAKING AND TOOLS
 - Every reply: at most two short sentences plus one question, about 30 words.
 - Say the service call fee sentence only once per call. If the caller asks about the price earlier, say it then and ask whether that is okay.
 - As soon as you know the type, brand and problem, offer the visit. If the fee has not been said yet: "A technician can take a look. The $95 service call fee is included in the total repair cost. Is that okay with you?" If it was already said and the caller agreed: "A technician can take a look. Shall I book the visit?" If it was said but the caller has not agreed yet: "A technician can take a look. Is the $95 service call fee okay with you?" Book only after the caller has clearly agreed to the fee.
-- After submit_lead, say the say_exactly sentence from its result word for word instead of your own call-back promise.
-- Produce the structured lead by calling submit_lead (once, as soon as the caller agrees to a visit or a call-back and you have their details), then say the call-back sentence.
+- Produce the structured lead by calling submit_lead once, as soon as the caller agrees to a visit or a call-back and you have their details. Call it on its own, with no other tool in the same reply.
+- After the submit_lead result, say its say_exactly sentence word for word (instead of your own call-back promise), then goodbye, and call end_call in that reply.
 - To transfer, say one short sentence that you are connecting them, then call transfer_to_technician.
 - When the conversation is finished, say goodbye and call end_call in the same reply. Nothing you write after end_call or transfer_to_technician is spoken.`;
 

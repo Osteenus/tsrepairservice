@@ -1,6 +1,8 @@
 import { log } from './log.js';
 import { systemPrompt, toolsFor } from './agent.js';
 
+const GOODBYE = 'Thank you for calling, goodbye.';
+
 const TIMEOUT_LINE = 'I am sorry, we are out of time for this call. A technician will call you back as soon as possible '
   + 'at this number. Thank you for calling, goodbye.';
 
@@ -105,6 +107,7 @@ export class CallSession {
       this.usage.cacheRead += message.usage.cache_read_input_tokens || 0;
       this.messages.push({ role: 'assistant', content: message.content });
       this.lastSpoken = spoken;
+      if (spoken.trim()) this.unsaidPromise = null;
 
       const calls = message.content.filter((block) => block.type === 'tool_use');
       if (message.stop_reason !== 'tool_use' || !calls.length) break;
@@ -115,6 +118,15 @@ export class CallSession {
       this.messages.push({ role: 'user', content: results });
       // Goodbye or transfer sentence was already spoken: no further reply.
       if (this.pendingEnd) break;
+    }
+
+    // The lead was saved but the model went quiet (or hung up) without the call-back promise or a goodbye: say it for it.
+    if (!this.ending && (this.unsaidPromise || (this.pendingEnd === 'end' && !this.lastSpoken?.trim()))) {
+      const closing = [this.unsaidPromise, GOODBYE].filter(Boolean).join(' ');
+      this.send({ type: 'text', token: closing, last: true });
+      this.lastSpoken = closing;
+      this.unsaidPromise = null;
+      if (!this.pendingEnd) this.pendingEnd = 'end';
     }
 
     if (this.pendingEnd) this.finish(this.pendingEnd);
@@ -128,13 +140,10 @@ export class CallSession {
         }
         await this.sendLead({ ...input, outcome: input.outcome === 'callback' ? 'callback' : 'visit' });
         // The promise depends on technician hours; give the model the exact sentence.
-        return {
-          saved: true,
-          technician_available: this.technicianAvailable,
-          say_exactly: this.technicianAvailable
-            ? 'Our closest technician will call you back in 20 minutes.'
-            : 'Our technicians are not working right now. A technician will call you back as soon as possible.',
-        };
+        this.unsaidPromise = this.technicianAvailable
+          ? 'Our closest technician will call you back in 20 minutes.'
+          : 'Our technicians are not working right now. A technician will call you back as soon as possible.';
+        return { saved: true, technician_available: this.technicianAvailable, say_exactly: this.unsaidPromise };
       case 'transfer_to_technician':
         if (!this.config.twilio.ownerPhone) return { transferred: false, note: 'No technician line is configured. Offer a call-back instead.' };
         this.pendingEnd = 'transfer';
