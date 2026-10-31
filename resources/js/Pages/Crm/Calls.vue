@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { Search } from 'lucide-vue-next';
 import CrmLayout from '@/Layouts/CrmLayout.vue';
 import CallRow from '@/Components/Crm/CallRow.vue';
@@ -37,6 +37,8 @@ const block = caller => {
         router.post(route('crm.blocked-numbers.store'), { phone: caller.number }, { preserveScroll: true });
     }
 };
+const blockForm = useForm({ phone: '', reason: '' });
+const blockNumber = () => blockForm.post(route('crm.blocked-numbers.store'), { preserveScroll: true, onSuccess: () => blockForm.reset() });
 const unblock = number => {
     if (confirm(`Unblock ${number.display_number}?`)) router.delete(route('crm.blocked-numbers.destroy', number.id), { preserveScroll: true });
 };
@@ -81,9 +83,19 @@ const unblock = number => {
         </ul>
         <p v-if="more" class="mt-2 text-center text-sm text-gray-500">Showing the latest {{ calls.length }} calls. Search by number to find older ones.</p>
 
-        <section v-if="blocked.length" class="mt-4">
+        <section class="mt-4">
             <h2 class="mb-2 text-sm font-bold uppercase tracking-wider text-[#c8000a]">Blocked numbers</h2>
-            <ul class="divide-y divide-gray-200 overflow-hidden rounded-xl bg-white shadow-sm">
+            <form class="mb-2 grid gap-2 rounded-xl bg-white p-4 shadow-sm" @submit.prevent="blockNumber">
+                <input v-model="blockForm.phone" type="tel" inputmode="tel" required placeholder="Phone number to block"
+                    class="block h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-[#c8000a] focus:ring-[#c8000a]">
+                <input v-model="blockForm.reason" type="text" placeholder="Reason (optional)"
+                    class="block h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-[#c8000a] focus:ring-[#c8000a]">
+                <p v-if="blockForm.errors.phone" class="text-sm text-[#c8000a]">{{ blockForm.errors.phone }}</p>
+                <button type="submit" class="h-12 rounded-lg bg-[#151515] font-bold text-white disabled:opacity-50" :disabled="blockForm.processing || !blockForm.phone">
+                    Block number
+                </button>
+            </form>
+            <ul v-if="blocked.length" class="divide-y divide-gray-200 overflow-hidden rounded-xl bg-white shadow-sm">
                 <li v-for="number in blocked" :key="number.id" class="flex items-center gap-3 px-4 py-3">
                     <div class="min-w-0 flex-1">
                         <p class="font-semibold">{{ number.display_number }}</p>
