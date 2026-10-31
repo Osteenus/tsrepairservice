@@ -5,6 +5,7 @@ import { MapPin, MessageSquare, Pencil, Phone, PhoneForwarded } from 'lucide-vue
 import CrmLayout from '@/Layouts/CrmLayout.vue';
 import ApplianceFields from '@/Components/Crm/ApplianceFields.vue';
 import Button from '@/Components/Crm/Button.vue';
+import CallRow from '@/Components/Crm/CallRow.vue';
 import StatusBadge from '@/Components/Crm/StatusBadge.vue';
 
 const props = defineProps({
@@ -13,13 +14,18 @@ const props = defineProps({
     jobs: Array,
     applianceTypes: Array,
     applianceBrands: Array,
+    calls: Array,
+    phoneBlocked: Boolean,
 });
 
 const address = [props.customer.address_line1, props.customer.city, [props.customer.state, props.customer.zip].filter(Boolean).join(' ')]
     .filter(Boolean).join(', ');
 const tel = (props.customer.phone || '').replace(/[^\d+]/g, '');
 const callFromBusinessLine = () => {
-    if (confirm('Twilio will ring your phone first. Answer and press 1 to connect.')) router.post(route('crm.call'), { phone: props.customer.phone, name: props.customer.name }, { preserveScroll: true });
+    if (confirm('Twilio will ring your phone first. Answer and press 1 to connect.')) router.post(route('crm.customers.call', props.customer.id), {}, { preserveScroll: true });
+};
+const blockPhone = () => {
+    if (confirm(`Block ${props.customer.phone}? Calls from this number will be rejected.`)) router.post(route('crm.blocked-numbers.store'), { phone: props.customer.phone, reason: props.customer.name }, { preserveScroll: true });
 };
 
 const editing = ref(null);
@@ -66,6 +72,8 @@ const save = () => {
                 <a v-if="address" :href="`https://maps.google.com/?q=${encodeURIComponent(address)}`" target="_blank" rel="noopener" class="flex h-12 items-center justify-center gap-1 rounded-lg border border-gray-300 font-bold"><MapPin class="size-5" />Map</a>
             </div>
             <button v-if="tel" type="button" class="mt-2 flex h-12 w-full items-center justify-center gap-1 rounded-lg border border-[#c8000a] font-bold text-[#c8000a]" @click="callFromBusinessLine"><PhoneForwarded class="size-5" />Call from business line</button>
+            <p v-if="phoneBlocked" class="mt-2 text-center text-sm font-semibold text-gray-500">Calls from this number are blocked (Phone → Calls to unblock).</p>
+            <button v-else-if="tel" type="button" class="mt-2 h-11 w-full rounded-lg text-sm font-semibold text-gray-500 active:bg-gray-100" @click="blockPhone">Block this number</button>
             <p v-if="customer.notes" class="mt-3 whitespace-pre-line text-sm text-gray-700">{{ customer.notes }}</p>
         </section>
 
@@ -107,6 +115,13 @@ const save = () => {
                     </form>
                 </li>
                 <li v-if="!appliances.length && editing !== 'new'" class="rounded-xl bg-white p-4 text-center text-gray-500 shadow-sm">No appliances yet.</li>
+            </ul>
+        </section>
+
+        <section v-if="calls.length" class="mt-4">
+            <h2 class="mb-2 text-sm font-bold uppercase tracking-wider text-[#c8000a]">Calls</h2>
+            <ul class="divide-y divide-gray-200 overflow-hidden rounded-xl bg-white shadow-sm">
+                <CallRow v-for="call in calls" :key="call.id" :call="call" :show-customer="false" />
             </ul>
         </section>
 

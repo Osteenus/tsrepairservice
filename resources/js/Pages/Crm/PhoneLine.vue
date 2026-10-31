@@ -3,6 +3,7 @@ import { Link, useForm } from '@inertiajs/vue3';
 import CrmLayout from '@/Layouts/CrmLayout.vue';
 import Button from '@/Components/Crm/Button.vue';
 import Field from '@/Components/Crm/Field.vue';
+import PhoneTabs from '@/Components/Crm/PhoneTabs.vue';
 
 const props = defineProps({
     settings: Object,
@@ -21,6 +22,7 @@ const seconds = (value) => (value === null ? '—' : value >= 60 ? `${Math.floor
 
 <template>
     <CrmLayout title="Phone line">
+        <PhoneTabs current="line" />
         <form class="rounded-xl bg-white p-4 shadow-sm" @submit.prevent="save">
             <h2 class="text-xs font-bold uppercase tracking-wider text-[#c8000a]">Who answers (805) 334-8375</h2>
             <div class="mt-2 grid gap-2">

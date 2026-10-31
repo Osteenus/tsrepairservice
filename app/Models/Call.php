@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Crm\LocalTime;
 use App\Support\Normalize;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -112,6 +113,30 @@ class Call extends Model
             'duration_seconds' => $duration !== null && $duration !== '' ? (int) $duration : null,
             'ended_at' => now(),
         ])->save();
+    }
+
+    /** "(805) 555-0123" for US numbers, other numbers as Twilio sent them. */
+    public static function displayNumber(?string $phone): ?string
+    {
+        return Normalize::phone(preg_replace('/^\+1(?=\d{10}$)/', '', (string) $phone));
+    }
+
+    /** Fields for the CRM call lists. */
+    public function toListItem(array $blocked = []): array
+    {
+        $number = $this->otherNumber();
+
+        return [
+            'id' => $this->id,
+            'time' => LocalTime::display($this->started_at, 'D, M j, g:i A'),
+            'direction' => $this->direction,
+            'number' => $number,
+            'display_number' => static::displayNumber($number) ?? 'Unknown',
+            'customer' => $this->customer ? ['id' => $this->customer->id, 'name' => $this->customer->name] : null,
+            'duration_seconds' => $this->duration_seconds,
+            'status' => $this->status,
+            'blocked' => in_array($number, $blocked, true),
+        ];
     }
 
     /** Customer whose phone matches the number (E.164 or as typed), compared by digits. */

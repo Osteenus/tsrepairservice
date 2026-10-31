@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Crm;
 use App\Crm\LocalTime;
 use App\Http\Controllers\Controller;
 use App\Models\Appliance;
+use App\Models\BlockedNumber;
+use App\Models\Call;
 use App\Models\Customer;
 use App\Models\WorkOrder;
 use Illuminate\Http\RedirectResponse;
@@ -63,6 +65,9 @@ class CustomerController extends Controller
                 'appliance' => $job->appliance?->label(),
                 'date' => LocalTime::display($job->scheduled_at ?? $job->created_at, 'M j, Y'),
             ]),
+            'calls' => Call::with('customer')->where('customer_id', $customer->id)->orderByDesc('started_at')->limit(30)->get()
+                ->map(fn (Call $call) => $call->toListItem(BlockedNumber::pluck('phone_e164')->all())),
+            'phoneBlocked' => BlockedNumber::isBlocked($customer->phone),
         ]);
     }
 

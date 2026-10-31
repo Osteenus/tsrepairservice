@@ -17,10 +17,12 @@ const tabs = [
     { label: 'Requests', href: '/crm/requests', icon: Inbox },
     { label: 'Jobs', href: '/crm/jobs', icon: Wrench },
     { label: 'Customers', href: '/crm/customers', icon: Users },
-    { label: 'Phone', href: '/crm/phone', icon: PhoneCall },
+    { label: 'Phone', href: '/crm/calls', icon: PhoneCall, also: ['/crm/phone'] },
 ];
 
-const active = tab => tab.exact ? path.value === tab.href : path.value.startsWith(tab.href);
+const active = tab => tab.exact
+    ? path.value === tab.href
+    : [tab.href, ...(tab.also ?? [])].some(href => path.value.startsWith(href));
 const logout = () => router.post(route('logout'));
 
 // Immediate feedback on every tap that loads a page; on a slow connection it otherwise looks like nothing happened.
