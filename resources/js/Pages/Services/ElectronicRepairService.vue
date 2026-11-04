@@ -5,8 +5,8 @@
         <meta name="description" :content="description">
         <meta property="og:title" content="Electronic Repair Moorpark CA | Tech Solutions Repair Service">
         <meta property="og:description" :content="description">
-        <link rel="canonical" href="https://tsrepairservice.com/services/electronic-repair" head-key="canonical">
-        <meta property="og:url" content="https://tsrepairservice.com/services/electronic-repair">
+        <link rel="canonical" href="https://tsrepairservice.com/electronic-repair-moorpark" head-key="canonical">
+        <meta property="og:url" content="https://tsrepairservice.com/electronic-repair-moorpark">
         <meta property="og:type" content="website">
     </Head>
 

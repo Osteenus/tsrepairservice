@@ -18,11 +18,13 @@ Route::inertia('/privacy', 'Privacy');
 Route::inertia('/terms', 'Terms');
 Route::inertia('/extra', 'Extra');
 
-Route::inertia('/services/refrigerator-repair-moorpark', 'Services/RefrigeratorRepairService');
+Route::inertia('/refrigerator-repair-moorpark', 'Services/RefrigeratorRepairService')->name('services.refrigerator');
+Route::permanentRedirect('/services/refrigerator-repair-moorpark', '/refrigerator-repair-moorpark');
 Route::inertia('/washer-repair-moorpark', 'Services/WasherRepairService')->name('services.washer');
 Route::permanentRedirect('/services/washer-repair', '/washer-repair-moorpark');
 Route::permanentRedirect('/washer-repair', '/washer-repair-moorpark');
-Route::inertia('/services/dryer-repair', 'Services/DryerRepairService');
+Route::inertia('/dryer-repair-moorpark', 'Services/DryerRepairService')->name('services.dryer');
+Route::permanentRedirect('/services/dryer-repair', '/dryer-repair-moorpark');
 Route::inertia('/oven-stove-repair-moorpark', 'Services/OvenRepairService')->name('services.oven-stove');
 Route::permanentRedirect('/services/oven-repair', '/oven-stove-repair-moorpark');
 Route::inertia('/dishwasher-repair-moorpark', 'Services/DishwasherRepairService')->name('services.dishwasher');
@@ -34,7 +36,8 @@ Route::inertia('/range-hood-repair-moorpark', 'Services/RangeHoodRepairService')
 Route::permanentRedirect('/services/range-hood-repair', '/range-hood-repair-moorpark');
 Route::inertia('/trash-compactor-repair-moorpark', 'Services/TrashCompactorRepairService')->name('services.trash-compactor');
 Route::permanentRedirect('/services/trash-compactor-repair', '/trash-compactor-repair-moorpark');
-Route::inertia('/services/electronic-repair', 'Services/ElectronicRepairService');
+Route::inertia('/electronic-repair-moorpark', 'Services/ElectronicRepairService')->name('services.electronic');
+Route::permanentRedirect('/services/electronic-repair', '/electronic-repair-moorpark');
 
 Route::post('/contact', [RepairRequestController::class, 'store'])
     ->middleware('throttle:service-requests')->name('contact.store');

@@ -220,42 +220,42 @@ export default {
                 refrigerators: [
                     {
                         name: 'French Door Refrigerators',
-                        url: '/services/refrigerator-repair-moorpark/french-door-refrigerators',
+                        url: '/refrigerator-repair-moorpark/french-door-refrigerators',
                         svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="22" y="8" width="66" height="94" fill="url(#paint0_linear_425_125)" stroke="#C90000" stroke-width="4" /> <path d="M24 69H90" stroke="#C90000" stroke-width="4" /> <path d="M28 76L83 76" stroke="#C90000" stroke-width="4" /> <path d="M55 70L55 8" stroke="#C90000" stroke-width="4" /> <path d="M62 63V25" stroke="#C90000" stroke-width="4" /> <path d="M48 63V25" stroke="#C90000" stroke-width="4" /> <path d="M74 15L83 15" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_125" x1="90" y1="55" x2="20" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFB1B1" /> <stop offset="0.5" stop-color="#FFD0D0" stop-opacity="0.48" /> <stop offset="1" stop-color="#FFB6B6" /> </linearGradient> </defs> </svg>',
                     },
                     {
                         name: 'Side-by-Side Refrigerators',
-                        url: '/services/refrigerator-repair-moorpark/side-by-side-refrigerators',
+                        url: '/refrigerator-repair-moorpark/side-by-side-refrigerators',
                         svg: ' <svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="22" y="8" width="66" height="94" fill="url(#paint0_linear_425_135)" stroke="#C90000" stroke-width="4" /> <path d="M50 101L50 8" stroke="#C90000" stroke-width="4" /> <path d="M57 79.0093V25" stroke="#C90000" stroke-width="4" /> <path d="M43 79L43 25" stroke="#C90000" stroke-width="4" /> <path d="M73 16L82 16" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_135" x1="90" y1="55" x2="20" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFAAAA" /> <stop offset="0.5625" stop-color="#FFE6E6" /> <stop offset="1" stop-color="#FFA1A1" /> </linearGradient> </defs> </svg>'
                     },
                     {
                         name: 'Top Freezer Refrigerators',
-                        url: '/services/refrigerator-repair-moorpark/top-freezer-refrigerators',
+                        url: '/refrigerator-repair-moorpark/top-freezer-refrigerators',
                         svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="27" y="8" width="56" height="94" fill="url(#paint0_linear_425_161)" stroke="#C90000" stroke-width="4" /> <path d="M28 40H82.0093" stroke="#C90000" stroke-width="4" /> <path d="M68 16L77 16" stroke="#C90000" stroke-width="4" /> <path d="M34 35V16" stroke="#C90000" stroke-width="4" /> <path d="M34 84L34 45" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_161" x1="85" y1="55" x2="25" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFA2A2" /> <stop offset="0.5" stop-color="#FFE7E7" /> <stop offset="1" stop-color="#FFCDCD" /> </linearGradient> </defs> </svg>'
                     },
                     {
                         name: 'Built-In Refrigerators',
-                        url: '/services/refrigerator-repair-moorpark/built-in-refrigerators',
+                        url: '/refrigerator-repair-moorpark/built-in-refrigerators',
                         svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="22" y="8" width="66" height="94" fill="url(#paint0_linear_425_169)" stroke="#C90000" stroke-width="4" /> <path d="M50 101L50 23" stroke="#C90000" stroke-width="4" /> <path d="M21 22H90" stroke="#C90000" stroke-width="4" /> <path d="M57 84.0093V30" stroke="#C90000" stroke-width="4" /> <path d="M43 84L43 30" stroke="#C90000" stroke-width="4" /> <path d="M75 14L84 14" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_169" x1="90" y1="55" x2="20" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFB3B3" /> <stop offset="0.572115" stop-color="#FFE2E2" /> <stop offset="1" stop-color="#FFADAD" /> </linearGradient> </defs> </svg>'
                     },
                     {
                         name: 'Wine Coolers',
-                        url: '/services/refrigerator-repair-moorpark/wine-coolers',
+                        url: '/refrigerator-repair-moorpark/wine-coolers',
                         svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="32" y="13" width="45" height="85" fill="url(#paint0_linear_425_178)" stroke="#C90000" stroke-width="4" /> <path d="M31 18H78" stroke="#C90000" stroke-width="10" /> <path d="M31 34H78" stroke="#C90000" stroke-width="4" /> <path d="M31 47H78" stroke="#C90000" stroke-width="4" /> <path d="M31 60H78" stroke="#C90000" stroke-width="4" /> <path d="M31 73H78" stroke="#C90000" stroke-width="4" /> <path d="M32 86H79" stroke="#C90000" stroke-width="4" /> <path d="M64 17L73 17" stroke="#D9D9D9" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_178" x1="30" y1="55.5" x2="79" y2="55.5" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFCACA" /> <stop offset="1" stop-color="white" /> </linearGradient> </defs> </svg>'
                     },
                     {
                         name: 'Freezers',
-                        url: '/services/refrigerator-repair-moorpark/freezers',
+                        url: '/refrigerator-repair-moorpark/freezers',
                         svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="27" y="8" width="56" height="94" fill="url(#paint0_linear_425_189)" stroke="#C90000" stroke-width="4" /> <path d="M34 79.0093V25" stroke="#C90000" stroke-width="4" /> <path d="M68 16L77 16" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_189" x1="25" y1="55" x2="85" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFB5B5" /> <stop offset="1" stop-color="white" /> </linearGradient> </defs> </svg>'
                     },
                     {
                         name: 'Commercial Refrigerators',
-                        url: '/services/refrigerator-repair-moorpark/commercial-refrigerators',
+                        url: '/refrigerator-repair-moorpark/commercial-refrigerators',
                         svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="16" y="8" width="78" height="94" fill="url(#paint0_linear_425_195)" stroke="#C90000" stroke-width="4" /> <path d="M55 101L55 23" stroke="#C90000" stroke-width="4" /> <path d="M16 21H96" stroke="#C90000" stroke-width="4" /> <path d="M48 71V53H44" stroke="#C90000" stroke-width="4" /> <path d="M62 71V53H66" stroke="#C90000" stroke-width="4" /> <path d="M79 14L88 14" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_195" x1="96" y1="55" x2="14" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFABAB" /> <stop offset="0.5" stop-color="#FFFEFE" /> <stop offset="1" stop-color="#FFA8A8" /> </linearGradient> </defs> </svg>'
                     },
                     {
                         name: 'Reach-In Coolers',
-                        url: '/services/refrigerator-repair-moorpark/reach-in-coolers',
+                        url: '/refrigerator-repair-moorpark/reach-in-coolers',
                         svg: '<svg width="96" height="96" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg"> <rect x="16" y="8" width="78" height="94" fill="url(#paint0_linear_425_204)" stroke="#C90000" stroke-width="4" /> <rect x="20" y="25" width="31" height="73" stroke="#C90000" stroke-width="4" /> <rect x="59" y="25" width="31" height="73" stroke="#C90000" stroke-width="4" /> <path d="M55 101L55 23" stroke="#C90000" stroke-width="4" /> <path d="M16 21H96" stroke="#C90000" stroke-width="4" /> <path d="M79 14L88 14" stroke="#C90000" stroke-width="4" /> <path d="M20 62L91 62" stroke="#C90000" stroke-width="4" /> <path d="M20 74L91 74" stroke="#C90000" stroke-width="4" /> <path d="M20 49L91 49" stroke="#C90000" stroke-width="4" /> <path d="M19 86L90 86" stroke="#C90000" stroke-width="4" /> <path d="M20 37L91 37" stroke="#C90000" stroke-width="4" /> <path d="M20 37L91 37" stroke="#C90000" stroke-width="4" /> <defs> <linearGradient id="paint0_linear_425_204" x1="96" y1="55" x2="14" y2="55" gradientUnits="userSpaceOnUse"> <stop stop-color="#FFA6A6" /> <stop offset="0.5" stop-color="white" /> <stop offset="1" stop-color="#FFA8A8" /> </linearGradient> </defs> </svg>'
                     },
                 ],

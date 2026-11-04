@@ -17,14 +17,14 @@ return [
     ],
     'service_areas' => ['Moorpark', 'Simi Valley', 'Camarillo', 'Thousand Oaks', 'Oxnard', 'Ventura', 'Ventura County'],
     'services' => [
-        ['id' => 1, 'slug' => 'refrigerator', 'name' => 'Refrigerator Repair', 'url' => '/services/refrigerator-repair-moorpark', 'logoUrl' => '/images/thumbnails/side-by-side-fridge.webp'],
+        ['id' => 1, 'slug' => 'refrigerator', 'name' => 'Refrigerator Repair', 'url' => '/refrigerator-repair-moorpark', 'logoUrl' => '/images/thumbnails/side-by-side-fridge.webp'],
         ['id' => 2, 'slug' => 'washer', 'name' => 'Washer Repair', 'url' => '/washer-repair-moorpark', 'logoUrl' => '/images/thumbnails/top-load-washer.webp'],
-        ['id' => 3, 'slug' => 'dryer', 'name' => 'Dryer Repair', 'url' => '/services/dryer-repair', 'logoUrl' => '/images/thumbnails/dryer-1.webp'],
+        ['id' => 3, 'slug' => 'dryer', 'name' => 'Dryer Repair', 'url' => '/dryer-repair-moorpark', 'logoUrl' => '/images/thumbnails/dryer-1.webp'],
         ['id' => 4, 'slug' => 'oven-stove', 'name' => 'Oven & Stove Repair', 'url' => '/oven-stove-repair-moorpark', 'logoUrl' => '/images/thumbnails/oven-stove-repair-moorpark.webp'],
         ['id' => 5, 'slug' => 'dishwasher', 'name' => 'Dishwasher Repair', 'url' => '/dishwasher-repair-moorpark', 'logoUrl' => '/images/thumbnails/dishwasher-repair-moorpark.webp'],
         ['id' => 7, 'slug' => 'microwave', 'name' => 'Microwave Repair', 'url' => '/microwave-repair-moorpark', 'logoUrl' => '/images/thumbnails/microwave-repair-moorpark.webp'],
         ['id' => 8, 'slug' => 'range-hood', 'name' => 'Range Hood Repair', 'url' => '/range-hood-repair-moorpark', 'logoUrl' => '/images/thumbnails/range-hood-repair-moorpark.webp'],
         ['id' => 9, 'slug' => 'trash-compactor', 'name' => 'Trash Compactor Repair', 'url' => '/trash-compactor-repair-moorpark', 'logoUrl' => '/images/thumbnails/trash-compactor-repair-moorpark.webp'],
-        ['id' => 10, 'slug' => 'electronic', 'name' => 'Electronic Repair', 'url' => '/services/electronic-repair', 'logoUrl' => '/images/thumbnails/pcb.webp'],
+        ['id' => 10, 'slug' => 'electronic', 'name' => 'Electronic Repair', 'url' => '/electronic-repair-moorpark', 'logoUrl' => '/images/thumbnails/pcb.webp'],
     ],
 ];

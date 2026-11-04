@@ -6,8 +6,8 @@
         <meta property="og:title" content="Dryer Repair Moorpark CA | Tech Solutions Repair Service">
         <meta property="og:description" :content="description">
         <meta property="og:image" content="https://tsrepairservice.com/storage/img/components/services/dryer-repair-1.jpg">
-        <link rel="canonical" href="https://tsrepairservice.com/services/dryer-repair" head-key="canonical">
-        <meta property="og:url" content="https://tsrepairservice.com/services/dryer-repair">
+        <link rel="canonical" href="https://tsrepairservice.com/dryer-repair-moorpark" head-key="canonical">
+        <meta property="og:url" content="https://tsrepairservice.com/dryer-repair-moorpark">
         <meta property="og:type" content="website">
     </Head>
 

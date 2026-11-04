@@ -10,8 +10,8 @@
         <meta property="og:description"
             content="Refrigerator repair in Moorpark and Ventura County for cooling problems, leaks, and ice maker issues. Contact Tech Solutions Repair Service to discuss service availability.">
         <meta property="og:image" content="https://tsrepairservice.com/images/services/refrigerator-hero.webp">
-        <link rel="canonical" href="https://tsrepairservice.com/services/refrigerator-repair-moorpark" head-key="canonical">
-        <meta property="og:url" content="https://tsrepairservice.com/services/refrigerator-repair-moorpark">
+        <link rel="canonical" href="https://tsrepairservice.com/refrigerator-repair-moorpark" head-key="canonical">
+        <meta property="og:url" content="https://tsrepairservice.com/refrigerator-repair-moorpark">
         <meta property="og:type" content="website">
     </Head>
 
