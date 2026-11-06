@@ -16,6 +16,7 @@ Route::middleware('twilio')->prefix('twilio/voice')->controller(TwilioVoiceContr
     Route::post('/answer/{step}', 'answer')->whereIn('step', ['name', 'problem', 'location']);
     Route::post('/status', 'status');
     Route::post('/recording-status', 'recording');
+    Route::post('/transcription-status', 'transcription');
     Route::post('/connect', 'connect');
     Route::post('/dialed', 'dialed');
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\FetchCallRecording;
+use App\Jobs\FetchCallTranscript;
 use App\Mail\WebFormRequestReceivedEmail;
 use App\Models\BlockedNumber;
 use App\Models\Call;
@@ -11,6 +12,7 @@ use App\Models\RepairRequest;
 use App\Models\VoiceCall;
 use App\Support\Normalize;
 use App\Voice\ApplianceType;
+use App\Voice\CallTranscript;
 use App\Voice\TwilioApi;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
@@ -130,6 +132,20 @@ class TwilioVoiceController extends Controller
         if ($request->input('RecordingStatus') === 'completed') {
             Call::firstWhere('call_sid', (string) $request->input('CallSid'))
                 ?->attachRecording((string) $request->input('RecordingSid'), (int) $request->input('RecordingDuration'));
+        }
+
+        return response()->noContent();
+    }
+
+    /**
+     * Voice Intelligence webhook: a transcript started by "Transcribe" is ready. Only the transcript
+     * SID is taken from the request; status and text are read back from Twilio.
+     */
+    public function transcription(Request $request, CallTranscript $transcripts): Response
+    {
+        $call = Call::firstWhere('transcript_sid', (string) $request->input('transcript_sid'));
+        if ($call && ! $transcripts->sync($call)) {
+            FetchCallTranscript::dispatch($call->id)->delay(now()->addMinute());
         }
 
         return response()->noContent();
