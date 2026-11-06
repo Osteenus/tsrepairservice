@@ -203,6 +203,37 @@ describe('call session (end)', () => {
     clearTimeout(session.timer);
   });
 
+  test('a transfer saves what the assistant already learned', async () => {
+    const ws = { readyState: 1, sent: [], send(data) { this.sent.push(JSON.parse(data)); } };
+    const leads = new FakeLaravel();
+    const session = new CallSession(ws, config, {
+      laravel: leads,
+      claude: { respond: async ({ onText }) => {
+        onText('Let me connect you with a technician.');
+        return {
+          content: [
+            { type: 'text', text: 'Let me connect you with a technician.' },
+            { type: 'tool_use', id: 'x1', name: 'transfer_to_technician', input: {
+              reason: 'Could not understand the name', appliance_type: 'refrigerator', appliance_brand: 'LG',
+              reported_problem: 'Not cooling', fee_accepted: true,
+            } },
+          ],
+          stop_reason: 'tool_use',
+          usage: {},
+        };
+      } },
+    });
+    await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAxfer', from: '+18055550123', customParameters: {} }));
+    await session.onMessage(JSON.stringify({ type: 'prompt', voicePrompt: 'Priest', last: true }));
+    clearTimeout(session.endTimer);
+    clearTimeout(session.timer);
+
+    assert.equal(leads.leads.length, 1);
+    const lead = leads.leads[0];
+    assert.deepEqual([lead.outcome, lead.appliance_type, lead.appliance_brand, lead.reported_problem, lead.fee_accepted],
+      ['transfer', 'refrigerator', 'LG', 'Not cooling', true]);
+  });
+
   test('after end_call the assistant is not asked for another reply', async () => {
     const ws = { readyState: 1, sent: [], send(data) { this.sent.push(JSON.parse(data)); } };
     let requests = 0;
@@ -243,6 +274,25 @@ describe('call session (end)', () => {
     clearTimeout(session.timer);
     assert.equal(leads.leads.length, 1);
     assert.ok(ws.sent.some((m) => m.token === 'Our closest technician will call you back in 10 minutes. Thank you for calling, goodbye.' && m.last));
+  });
+
+  test('a call-back promise followed by end_call without a goodbye gets one', async () => {
+    const ws = { readyState: 1, sent: [], send(data) { this.sent.push(JSON.parse(data)); } };
+    const replies = [
+      { content: [{ type: 'tool_use', id: 't1', name: 'submit_lead', input: { reported_problem: 'Not heating', agent_summary: 'GE dryer not heating.', consent_to_callback: true, fee_accepted: true, outcome: 'visit' } }], stop_reason: 'tool_use', usage: {} },
+      { content: [{ type: 'text', text: 'Our closest technician will call you back in 10 minutes.' }, { type: 'tool_use', id: 'e1', name: 'end_call', input: {} }], stop_reason: 'tool_use', usage: {} },
+    ];
+    const session = new CallSession(ws, config, {
+      laravel: new FakeLaravel(),
+      claude: { respond: async ({ onText }) => { const reply = replies.shift(); reply.content.filter((b) => b.type === 'text').forEach((b) => onText(b.text)); return reply; } },
+    });
+    await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAnobye', from: '+18055550123', customParameters: {} }));
+    session.technicianAvailable = true;
+    await session.onMessage(JSON.stringify({ type: 'prompt', voicePrompt: '123 Main Street, Simi Valley', last: true }));
+    clearTimeout(session.endTimer);
+    clearTimeout(session.timer);
+    const spoken = ws.sent.filter((m) => m.type === 'text' && m.token).map((m) => m.token).join('');
+    assert.equal(spoken, 'Our closest technician will call you back in 10 minutes.Thank you for calling, goodbye.');
   });
 
   test('a lead saved and then silence: the promise is spoken and the call ends', async () => {

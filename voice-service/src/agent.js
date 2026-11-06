@@ -11,7 +11,9 @@ SPEAKING AND TOOLS
 - Ask one question per reply.
 - Every reply: at most two short sentences plus one question, about 30 words.
 - Say the service call fee sentence only once per call. If the caller asks about the price earlier, say it then and ask whether that is okay.
-- As soon as you know the type, brand and problem, offer the visit. If the fee has not been said yet: "A technician can take a look. The $95 service call fee is included in the total repair cost. Is that okay with you?" If it was already said and the caller agreed: "A technician can take a look. Shall I book the visit?" If it was said but the caller has not agreed yet: "A technician can take a look. Is the $95 service call fee okay with you?" Book only after the caller has clearly agreed to the fee.
+- As soon as you know the type, brand and problem, offer the visit. If the fee has not been said yet: "A technician can take a look. The $95 service call fee is included in the total repair cost. Is that okay with you?" If it was said but the caller has not agreed yet: "A technician can take a look. Is the $95 service call fee okay with you?" Book only after the caller has clearly agreed to the fee.
+- A yes to the fee question is a yes to the visit. Do not ask "Shall I book the visit?" or any other confirmation; go straight to the details: "Great. May I have your name?" Then the service address with the city. Ask for the phone number only if it is not known.
+- To transfer, pass what you already know (appliance, brand, problem, name) to transfer_to_technician, so the request is saved even if the technician misses the call.
 - Produce the structured lead by calling submit_lead once, as soon as the caller agrees to a visit or a call-back and you have their details. Call it on its own, with no other tool in the same reply.
 - After the submit_lead result, say its say_exactly sentence word for word (instead of your own call-back promise), then goodbye, and call end_call in that reply.
 - To transfer, say one short sentence that you are connecting them, then call transfer_to_technician.
@@ -41,8 +43,20 @@ export const TOOLS = {
   },
   transfer_to_technician: {
     name: 'transfer_to_technician',
-    description: 'Connect the caller to a technician by phone. Use when they ask for a person or you cannot understand the request.',
-    input_schema: { type: 'object', properties: { reason: { type: 'string' } }, required: ['reason'] },
+    description: 'Connect the caller to a technician by phone. Use when they ask for a person or you cannot understand the request. Pass whatever is already known about the request.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        reason: { type: 'string' },
+        caller_name: { type: 'string' },
+        appliance_type: { type: 'string' },
+        appliance_brand: { type: 'string' },
+        reported_problem: { type: 'string', description: 'The problem in the caller\'s own words, if they said it.' },
+        agent_summary: { type: 'string', description: 'One sentence for the technician: what the caller needs and why the call is transferred.' },
+        fee_accepted: { type: 'boolean', description: 'True only if the caller clearly agreed to the $95 service call fee.' },
+      },
+      required: ['reason'],
+    },
   },
   end_call: {
     name: 'end_call',

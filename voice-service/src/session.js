@@ -121,10 +121,12 @@ export class CallSession {
     }
 
     // The lead was saved but the model went quiet (or hung up) without the call-back promise or a goodbye: say it for it.
-    if (!this.ending && (this.unsaidPromise || (this.pendingEnd === 'end' && !this.lastSpoken?.trim()))) {
+    const noGoodbye = this.pendingEnd === 'end' && !/\b(good)?bye\b/i.test(this.lastSpoken || '');
+    if (!this.ending && (this.unsaidPromise || noGoodbye)) {
       const closing = [this.unsaidPromise, GOODBYE].filter(Boolean).join(' ');
       this.send({ type: 'text', token: closing, last: true });
-      this.lastSpoken = closing;
+      // The end delay covers everything still to be spoken.
+      this.lastSpoken = [this.lastSpoken?.trim(), closing].filter(Boolean).join(' ');
       this.unsaidPromise = null;
       if (!this.pendingEnd) this.pendingEnd = 'end';
     }
@@ -147,6 +149,7 @@ export class CallSession {
       case 'transfer_to_technician':
         if (!this.config.twilio.ownerPhone) return { transferred: false, note: 'No technician line is configured. Offer a call-back instead.' };
         this.pendingEnd = 'transfer';
+        this.transferDetails = input;
         return { transferring: true, note: 'The transfer starts when you finish this sentence. Do not say anything else.' };
       case 'end_call':
         this.pendingEnd = 'end';
@@ -210,7 +213,11 @@ export class CallSession {
   async finish(reason) {
     if (this.ending) return;
     this.ending = true;
-    if (reason === 'transfer') await this.sendLead({ outcome: 'transfer' });
+    if (reason === 'transfer') {
+      // What the assistant learned before the transfer, so a missed transfer still leaves a full request.
+      const { caller_name, appliance_type, appliance_brand, reported_problem, agent_summary, fee_accepted } = this.transferDetails || {};
+      await this.sendLead({ caller_name, appliance_type, appliance_brand, reported_problem, agent_summary, fee_accepted, outcome: 'transfer' });
+    }
     this.end(reason, this.lastSpoken || '');
   }
 
