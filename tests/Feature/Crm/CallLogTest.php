@@ -19,7 +19,7 @@ class CallLogTest extends CrmTestCase
         config([
             'services.twilio' => [
                 'account_sid' => 'AC1', 'auth_token' => 'token', 'number' => '+18053348375',
-                'owner_phone' => '+18055550199', 'voice' => 'Polly.Joanna-Neural',
+                'owner_phone' => '+18055550199', 'voice' => 'Polly.Joanna-Neural', 'test_numbers' => ['+18059912874'],
             ],
             'voice.public_url' => 'https://voice.test',
         ]);
@@ -45,6 +45,24 @@ class CallLogTest extends CrmTestCase
         $this->assertSame(['inbound', '+18055550123', '+18053348375', 'ringing'], [$call->direction, $call->from_number, $call->to_number, $call->status]);
         $this->assertNotNull($call->started_at);
         $this->assertNull($call->customer_id);
+    }
+
+    public function test_call_from_the_test_number_is_internal(): void
+    {
+        $this->incoming('CA1', '+18059912874')->assertSee('Redirect');
+        $this->incoming('CA2');
+
+        $this->assertTrue(Call::firstWhere('call_sid', 'CA1')->is_internal);
+        $this->assertFalse(Call::firstWhere('call_sid', 'CA2')->is_internal);
+    }
+
+    public function test_call_from_the_business_number_is_outbound(): void
+    {
+        $customer = Customer::create(['name' => 'Jane Doe', 'phone' => '(805) 555-0123']);
+        $this->twilio('/api/twilio/voice/incoming', ['CallSid' => 'CA1', 'From' => '+18053348375', 'To' => '+18055550123']);
+
+        $call = Call::sole();
+        $this->assertSame(['outbound', '+18055550123', $customer->id], [$call->direction, $call->otherNumber(), $call->customer_id]);
     }
 
     public function test_status_callback_sets_status_and_duration(): void

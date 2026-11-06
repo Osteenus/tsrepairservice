@@ -68,6 +68,7 @@ class CustomerController extends Controller
             'calls' => Call::with('customer')->where('customer_id', $customer->id)->orderByDesc('started_at')->limit(30)->get()
                 ->map(fn (Call $call) => $call->toListItem(BlockedNumber::pluck('phone_e164')->all())),
             'phoneBlocked' => BlockedNumber::isBlocked($customer->phone),
+            'phoneBlockable' => ! BlockedNumber::isProtected($customer->phone),
         ]);
     }
 

@@ -56,7 +56,10 @@ class CallsScreenTest extends CrmTestCase
         $this->logCall('CAc1', '+18055558888', '2026-10-28 18:00:00'); // one call: not frequent
         // Outgoing calls do not count.
         $this->logCall('CAo1', '+18053348375', '2026-10-30 19:00:00', ['direction' => 'outbound', 'to_number' => '+18055559999']);
-        BlockedNumber::block('+18055559999');
+        // Test calls from the owner's second phone do not count.
+        foreach (range(1, 3) as $i) {
+            $this->logCall("CAt{$i}", '+18059912874', '2026-10-30 1'.$i.':00:00', ['is_internal' => true]);
+        }
         $this->signIn();
 
         $this->get('/crm/calls')->assertInertia(fn (Assert $page) => $page
@@ -66,10 +69,45 @@ class CallsScreenTest extends CrmTestCase
             ->where('frequent.0.calls', 3)
             ->where('frequent.0.repeat', true)
             ->where('frequent.0.last_call', 'Fri, Oct 30, 11:00 AM')
+            ->where('frequent.1.number', '+18055559999')
             ->where('frequent.1.calls', 2)
-            ->where('frequent.1.repeat', false)
-            ->where('frequent.1.blocked', true)
-            ->has('blocked', 1));
+            ->where('frequent.1.repeat', false));
+
+        // Blocked numbers leave the list.
+        BlockedNumber::block('+18055559999');
+        $this->get('/crm/calls')->assertInertia(fn (Assert $page) => $page
+            ->has('frequent', 1)->where('frequent.0.number', '+18055550123')->has('blocked', 1));
+    }
+
+    public function test_test_calls_are_marked_and_cannot_be_blocked(): void
+    {
+        $this->travelTo('2026-10-30 20:00:00');
+        $this->logCall('CA1', '+18059912874', '2026-10-30 18:00:00', ['is_internal' => true]);
+        $this->logCall('CA2', '+18055550123', '2026-10-30 17:00:00');
+        $this->signIn();
+
+        $this->get('/crm/calls')->assertInertia(fn (Assert $page) => $page
+            ->where('calls.0.internal', true)->where('calls.0.blockable', false)
+            ->where('calls.1.internal', false)->where('calls.1.blockable', true));
+
+        $this->post('/crm/blocked-numbers', ['phone' => '(805) 991-2874'])
+            ->assertSessionHas('flash.banner', 'The business line and your own test phones cannot be blocked.');
+        $this->assertSame(0, BlockedNumber::withTrashed()->count());
+    }
+
+    public function test_business_number_is_never_blocked(): void
+    {
+        $this->signIn();
+
+        foreach (['(805) 334-8375', '+18053348375', '8053348375'] as $number) {
+            $this->post('/crm/blocked-numbers', ['phone' => $number])->assertSessionHas('flash.bannerStyle', 'danger');
+        }
+        $this->assertNull(BlockedNumber::block('+18053348375'));
+        $this->assertSame(0, BlockedNumber::withTrashed()->count());
+
+        // Even a row written by hand does not reject the business line.
+        BlockedNumber::forceCreate(['phone_e164' => '+18053348375', 'created_at' => now()]);
+        $this->assertFalse(BlockedNumber::isBlocked('+18053348375'));
     }
 
     public function test_block_and_unblock_a_number(): void
@@ -100,7 +138,7 @@ class CallsScreenTest extends CrmTestCase
         $this->signIn();
 
         $this->get("/crm/customers/{$customer->id}")->assertInertia(fn (Assert $page) => $page
-            ->has('calls', 1)->where('calls.0.number', '+18055550123')->where('phoneBlocked', false));
+            ->has('calls', 1)->where('calls.0.number', '+18055550123')->where('phoneBlocked', false)->where('phoneBlockable', true));
 
         BlockedNumber::block($customer->phone);
         $this->get("/crm/customers/{$customer->id}")->assertInertia(fn (Assert $page) => $page

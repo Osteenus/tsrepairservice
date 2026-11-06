@@ -19,14 +19,26 @@ class BlockedNumber extends Model
     {
         $phone = Normalize::e164($phone);
 
-        return $phone !== null && static::where('phone_e164', $phone)->exists();
+        return $phone !== null && ! static::isProtected($phone) && static::where('phone_e164', $phone)->exists();
     }
 
-    /** Blocks the number, or blocks it again after an unblock. Null when it cannot be read as a phone number. */
+    /** The business line, the owner's mobile and the test phones are never blocked. */
+    public static function isProtected(?string $phone): bool
+    {
+        $phone = Normalize::e164($phone);
+        $own = [config('services.twilio.number'), config('services.twilio.owner_phone'), ...(config('services.twilio.test_numbers') ?? [])];
+
+        return $phone !== null && in_array($phone, array_map(fn ($number) => Normalize::e164($number), $own), true);
+    }
+
+    /**
+     * Blocks the number, or blocks it again after an unblock. Null when it cannot be read as a phone
+     * number or is one of our own (isProtected).
+     */
     public static function block(?string $phone, ?string $reason = null): ?self
     {
         $phone = Normalize::e164($phone);
-        if ($phone === null) {
+        if ($phone === null || static::isProtected($phone)) {
             return null;
         }
 

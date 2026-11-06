@@ -15,6 +15,7 @@ const props = defineProps({
     applianceTypes: Array,
     applianceBrands: Array,
     calls: Array,
+    phoneBlockable: Boolean,
     phoneBlocked: Boolean,
 });
 
@@ -73,7 +74,7 @@ const save = () => {
             </div>
             <button v-if="tel" type="button" class="mt-2 flex h-12 w-full items-center justify-center gap-1 rounded-lg border border-[#c8000a] font-bold text-[#c8000a]" @click="callFromBusinessLine"><PhoneForwarded class="size-5" />Call from business line</button>
             <p v-if="phoneBlocked" class="mt-2 text-center text-sm font-semibold text-gray-500">Calls from this number are blocked (Phone → Calls to unblock).</p>
-            <button v-else-if="tel" type="button" class="mt-2 h-11 w-full rounded-lg text-sm font-semibold text-gray-500 active:bg-gray-100" @click="blockPhone">Block this number</button>
+            <button v-else-if="tel && phoneBlockable" type="button" class="mt-2 h-11 w-full rounded-lg text-sm font-semibold text-gray-500 active:bg-gray-100" @click="blockPhone">Block this number</button>
             <p v-if="customer.notes" class="mt-3 whitespace-pre-line text-sm text-gray-700">{{ customer.notes }}</p>
         </section>
 

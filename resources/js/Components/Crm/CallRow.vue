@@ -45,10 +45,11 @@ const block = () => {
             </Link>
             <a v-if="tel" :href="`tel:${tel}`" class="block truncate" :class="showCustomer && call.customer ? 'text-sm text-gray-700' : 'font-semibold'">{{ call.display_number }}</a>
             <span v-else class="block font-semibold">{{ call.display_number }}</span>
+            <span v-if="call.internal" class="mt-0.5 inline-block rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-bold text-sky-800">Test</span>
             <span class="block text-sm text-gray-500">{{ details }}</span>
         </div>
         <span v-if="call.blocked" class="shrink-0 text-sm font-semibold text-gray-500">Blocked</span>
-        <button v-else-if="call.number" type="button" class="h-11 shrink-0 rounded-lg border border-gray-300 px-3 text-sm font-bold active:bg-gray-100" @click="block">
+        <button v-else-if="call.blockable" type="button" class="h-11 shrink-0 rounded-lg border border-gray-300 px-3 text-sm font-bold active:bg-gray-100" @click="block">
             Block
         </button>
     </li>
