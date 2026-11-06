@@ -87,19 +87,19 @@ class Call extends Model
      * Twilio status callback. An outgoing CRM call is the call to the owner's phone; once it
      * reached the customer, the Dial result (logDialResult) already describes the call.
      */
-    public static function logStatus(array $fields): void
+    public static function logStatus(array $fields): ?self
     {
         $status = (string) ($fields['CallStatus'] ?? '');
         $call = static::firstWhere('call_sid', (string) ($fields['CallSid'] ?? ''));
         if (! $call) {
             // Incoming calls that did not pass through the incoming webhook (Twilio used the fallback URL).
             if (($fields['Direction'] ?? '') !== self::INBOUND || BlockedNumber::isBlocked($fields['From'] ?? null)) {
-                return;
+                return null;
             }
             $call = static::logIncoming((string) $fields['CallSid'], $fields['From'] ?? null, $fields['To'] ?? null);
         }
         if ($call->ended_at) {
-            return;
+            return $call;
         }
 
         $final = in_array($status, self::FINAL, true);
@@ -114,6 +114,20 @@ class Call extends Model
             ]);
         }
         $call->save();
+
+        return $call;
+    }
+
+    /**
+     * Keeps a finished recording of this call. A call can have several (the AI part and the transfer
+     * to the technician); the longest one is kept.
+     */
+    public function attachRecording(string $recordingSid, int $duration): void
+    {
+        if ($this->recording_sid && $this->recording_sid !== $recordingSid && $duration <= (int) $this->recording_duration_seconds) {
+            return;
+        }
+        $this->fill(['recording_sid' => $recordingSid, 'recording_duration_seconds' => $duration])->save();
     }
 
     /** Result of dialing the customer on an outgoing CRM call: completed (talked), busy, no-answer, ... */
@@ -149,6 +163,10 @@ class Call extends Model
             'internal' => $this->is_internal,
             'blocked' => in_array($number, $blocked, true),
             'blockable' => ! $this->is_internal && $number !== null && ! BlockedNumber::isProtected($number),
+            'recorded' => $this->recording_sid !== null,
+            'recording_duration_seconds' => $this->recording_duration_seconds,
+            'transcript_status' => $this->transcript_status,
+            'transcript' => $this->transcript,
         ];
     }
 

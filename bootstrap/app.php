@@ -6,10 +6,12 @@ use App\Http\Middleware\PrivateArea;
 use App\Http\Middleware\RedirectWwwToApex;
 use App\Http\Middleware\VerifyTwilioSignature;
 use App\Http\Middleware\VerifyVoiceApiKey;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -35,5 +37,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // An <audio> element cannot follow a redirect to the login page: answer 401 instead.
+        $exceptions->render(function (AuthenticationException $exception, Request $request) {
+            if ($request->routeIs('crm.calls.recording')) {
+                return response('Unauthorized.', 401);
+            }
+        });
     })->create();

@@ -19,7 +19,8 @@ class TwilioVoiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        config(['services.twilio.auth_token' => self::TOKEN]);
+        // No account SID: the recording lookup after a call is not queued here (see CallRecordingTest).
+        config(['services.twilio.auth_token' => self::TOKEN, 'services.twilio.account_sid' => null]);
         Mail::fake();
     }
 

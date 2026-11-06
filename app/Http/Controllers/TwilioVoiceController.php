@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\FetchCallRecording;
 use App\Mail\WebFormRequestReceivedEmail;
 use App\Models\BlockedNumber;
 use App\Models\Call;
@@ -10,6 +11,7 @@ use App\Models\RepairRequest;
 use App\Models\VoiceCall;
 use App\Support\Normalize;
 use App\Voice\ApplianceType;
+use App\Voice\TwilioApi;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -98,7 +100,11 @@ class TwilioVoiceController extends Controller
     /** Call status callback: a caller who hangs up halfway still leaves a request with what they said. */
     public function status(Request $request): Response
     {
-        Call::logStatus($request->post());
+        $call = Call::logStatus($request->post());
+        // Recordings are finished a little after the call; the job waits and fetches them.
+        if ($call?->direction === Call::INBOUND && $request->input('CallStatus') === 'completed' && TwilioApi::configured()) {
+            FetchCallRecording::dispatch($call->id)->delay(now()->addMinute());
+        }
 
         // Duration of every call on the number (also the AI ones), for the A/B statistics.
         if ($request->input('CallStatus') === 'completed' || $request->filled('CallDuration')) {
@@ -113,6 +119,17 @@ class TwilioVoiceController extends Controller
             if ($state) {
                 $this->save((string) $request->input('CallSid'), $state);
             }
+        }
+
+        return response()->noContent();
+    }
+
+    /** Recording status callback (recordings started with recordingStatusCallback pointing here). */
+    public function recording(Request $request): Response
+    {
+        if ($request->input('RecordingStatus') === 'completed') {
+            Call::firstWhere('call_sid', (string) $request->input('CallSid'))
+                ?->attachRecording((string) $request->input('RecordingSid'), (int) $request->input('RecordingDuration'));
         }
 
         return response()->noContent();

@@ -67,12 +67,14 @@ class CallLogTest extends CrmTestCase
 
     public function test_status_callback_sets_status_and_duration(): void
     {
+        // The queue runs right away in tests: the recording lookup happens during the callback.
+        Http::fake(['api.twilio.com/*/Calls/CA1/Recordings.json' => Http::response(['recordings' => [['sid' => 'RE1', 'status' => 'completed', 'duration' => '70']]])]);
         $this->incoming('CA1');
         $this->twilio('/api/twilio/voice/status', ['CallSid' => 'CA1', 'CallStatus' => 'completed', 'CallDuration' => '74', 'Direction' => 'inbound'])
             ->assertNoContent();
 
         $call = Call::sole();
-        $this->assertSame(['completed', 74], [$call->status, $call->duration_seconds]);
+        $this->assertSame(['completed', 74, 'RE1'], [$call->status, $call->duration_seconds, $call->recording_sid]);
         $this->assertNotNull($call->ended_at);
     }
 

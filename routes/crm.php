@@ -3,6 +3,7 @@
 use App\Http\Controllers\Crm\ApplianceController;
 use App\Http\Controllers\Crm\CallController;
 use App\Http\Controllers\Crm\CallLogController;
+use App\Http\Controllers\Crm\CallRecordingController;
 use App\Http\Controllers\Crm\CustomerController;
 use App\Http\Controllers\Crm\DashboardController;
 use App\Http\Controllers\Crm\DocumentController;
@@ -28,6 +29,7 @@ Route::prefix('crm')
             Route::get('phone', [PhoneLineController::class, 'show'])->name('phone.show');
             Route::put('phone', [PhoneLineController::class, 'update'])->name('phone.update');
             Route::get('calls', [CallLogController::class, 'index'])->name('calls.index');
+            Route::get('calls/{call}/recording', [CallRecordingController::class, 'show'])->name('calls.recording');
             Route::post('blocked-numbers', [CallLogController::class, 'block'])->name('blocked-numbers.store');
             Route::delete('blocked-numbers/{blockedNumber}', [CallLogController::class, 'unblock'])->name('blocked-numbers.destroy');
             Route::post('call', [CallController::class, 'store'])->middleware('throttle:business-line-calls')->name('call');
