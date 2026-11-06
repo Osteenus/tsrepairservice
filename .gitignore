@@ -7,3 +7,6 @@ public/storage
 vite.config.js
 /bootstrap/ssr
 /.cache
+/public/hot
+.DS_Store
+.phpunit.result.cache
