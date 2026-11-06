@@ -172,6 +172,28 @@ Twilio Console → Phone Numbers → (805) 334-8375 → Voice configuration:
 business number as caller ID after you press 1. It is limited to 20 calls per hour per CRM user.
 Calls are never deleted; unblocking a number soft-deletes its `blocked_numbers` row.
 
+`.env` names: `TWILIO_PHONE_NUMBER` or `TWILIO_NUMBER` (business line), `OWNER_PHONE` or
+`TWILIO_OWNER_PHONE` (your mobile); either name works. `TWILIO_TEST_NUMBERS` (default
+`+18059912874`, comma-separated) are your own test phones: their calls are marked "Test", left out
+of Frequent callers and cannot be blocked. The business line and your mobile cannot be blocked either.
+
+**Recordings.** voice-service records calls when `RECORD_CALLS=true` in `voice-service/.env`, after
+the "This call may be recorded" notice. About a minute after an incoming call ends, the queue worker
+asks Twilio for its recording (retries for ~20 minutes while Twilio processes it) and saves the
+recording SID. `https://tsrepairservice.com/api/twilio/voice/recording-status` also accepts
+Twilio recording status callbacks. In CRM → Phone → Calls, Play streams the MP3 through Laravel
+(`/crm/calls/{id}/recording`, signed-in users with 2FA only, 401 otherwise); the browser never gets
+a Twilio URL or credentials. The audio stays at Twilio (about $0.0025/min to record, $0.0005/min per
+month to store).
+
+**Transcripts (on demand only).** One-time setup in Twilio Console → Conversational Intelligence →
+Services: create a service (language English), then on its Webhooks tab set
+`https://tsrepairservice.com/api/twilio/voice/transcription-status`, HTTP POST. Put its `GA…` SID in
+`.env` as `TWILIO_INTELLIGENCE_SERVICE_SID` and run `php artisan config:cache`. "Transcribe" on a
+recorded call creates one transcript (about $0.035/min, so it is never automatic); the call shows
+"Preparing..." until the webhook arrives. If the webhook is missing, the queue worker still picks
+the text up within ~30 minutes. Failed webhooks (403) are in `storage/logs/laravel.log`.
+
 ### Database user (recommended)
 
 The app connects as `postgres` (superuser). Use a dedicated owner instead. Do this right after a

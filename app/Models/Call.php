@@ -17,13 +17,17 @@ class Call extends Model
 
     protected $fillable = [
         'call_sid', 'direction', 'from_number', 'to_number', 'status', 'duration_seconds', 'started_at', 'ended_at', 'customer_id',
+        'is_internal', 'recording_sid', 'recording_duration_seconds', 'transcript_sid', 'transcript_status', 'transcript',
     ];
+
+    protected $attributes = ['is_internal' => false];
 
     protected function casts(): array
     {
         return [
             'started_at' => 'datetime',
             'ended_at' => 'datetime',
+            'is_internal' => 'boolean',
         ];
     }
 
@@ -49,13 +53,19 @@ class Call extends Model
 
     public static function logIncoming(string $callSid, ?string $from, ?string $to): self
     {
+        $from = Normalize::e164($from) ?? $from;
+        $to = Normalize::e164($to) ?? $to;
+        // A call placed from the business line is ours, not a caller's.
+        $outbound = $from !== null && $from === Normalize::e164(config('services.twilio.number'));
+
         return static::firstOrCreate(['call_sid' => $callSid], [
-            'direction' => self::INBOUND,
-            'from_number' => Normalize::e164($from) ?? $from,
-            'to_number' => Normalize::e164($to) ?? $to,
+            'direction' => $outbound ? self::OUTBOUND : self::INBOUND,
+            'from_number' => $from,
+            'to_number' => $to,
             'status' => 'ringing',
             'started_at' => now(),
-            'customer_id' => static::customerIdFor($from),
+            'customer_id' => static::customerIdFor($outbound ? $to : $from),
+            'is_internal' => static::isTestNumber($from) || static::isTestNumber($to),
         ]);
     }
 
@@ -69,6 +79,7 @@ class Call extends Model
             'status' => 'initiated',
             'started_at' => now(),
             'customer_id' => $customerId ?? static::customerIdFor($to),
+            'is_internal' => static::isTestNumber($to),
         ]);
     }
 
@@ -76,19 +87,19 @@ class Call extends Model
      * Twilio status callback. An outgoing CRM call is the call to the owner's phone; once it
      * reached the customer, the Dial result (logDialResult) already describes the call.
      */
-    public static function logStatus(array $fields): void
+    public static function logStatus(array $fields): ?self
     {
         $status = (string) ($fields['CallStatus'] ?? '');
         $call = static::firstWhere('call_sid', (string) ($fields['CallSid'] ?? ''));
         if (! $call) {
             // Incoming calls that did not pass through the incoming webhook (Twilio used the fallback URL).
             if (($fields['Direction'] ?? '') !== self::INBOUND || BlockedNumber::isBlocked($fields['From'] ?? null)) {
-                return;
+                return null;
             }
             $call = static::logIncoming((string) $fields['CallSid'], $fields['From'] ?? null, $fields['To'] ?? null);
         }
         if ($call->ended_at) {
-            return;
+            return $call;
         }
 
         $final = in_array($status, self::FINAL, true);
@@ -103,6 +114,20 @@ class Call extends Model
             ]);
         }
         $call->save();
+
+        return $call;
+    }
+
+    /**
+     * Keeps a finished recording of this call. A call can have several (the AI part and the transfer
+     * to the technician); the longest one is kept.
+     */
+    public function attachRecording(string $recordingSid, int $duration): void
+    {
+        if ($this->recording_sid && $this->recording_sid !== $recordingSid && $duration <= (int) $this->recording_duration_seconds) {
+            return;
+        }
+        $this->fill(['recording_sid' => $recordingSid, 'recording_duration_seconds' => $duration])->save();
     }
 
     /** Result of dialing the customer on an outgoing CRM call: completed (talked), busy, no-answer, ... */
@@ -135,8 +160,22 @@ class Call extends Model
             'customer' => $this->customer ? ['id' => $this->customer->id, 'name' => $this->customer->name] : null,
             'duration_seconds' => $this->duration_seconds,
             'status' => $this->status,
+            'internal' => $this->is_internal,
             'blocked' => in_array($number, $blocked, true),
+            'blockable' => ! $this->is_internal && $number !== null && ! BlockedNumber::isProtected($number),
+            'recorded' => $this->recording_sid !== null,
+            'recording_duration_seconds' => $this->recording_duration_seconds,
+            'transcript_status' => $this->transcript_status,
+            'transcript' => $this->transcript,
         ];
+    }
+
+    /** One of the owner's phones used for test calls (services.twilio.test_numbers). */
+    public static function isTestNumber(?string $phone): bool
+    {
+        $phone = Normalize::e164($phone);
+
+        return $phone !== null && in_array($phone, array_map(fn ($number) => Normalize::e164($number), config('services.twilio.test_numbers') ?? []), true);
     }
 
     /** Customer whose phone matches the number (E.164 or as typed), compared by digits. */

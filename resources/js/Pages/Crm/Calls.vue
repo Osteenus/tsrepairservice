@@ -60,8 +60,7 @@ const unblock = number => {
                         </p>
                         <p class="text-sm text-gray-500">{{ caller.calls }} calls · last {{ caller.last_call }}</p>
                     </div>
-                    <span v-if="caller.blocked" class="shrink-0 text-sm font-semibold text-gray-500">Blocked</span>
-                    <button v-else type="button" class="h-11 shrink-0 rounded-lg border border-gray-300 px-3 text-sm font-bold active:bg-gray-100" @click="block(caller)">Block</button>
+                    <button v-if="caller.blockable" type="button" class="h-11 shrink-0 rounded-lg border border-gray-300 px-3 text-sm font-bold active:bg-gray-100" @click="block(caller)">Block</button>
                 </li>
             </ul>
         </section>

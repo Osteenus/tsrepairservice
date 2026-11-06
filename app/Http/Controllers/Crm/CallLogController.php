@@ -62,6 +62,9 @@ class CallLogController extends Controller
     {
         $data = $request->validate(['phone' => ['required', 'string', 'max:50'], 'reason' => ['nullable', 'string', 'max:255']]);
 
+        if (BlockedNumber::isProtected($data['phone'])) {
+            return back()->with('flash.banner', 'The business line and your own test phones cannot be blocked.')->with('flash.bannerStyle', 'danger');
+        }
         if (! BlockedNumber::block($data['phone'], $data['reason'] ?? null)) {
             return back()->with('flash.banner', 'This number cannot be blocked.')->with('flash.bannerStyle', 'danger');
         }
@@ -76,12 +79,14 @@ class CallLogController extends Controller
         return back()->with('flash.banner', 'Unblocked.');
     }
 
-    /** Incoming numbers with two or more calls in the last 7 days, most calls first. */
+    /** Incoming numbers with two or more calls in the last 7 days, most calls first; test calls and blocked numbers left out. */
     private function frequentCallers(array $blockedNumbers): array
     {
         $rows = Call::where('direction', Call::INBOUND)
             ->where('started_at', '>=', now()->subDays(7))
+            ->where('is_internal', false)
             ->whereNotNull('from_number')
+            ->whereNotIn('from_number', $blockedNumbers)
             ->groupBy('from_number')
             ->havingRaw('count(*) >= 2')
             ->orderByDesc(DB::raw('count(*)'))
@@ -97,7 +102,7 @@ class CallLogController extends Controller
             'calls' => (int) $row->calls,
             'last_call' => LocalTime::display(Carbon::parse($row->last_call, 'UTC'), 'D, M j, g:i A'),
             'repeat' => $row->calls >= self::REPEAT_CALLS,
-            'blocked' => in_array($row->from_number, $blockedNumbers, true),
+            'blockable' => ! BlockedNumber::isProtected($row->from_number),
         ])->all();
     }
 }
