@@ -34,9 +34,9 @@ class CallTranscriptTest extends CrmTestCase
     {
         Http::fake([
             self::INTELLIGENCE.'/GT1/Sentences*' => Http::response(['sentences' => [
-                ['sentence_index' => 1, 'media_channel' => 2, 'transcript' => 'My fridge is warm.'],
-                ['sentence_index' => 0, 'media_channel' => 1, 'transcript' => 'Tech Solutions, how can I help?'],
-                ['sentence_index' => 2, 'media_channel' => 2, 'transcript' => 'Since yesterday.'],
+                ['sentence_index' => 1, 'media_channel' => 1, 'transcript' => 'My fridge is warm.'],
+                ['sentence_index' => 0, 'media_channel' => 2, 'transcript' => 'Tech Solutions, how can I help?'],
+                ['sentence_index' => 2, 'media_channel' => 1, 'transcript' => 'Since yesterday.'],
             ], 'meta' => ['next_page_url' => null]]),
             self::INTELLIGENCE.'/GT1' => Http::response(['sid' => 'GT1', 'status' => $status]),
         ]);
@@ -86,7 +86,7 @@ class CallTranscriptTest extends CrmTestCase
 
         $call->refresh();
         $this->assertSame('completed', $call->transcript_status);
-        $this->assertSame("Speaker 1: Tech Solutions, how can I help?\n\nSpeaker 2: My fridge is warm. Since yesterday.", $call->transcript);
+        $this->assertSame("TS Repair: Tech Solutions, how can I help?\n\nCaller: My fridge is warm. Since yesterday.", $call->transcript);
     }
 
     public function test_failed_transcript_is_marked_failed(): void

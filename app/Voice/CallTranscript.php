@@ -14,6 +14,9 @@ class CallTranscript
 
     public const FAILED = 'failed';
 
+    /** Recording channels: 1 is the caller, 2 is our side (the AI assistant or the technician after a transfer). */
+    private const SPEAKERS = [1 => 'Caller', 2 => 'TS Repair'];
+
     public function __construct(private TwilioApi $twilio) {}
 
     public static function configured(): bool
@@ -53,7 +56,7 @@ class CallTranscript
         return true;
     }
 
-    /** "Speaker 1: …" paragraphs, one per change of speaker (recordings are dual-channel). */
+    /** "Caller: …" / "TS Repair: …" paragraphs, one per change of speaker (recordings are dual-channel). */
     private function text(array $sentences): string
     {
         $paragraphs = [];
@@ -65,7 +68,7 @@ class CallTranscript
             }
             if ($sentence['media_channel'] !== $channel || ! $paragraphs) {
                 $channel = $sentence['media_channel'];
-                $paragraphs[] = 'Speaker '.$channel.': '.$words;
+                $paragraphs[] = (self::SPEAKERS[$channel] ?? 'Speaker '.$channel).': '.$words;
             } else {
                 $paragraphs[array_key_last($paragraphs)] .= ' '.$words;
             }
