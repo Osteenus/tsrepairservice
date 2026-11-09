@@ -3,6 +3,12 @@ import { systemPrompt, toolsFor } from './agent.js';
 
 const GOODBYE = 'Thank you for calling, goodbye.';
 
+const STILL_THERE = 'Hello? Are you still there?';
+const SILENT_GOODBYE = 'I cannot hear you. Please call us again. Goodbye.';
+
+/** Rough time text-to-speech needs to say the text. */
+const speakingMs = (text) => Math.min(12000, 1200 + String(text || '').length * 65);
+
 const TIMEOUT_LINE = 'I am sorry, we are out of time for this call. A technician will call you back as soon as possible '
   + 'at this number. Thank you for calling, goodbye.';
 
@@ -31,8 +37,15 @@ export class CallSession {
     }
     switch (message.type) {
       case 'setup': return this.setup(message);
-      case 'prompt': return this.enqueue(message.voicePrompt);
-      case 'interrupt': return this.interrupt(message.utteranceUntilInterrupt);
+      case 'prompt':
+        this.heard();
+        return this.enqueue(message.voicePrompt);
+      case 'interrupt':
+        this.heard();
+        return this.interrupt(message.utteranceUntilInterrupt);
+      case 'dtmf':
+        this.heard();
+        return undefined;
       case 'error': return log('relay_error', { callSid: this.callSid, description: message.description });
       default: return undefined;
     }
@@ -67,6 +80,37 @@ export class CallSession {
     });
     // The welcome greeting is spoken by Twilio; keep it in the history so the model knows it was said.
     this.messages.push({ role: 'user', content: '(The call has connected; the greeting was played.)' });
+    this.armSilence(this.mode === 'followup' ? 'x'.repeat(180) : 'How can I help you with your appliance today?');
+  }
+
+  /** The caller said or pressed something: the silence count starts over. */
+  heard() {
+    clearTimeout(this.silenceTimer);
+    this.silentChecks = 0;
+  }
+
+  /** After the assistant finished speaking: wait for the caller, ask once, then hang up (silent robocalls). */
+  armSilence(lastSentence) {
+    clearTimeout(this.silenceTimer);
+    if (this.ending) return;
+    const wait = this.silentChecks ? this.config.silenceHangupMs : this.config.silenceCheckMs;
+    if (!wait) return;
+    this.silenceTimer = setTimeout(() => this.onSilence(), speakingMs(lastSentence) + wait);
+  }
+
+  onSilence() {
+    if (this.ending) return;
+    if (!this.silentChecks) {
+      this.silentChecks = 1;
+      this.send({ type: 'text', token: STILL_THERE, last: true });
+      this.armSilence(STILL_THERE);
+      return;
+    }
+    log('silent_caller', { callSid: this.callSid });
+    this.abort?.abort();
+    this.ending = true;
+    this.send({ type: 'text', token: SILENT_GOODBYE, last: true });
+    this.end('end', SILENT_GOODBYE);
   }
 
   enqueue(text) {
@@ -132,6 +176,7 @@ export class CallSession {
     }
 
     if (this.pendingEnd) this.finish(this.pendingEnd);
+    else this.armSilence(this.lastSpoken);
   }
 
   async runTool(name, input) {
@@ -148,6 +193,13 @@ export class CallSession {
         return { saved: true, technician_available: this.technicianAvailable, say_exactly: this.unsaidPromise };
       case 'transfer_to_technician':
         if (!this.config.twilio.ownerPhone) return { transferred: false, note: 'No technician line is configured. Offer a call-back instead.' };
+        if (!this.callerSpoke()) {
+          return {
+            transferred: false,
+            note: 'The caller has not said anything understandable yet, so the technician is not called. Ask once what they need. '
+              + 'If nothing understandable comes back, say goodbye and call end_call.',
+          };
+        }
         this.pendingEnd = 'transfer';
         this.transferDetails = input;
         return { transferring: true, note: 'The transfer starts when you finish this sentence. Do not say anything else.' };
@@ -164,6 +216,16 @@ export class CallSession {
       default:
         return { error: `Unknown tool ${name}` };
     }
+  }
+
+  /**
+   * Whether a real person seems to be on the line: they asked for a person, or said at least three
+   * words in total. Noise and robocalls produce nothing or one-word fragments.
+   */
+  callerSpoke() {
+    const text = this.callerTexts.join(' ').toLowerCase();
+    if (/\b(technician|person|human|someone|somebody|agent|representative|operator|real)\b/.test(text)) return true;
+    return (text.match(/[a-z]+/g) || []).length >= 3;
   }
 
   /** Lead for Laravel; missing contact fields fall back to what the call itself tells us. */
@@ -236,6 +298,7 @@ export class CallSession {
 
   async close() {
     clearTimeout(this.timer);
+    clearTimeout(this.silenceTimer);
     // Caller hung up mid-conversation: keep what they said (the owner gets an email, no follow-up call).
     if (this.mode === 'intake' && !this.leadSent && this.callerTexts.length) {
       await this.sendLead({ outcome: 'hangup' });

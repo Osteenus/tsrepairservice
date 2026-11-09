@@ -49,7 +49,7 @@ export function menuTwiml(config, attempt = 1) {
   return response(
     (attempt === 1 ? say(config, GREETING) + say(config, RECORDING_NOTICE) : '')
     + `<Gather input="dtmf speech" numDigits="1" timeout="5" speechTimeout="auto" language="en-US"`
-    + ` hints="one, two, request, technician" action="${action}" method="POST">`
+    + ` hints="one, request, repair" action="${action}" method="POST">`
     + say(config, 'To leave a repair request, press 1. To talk with a technician, press 2.')
     + `</Gather><Redirect method="POST">${action}</Redirect>`,
   );

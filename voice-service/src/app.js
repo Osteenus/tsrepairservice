@@ -13,9 +13,9 @@ import {
 /** Menu answer from a key press or speech: 'request', 'technician' or null. */
 export function menuChoice(digits, speech) {
   if (digits === '1') return 'request';
+  // The technician only by key press: noise or a robocall recognized as "two" must not ring the owner.
   if (digits === '2') return 'technician';
   const said = String(speech || '').toLowerCase();
-  if (/\b(two|2|technician|person|human|someone)\b/.test(said)) return 'technician';
   if (/\b(one|1|request|repair)\b/.test(said)) return 'request';
   return null;
 }

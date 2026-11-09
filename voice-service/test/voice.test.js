@@ -12,6 +12,8 @@ process.env.NODE_ENV = 'test';
 const config = loadConfig({
   PUBLIC_URL: 'https://voice.example.test', TWILIO_AUTH_TOKEN: 'test-token', VOICE_API_KEY: 'voice-key',
   OWNER_PHONE: '+18055550199', RECORD_CALLS: 'false', CALLS_PER_HOUR: '3',
+  // Silence timers off here; the silence tests turn them on with short values.
+  SILENCE_CHECK_SECONDS: '0', SILENCE_HANGUP_SECONDS: '0',
 });
 
 class FakeLaravel {
@@ -145,8 +147,10 @@ describe('phone line modes (A/B)', () => {
   });
 
   test('spoken menu answers are understood', () => {
-    assert.equal(menuChoice(undefined, 'Two.'), 'technician');
-    assert.equal(menuChoice(undefined, 'I want to talk to a person'), 'technician');
+    // The technician only by pressing 2: speech never rings the owner.
+    assert.equal(menuChoice('2', undefined), 'technician');
+    assert.equal(menuChoice(undefined, 'Two.'), null);
+    assert.equal(menuChoice(undefined, 'I want to talk to a person'), null);
     assert.equal(menuChoice(undefined, 'One'), 'request');
     assert.equal(menuChoice(undefined, 'hello?'), null);
   });
@@ -224,6 +228,7 @@ describe('call session (end)', () => {
       } },
     });
     await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAxfer', from: '+18055550123', customParameters: {} }));
+    session.callerTexts.push('My LG fridge is not cooling', 'Yes');
     await session.onMessage(JSON.stringify({ type: 'prompt', voicePrompt: 'Priest', last: true }));
     clearTimeout(session.endTimer);
     clearTimeout(session.timer);
@@ -232,6 +237,46 @@ describe('call session (end)', () => {
     const lead = leads.leads[0];
     assert.deepEqual([lead.outcome, lead.appliance_type, lead.appliance_brand, lead.reported_problem, lead.fee_accepted],
       ['transfer', 'refrigerator', 'LG', 'Not cooling', true]);
+  });
+
+  test('no transfer to the technician while the caller has said nothing understandable', async () => {
+    const session = new CallSession({ readyState: 1, send() {} }, config, { laravel: new FakeLaravel(), claude: {} });
+    await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAnoise', from: '+18055550123', customParameters: {} }));
+    clearTimeout(session.timer);
+
+    session.callerTexts.push('Hm.');
+    assert.equal((await session.runTool('transfer_to_technician', { reason: 'unclear' })).transferred, false);
+    assert.equal(session.pendingEnd, undefined);
+
+    session.callerTexts.push('Technician');
+    assert.equal((await session.runTool('transfer_to_technician', { reason: 'asked' })).transferring, true);
+  });
+
+  test('a silent caller hears one check, then a goodbye, and the call ends; speech resets the count', async () => {
+    const ws = { readyState: 1, sent: [], send(data) { this.sent.push(JSON.parse(data)); } };
+    const silentConfig = { ...config, silenceCheckMs: 40, silenceHangupMs: 40 };
+    const session = new CallSession(ws, silentConfig, { laravel: new FakeLaravel(), claude: {} });
+    // Spoken-length estimates are not what is tested here.
+    session.armSilence = function arm() {
+      clearTimeout(this.silenceTimer);
+      if (!this.ending) this.silenceTimer = setTimeout(() => this.onSilence(), 40);
+    };
+    await session.onMessage(JSON.stringify({ type: 'setup', callSid: 'CAquiet2', from: '+18055550123', customParameters: {} }));
+    clearTimeout(session.timer);
+    const spoken = () => ws.sent.filter((m) => m.type === 'text').map((m) => m.token);
+
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    assert.deepEqual(spoken(), ['Hello? Are you still there?']);
+    // The caller presses a key: the count starts over.
+    await session.onMessage(JSON.stringify({ type: 'dtmf', digit: '1' }));
+    assert.equal(session.silentChecks, 0);
+    session.armSilence('');
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    assert.deepEqual(spoken(), ['Hello? Are you still there?', 'Hello? Are you still there?', 'I cannot hear you. Please call us again. Goodbye.']);
+    assert.equal(session.ending, true);
+    clearTimeout(session.endTimer);
+    await session.close();
   });
 
   test('after end_call the assistant is not asked for another reply', async () => {

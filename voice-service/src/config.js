@@ -30,6 +30,9 @@ export function loadConfig(env = process.env) {
       effort: env.CLAUDE_EFFORT || 'low',
     },
     callLimitMs: Number(env.CALL_LIMIT_SECONDS || 300) * 1000,
+    // Silence after the assistant spoke: ask "are you still there?", then hang up (silent robocalls).
+    silenceCheckMs: Number(env.SILENCE_CHECK_SECONDS || 7) * 1000,
+    silenceHangupMs: Number(env.SILENCE_HANGUP_SECONDS || 5) * 1000,
     callsPerHour: Number(env.CALLS_PER_HOUR || 3),
     outboxDir: env.OUTBOX_DIR || new URL('../outbox/', import.meta.url).pathname,
   };
