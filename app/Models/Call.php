@@ -163,6 +163,9 @@ class Call extends Model
             'internal' => $this->is_internal,
             'blocked' => in_array($number, $blocked, true),
             'blockable' => ! $this->is_internal && $number !== null && ! BlockedNumber::isProtected($number),
+            // Can be called back from the business line (not the line itself, not the owner's mobile).
+            'callable' => Normalize::e164($number) !== null
+                && ! in_array(Normalize::e164($number), [Normalize::e164(config('services.twilio.number')), Normalize::e164(config('services.twilio.owner_phone'))], true),
             'recorded' => $this->recording_sid !== null,
             'recording_duration_seconds' => $this->recording_duration_seconds,
             'transcript_status' => $this->transcript_status,

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
-import { FileText, PhoneIncoming, PhoneMissed, PhoneOutgoing, Play, X } from 'lucide-vue-next';
+import { FileText, PhoneForwarded, PhoneIncoming, PhoneMissed, PhoneOutgoing, Play, X } from 'lucide-vue-next';
 
 const props = defineProps({
     call: { type: Object, required: true },
@@ -53,6 +53,12 @@ watch([open, pending], ([isOpen, isPending]) => {
 }, { immediate: true });
 onUnmounted(() => clearInterval(poll));
 
+const callBack = () => {
+    if (confirm(`Call ${props.call.customer?.name || props.call.display_number} from the business line? Twilio will ring your phone first. Answer and press 1 to connect.`)) {
+        router.post(route('crm.call'), { phone: props.call.number, name: props.call.customer?.name }, { preserveScroll: true });
+    }
+};
+
 const block = () => {
     if (confirm(`Block ${props.call.display_number}? Calls from this number will be rejected.`)) {
         router.post(route('crm.blocked-numbers.store'), { phone: props.call.number }, { preserveScroll: true });
@@ -74,6 +80,10 @@ const block = () => {
                 <span v-if="call.internal" class="mt-0.5 inline-block rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-bold text-sky-800">Test</span>
                 <span class="block text-sm text-gray-500">{{ details }}</span>
             </div>
+            <button v-if="call.callable" type="button" class="flex h-11 shrink-0 items-center gap-1 rounded-lg border border-[#c8000a] px-3 text-sm font-bold text-[#c8000a] active:bg-red-50"
+                :aria-label="`Call back ${call.display_number} from the business line`" @click="callBack">
+                <PhoneForwarded class="size-4" />Call back
+            </button>
             <span v-if="call.blocked" class="shrink-0 text-sm font-semibold text-gray-500">Blocked</span>
             <button v-else-if="call.blockable" type="button" class="h-11 shrink-0 rounded-lg border border-gray-300 px-3 text-sm font-bold active:bg-gray-100" @click="block">
                 Block

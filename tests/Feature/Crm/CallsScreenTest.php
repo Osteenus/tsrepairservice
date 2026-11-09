@@ -87,8 +87,8 @@ class CallsScreenTest extends CrmTestCase
         $this->signIn();
 
         $this->get('/crm/calls')->assertInertia(fn (Assert $page) => $page
-            ->where('calls.0.internal', true)->where('calls.0.blockable', false)
-            ->where('calls.1.internal', false)->where('calls.1.blockable', true));
+            ->where('calls.0.internal', true)->where('calls.0.blockable', false)->where('calls.0.callable', true)
+            ->where('calls.1.internal', false)->where('calls.1.blockable', true)->where('calls.1.callable', true));
 
         $this->post('/crm/blocked-numbers', ['phone' => '(805) 991-2874'])
             ->assertSessionHas('flash.banner', 'The business line and your own test phones cannot be blocked.');
