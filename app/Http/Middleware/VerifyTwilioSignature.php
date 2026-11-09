@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Twilio\Security\RequestValidator;
 
@@ -26,10 +27,36 @@ class VerifyTwilioSignature
         $valid = $request->isJson()
             ? $request->query->has('bodySHA256')
                 && $validator->validate($signature, $request->getSchemeAndHttpHost().$request->getRequestUri(), $request->getContent())
-            : $validator->validate($signature, $request->url(), $request->post());
-        abort_unless($signature !== '' && $valid, 403);
+            : $validator->validate($signature, $request->url(), self::fields($request));
+        if ($signature === '' || ! $valid) {
+            // Field names only: values can hold callers' numbers.
+            Log::warning('Twilio signature rejected', ['url' => $request->url(), 'fields' => array_keys(self::fields($request))]);
+            abort(403);
+        }
 
         return $next($request);
+    }
+
+    /**
+     * Form fields exactly as Twilio sent them. $request->post() is already changed by TrimStrings
+     * and ConvertEmptyStringsToNull, and a single trimmed value breaks the signature.
+     */
+    private static function fields(Request $request): array
+    {
+        $body = $request->getContent();
+        if ($body === '') {
+            return $request->post(); // requests built in tests carry no raw body
+        }
+        $fields = [];
+        foreach (explode('&', $body) as $pair) {
+            if ($pair === '') {
+                continue;
+            }
+            [$name, $value] = array_pad(explode('=', $pair, 2), 2, '');
+            $fields[urldecode($name)] = urldecode($value);
+        }
+
+        return $fields;
     }
 
     /** Signature Twilio would send for these fields (tests and local tools). */

@@ -47,6 +47,18 @@ class CallLogTest extends CrmTestCase
         $this->assertNull($call->customer_id);
     }
 
+    public function test_signature_is_checked_on_the_fields_as_sent(): void
+    {
+        // A failed Dial posts empty fields and text with trailing spaces; Laravel trims and nulls them.
+        $fields = ['CallSid' => 'CAout', 'DialCallStatus' => 'failed', 'DialCallSid' => '', 'ErrorMessage' => 'Not allowed '];
+        $send = fn (string $signature) => $this->call('POST', '/api/twilio/voice/dialed', $fields, [], [], [
+            'CONTENT_TYPE' => 'application/x-www-form-urlencoded', 'HTTP_X_TWILIO_SIGNATURE' => $signature,
+        ], http_build_query($fields));
+
+        $send(VerifyTwilioSignature::sign('token', url('/api/twilio/voice/dialed'), $fields))->assertOk();
+        $send('wrong')->assertForbidden();
+    }
+
     public function test_call_from_the_test_number_is_internal(): void
     {
         $this->incoming('CA1', '+18059912874')->assertSee('Redirect');
