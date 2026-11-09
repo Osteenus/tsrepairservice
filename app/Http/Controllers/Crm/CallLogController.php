@@ -35,6 +35,9 @@ class CallLogController extends Controller
 
         $calls = Call::with('customer')
             ->where('started_at', '>=', $period === 'today' ? LocalTime::today()->utc() : now()->subDays((int) $period))
+            // Blocked numbers show only in the blocked list (an unblock brings their calls back).
+            ->where(fn ($query) => $query->whereNull('from_number')->orWhereNotIn('from_number', $blockedNumbers))
+            ->where(fn ($query) => $query->whereNull('to_number')->orWhereNotIn('to_number', $blockedNumbers))
             ->when($digits !== '', fn ($query) => $query->where(fn ($query) => $query
                 ->where('from_number', 'like', "%{$digits}%")->orWhere('to_number', 'like', "%{$digits}%")))
             ->orderByDesc('started_at')
